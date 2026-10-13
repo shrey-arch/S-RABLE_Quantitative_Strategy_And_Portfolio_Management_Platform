@@ -12,3 +12,4 @@ from .order_status import OrderStatus
 from .position_status import PositionStatus
 from .notification_type import NotificationType
 from .notification_priority import NotificationPriority
+from .timeframe import Timeframe

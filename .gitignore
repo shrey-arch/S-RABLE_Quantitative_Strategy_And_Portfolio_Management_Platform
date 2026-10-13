@@ -73,3 +73,21 @@ dist/
 *.temp
 *.swp
 *.swo
+# =========================
+# Generated backtest data
+# =========================
+.cache/
+
+# =========================
+# Local audit archive
+# =========================
+backend_final_audit.zip
+
+# =========================
+# Backup files
+# =========================
+*.bak
+*.bak.*
+*.phase*_backup
+*.phase*.bak
+requirements.txt.*.bak

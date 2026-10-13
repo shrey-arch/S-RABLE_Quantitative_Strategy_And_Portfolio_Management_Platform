@@ -109,6 +109,12 @@ class Execution(BaseModelMixin, Base):
         lazy="selectin",
     )
 
+    portfolios: Mapped[list["Portfolio"]] = relationship(
+        "Portfolio",
+        secondary="portfolio_executions",
+        back_populates="executions",
+        lazy="selectin",
+    )
     notifications: Mapped[list["Notification"]] = relationship(
         "Notification",
         back_populates="execution",

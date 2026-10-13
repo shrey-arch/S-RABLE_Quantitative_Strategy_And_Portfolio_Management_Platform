@@ -1,8 +1,15 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import (
+    Boolean,
+    DateTime,
+    Enum,
+    ForeignKey,
+    String,
+    UniqueConstraint,
+)
 
 from app.db import Base
 from app.enums import BrokerName, ConnectionStatus
@@ -15,6 +22,15 @@ class BrokerAccount(BaseModelMixin, Base):
     """
 
     __tablename__ = "broker_accounts"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "broker_name",
+            "broker_user_id",
+            name="uq_broker_account_user_broker_user",
+        ),
+    )
 
     user_id: Mapped[UUID] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"),
@@ -86,7 +102,7 @@ class BrokerAccount(BaseModelMixin, Base):
     )
 
     positions: Mapped[list["Position"]] = relationship(
-    "Position",
-    back_populates="broker_account",
-    lazy="selectin",
+        "Position",
+        back_populates="broker_account",
+        lazy="selectin",
     )

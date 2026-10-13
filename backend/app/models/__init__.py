@@ -5,9 +5,13 @@ from .instrument import Instrument
 from .notification import Notification
 from .order import Order
 from .position import Position
+from .portfolio import Portfolio
+from .portfolio_holding import PortfolioHolding
 from .strategy import Strategy
 from .trade import Trade
 from .user import User
+from .market_data import MarketData
+
 
 __all__ = [
     "BaseModelMixin",
@@ -20,4 +24,7 @@ __all__ = [
     "Trade",
     "Position",
     "Notification",
+    "Portfolio",
+    "PortfolioHolding",
+    "MarketData",
 ]

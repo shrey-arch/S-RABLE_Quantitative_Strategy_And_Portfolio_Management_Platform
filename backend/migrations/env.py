@@ -6,7 +6,7 @@ from alembic import context
 
 from app.config import settings
 from app.db import Base
-from app.models import User, BrokerAccount
+from app.models import User, BrokerAccount, Portfolio, PortfolioHolding
 
 # Alembic Config object
 config = context.config

@@ -60,8 +60,8 @@ class Strategy(BaseModelMixin, Base):
     )
 
     executions: Mapped[list["Execution"]] = relationship(
-        "Execution",
-        back_populates="strategy",
-        cascade="all, delete-orphan",
-        lazy="selectin",
+    "Execution",
+    back_populates="strategy",
+    cascade="all, delete-orphan",
+    lazy="selectin",
     )

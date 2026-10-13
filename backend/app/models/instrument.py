@@ -64,19 +64,25 @@ class Instrument(BaseModelMixin, Base):
     )
 
     executions: Mapped[list["Execution"]] = relationship(
-    "Execution",
-    back_populates="instrument",
-    lazy="selectin",
+        "Execution",
+        back_populates="instrument",
+        lazy="selectin",
     )
 
     orders: Mapped[list["Order"]] = relationship(
-    "Order",
-    back_populates="instrument",
-    lazy="selectin",
+        "Order",
+        back_populates="instrument",
+        lazy="selectin",
     )
 
     positions: Mapped[list["Position"]] = relationship(
-    "Position",
-    back_populates="instrument",
-    lazy="selectin",
+        "Position",
+        back_populates="instrument",
+        lazy="selectin",
+    )
+
+    market_data: Mapped[list["MarketData"]] = relationship(
+        "MarketData",
+        back_populates="instrument",
+        lazy="selectin",
     )

@@ -75,6 +75,12 @@ class User(BaseModelMixin, Base):
         lazy="selectin",
     )
 
+    portfolios: Mapped[list["Portfolio"]] = relationship(
+        "Portfolio",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
     notifications: Mapped[list["Notification"]] = relationship(
         "Notification",
         back_populates="user",
