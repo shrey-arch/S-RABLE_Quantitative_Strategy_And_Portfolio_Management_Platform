@@ -1,0 +1,565 @@
+﻿
+
+Method      : POST
+Path        : /auth/register
+OperationId : register_auth_register_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/RegisterRequest"}
+Responses   : 201: #/components/schemas/RegisterResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /auth/login
+OperationId : login_auth_login_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/LoginRequest"}
+Responses   : 200: #/components/schemas/LoginResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /auth/change-password
+OperationId : change_password_auth_change_password_post
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/ChangePasswordRequest"}
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /users/me
+OperationId : get_current_user_profile_users_me_get
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : 
+Responses   : 200: no JSON schema
+
+Method      : PATCH
+Path        : /users/me
+OperationId : update_current_user_profile_users_me_patch
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/UpdateProfileRequest"}
+Responses   : 200: #/components/schemas/UserProfileResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /brokers/accounts
+OperationId : list_broker_accounts_brokers_accounts_get
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : 
+Responses   : 200: array of #/components/schemas/BrokerAccountResponse
+
+Method      : POST
+Path        : /brokers/accounts
+OperationId : create_broker_account_brokers_accounts_post
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateBrokerAccountRequest"}
+Responses   : 201: #/components/schemas/BrokerAccountResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /brokers/accounts/{broker_account_id}
+OperationId : get_broker_account_brokers_accounts__broker_account_id__get
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"broker_account_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"
+              Broker Account Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/BrokerAccountResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /brokers/accounts/{broker_account_id}
+OperationId : update_broker_account_brokers_accounts__broker_account_id__patch
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"broker_account_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"
+              Broker Account Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdateBrokerAccountRequest"}
+Responses   : 200: #/components/schemas/BrokerAccountResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /brokers/accounts/{broker_account_id}
+OperationId : delete_broker_account_brokers_accounts__broker_account_id__delete
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"broker_account_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"
+              Broker Account Id"}}
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /brokers/accounts/{broker_account_id}/connect
+OperationId : connect_broker_account_brokers_accounts__broker_account_id__connect_post
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"broker_account_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"
+              Broker Account Id"}}
+RequestBody : {"$ref":"#/components/schemas/ConnectBrokerAccountRequest"}
+Responses   : 200: #/components/schemas/BrokerAccountResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /brokers/accounts/{broker_account_id}/disconnect
+OperationId : disconnect_broker_account_brokers_accounts__broker_account_id__disconnect_post
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"broker_account_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"
+              Broker Account Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/BrokerAccountResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /strategies
+OperationId : list_strategies_strategies_get
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : 
+Responses   : 200: array of #/components/schemas/StrategyResponse
+
+Method      : POST
+Path        : /strategies
+OperationId : create_strategy_strategies_post
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateStrategyRequest"}
+Responses   : 201: #/components/schemas/StrategyResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /strategies/{strategy_id}
+OperationId : get_strategy_strategies__strategy_id__get
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"strategy_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Strate
+              gy Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/StrategyResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /strategies/{strategy_id}
+OperationId : update_strategy_strategies__strategy_id__patch
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"strategy_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Strate
+              gy Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdateStrategyRequest"}
+Responses   : 200: #/components/schemas/StrategyResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /strategies/{strategy_id}
+OperationId : delete_strategy_strategies__strategy_id__delete
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"strategy_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Strate
+              gy Id"}}
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /instruments
+OperationId : create_instrument_instruments_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateInstrumentRequest"}
+Responses   : 201: #/components/schemas/InstrumentResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /instruments
+OperationId : list_instruments_instruments_get
+Security    : No operation-level security declaration
+Parameters  : {"name":"active_only","in":"query","required":false,"schema":{"type":"boolean","default":false,"title":"Act
+              ive Only"}}
+RequestBody : 
+Responses   : 200: array of #/components/schemas/InstrumentResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /instruments/{instrument_id}
+OperationId : get_instrument_instruments__instrument_id__get
+Security    : No operation-level security declaration
+Parameters  : {"name":"instrument_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Inst
+              rument Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/InstrumentResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /instruments/{instrument_id}
+OperationId : update_instrument_instruments__instrument_id__patch
+Security    : No operation-level security declaration
+Parameters  : {"name":"instrument_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Inst
+              rument Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdateInstrumentRequest"}
+Responses   : 200: #/components/schemas/InstrumentResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /instruments/{instrument_id}
+OperationId : delete_instrument_instruments__instrument_id__delete
+Security    : No operation-level security declaration
+Parameters  : {"name":"instrument_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Inst
+              rument Id"}}
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /executions
+OperationId : list_executions_executions_get
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : 
+Responses   : 200: array of #/components/schemas/ExecutionResponse
+
+Method      : POST
+Path        : /executions
+OperationId : create_execution_executions_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateExecutionRequest"}
+Responses   : 201: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /executions/{execution_id}
+OperationId : get_execution_executions__execution_id__get
+Security    : No operation-level security declaration
+Parameters  : {"name":"execution_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Execu
+              tion Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /executions/{execution_id}
+OperationId : update_execution_executions__execution_id__patch
+Security    : No operation-level security declaration
+Parameters  : {"name":"execution_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Execu
+              tion Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdateExecutionRequest"}
+Responses   : 200: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /executions/{execution_id}
+OperationId : delete_execution_executions__execution_id__delete
+Security    : No operation-level security declaration
+Parameters  : {"name":"execution_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Execu
+              tion Id"}}
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /executions/{execution_id}/start
+OperationId : start_execution_executions__execution_id__start_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"execution_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Execu
+              tion Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /executions/{execution_id}/complete
+OperationId : complete_execution_executions__execution_id__complete_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"execution_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Execu
+              tion Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /executions/{execution_id}/fail
+OperationId : fail_execution_executions__execution_id__fail_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"execution_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Execu
+              tion Id"}}
+RequestBody : {"$ref":"#/components/schemas/FailExecutionRequest"}
+Responses   : 200: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /executions/{execution_id}/cancel
+OperationId : cancel_execution_executions__execution_id__cancel_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"execution_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Execu
+              tion Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /backtests
+OperationId : create_backtest_backtests_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateBacktestRequest"}
+Responses   : 201: #/components/schemas/ExecutionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /orders
+OperationId : list_orders_orders_get
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : 
+Responses   : 200: array of #/components/schemas/OrderResponse
+
+Method      : POST
+Path        : /orders
+OperationId : create_order_orders_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateOrderRequest"}
+Responses   : 201: #/components/schemas/OrderResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /orders/{order_id}
+OperationId : get_order_orders__order_id__get
+Security    : No operation-level security declaration
+Parameters  : {"name":"order_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Order 
+              Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/OrderResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /orders/{order_id}
+OperationId : update_order_orders__order_id__patch
+Security    : No operation-level security declaration
+Parameters  : {"name":"order_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Order 
+              Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdateOrderRequest"}
+Responses   : 200: #/components/schemas/OrderResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /orders/{order_id}
+OperationId : delete_order_orders__order_id__delete
+Security    : No operation-level security declaration
+Parameters  : {"name":"order_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Order 
+              Id"}}
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /orders/{order_id}/reject
+OperationId : reject_order_orders__order_id__reject_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"order_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Order 
+              Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/OrderResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /orders/{order_id}/cancel
+OperationId : cancel_order_orders__order_id__cancel_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"order_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Order 
+              Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/OrderResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /orders/{order_id}/complete
+OperationId : complete_order_orders__order_id__complete_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"order_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Order 
+              Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/OrderResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /orders/{order_id}/open
+OperationId : open_order_orders__order_id__open_post
+Security    : No operation-level security declaration
+Parameters  : {"name":"order_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Order 
+              Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/OrderResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /trades
+OperationId : list_trades_trades_get
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : 
+Responses   : 200: array of #/components/schemas/TradeResponse
+
+Method      : POST
+Path        : /trades
+OperationId : create_trade_trades_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateTradeRequest"}
+Responses   : 201: #/components/schemas/TradeResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /trades/execute
+OperationId : execute_trade_trades_execute_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateTradeRequest"}
+Responses   : 201: #/components/schemas/TradeResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /trades/{trade_id}
+OperationId : get_trade_trades__trade_id__get
+Security    : No operation-level security declaration
+Parameters  : {"name":"trade_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Trade 
+              Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/TradeResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /trades/{trade_id}
+OperationId : update_trade_trades__trade_id__patch
+Security    : No operation-level security declaration
+Parameters  : {"name":"trade_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Trade 
+              Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdateTradeRequest"}
+Responses   : 200: #/components/schemas/TradeResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /trades/{trade_id}
+OperationId : delete_trade_trades__trade_id__delete
+Security    : No operation-level security declaration
+Parameters  : {"name":"trade_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Trade 
+              Id"}}
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /positions
+OperationId : list_positions_positions_get
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : 
+Responses   : 200: array of #/components/schemas/PositionResponse
+
+Method      : POST
+Path        : /positions
+OperationId : create_position_positions_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreatePositionRequest"}
+Responses   : 201: #/components/schemas/PositionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /positions/{position_id}
+OperationId : get_position_positions__position_id__get
+Security    : No operation-level security declaration
+Parameters  : {"name":"position_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Positi
+              on Id"}}
+RequestBody : 
+Responses   : 200: #/components/schemas/PositionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /positions/{position_id}
+OperationId : update_position_positions__position_id__patch
+Security    : No operation-level security declaration
+Parameters  : {"name":"position_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Positi
+              on Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdatePositionRequest"}
+Responses   : 200: #/components/schemas/PositionResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /positions/{position_id}
+OperationId : delete_position_positions__position_id__delete
+Security    : No operation-level security declaration
+Parameters  : {"name":"position_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Positi
+              on Id"}}
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /portfolio/target
+OperationId : calculate_target_portfolio_target_post
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/TargetPortfolioRequest"}
+Responses   : 200: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /portfolio/rebalance
+OperationId : propose_rebalance_portfolio_rebalance_post
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/PortfolioRebalanceRequest"}
+Responses   : 200: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /portfolio/accounts
+OperationId : list_portfolios_portfolio_accounts_get
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : 
+Responses   : 200: no JSON schema
+
+Method      : POST
+Path        : /portfolio/accounts
+OperationId : create_portfolio_portfolio_accounts_post
+Security    : {"HTTPBearer":[]}
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreatePortfolioRequest"}
+Responses   : 201: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /portfolio/accounts/{portfolio_id}
+OperationId : get_portfolio_state_portfolio_accounts__portfolio_id__get
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"portfolio_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Portf
+              olio Id"}}
+RequestBody : 
+Responses   : 200: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : PUT
+Path        : /portfolio/accounts/{portfolio_id}/state
+OperationId : update_portfolio_state_portfolio_accounts__portfolio_id__state_put
+Security    : {"HTTPBearer":[]}
+Parameters  : {"name":"portfolio_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"Portf
+              olio Id"}}
+RequestBody : {"$ref":"#/components/schemas/UpdatePortfolioStateRequest"}
+Responses   : 200: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /notifications
+OperationId : create_notification_notifications_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateNotificationRequest"}
+Responses   : 201: #/components/schemas/NotificationResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /notifications
+OperationId : list_notifications_notifications_get
+Security    : No operation-level security declaration
+Parameters  : {"name":"user_id","in":"query","required":true,"schema":{"type":"string","format":"uuid","title":"User 
+              Id"}}
+RequestBody : 
+Responses   : 200: array of #/components/schemas/NotificationResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : POST
+Path        : /notifications/execution
+OperationId : create_execution_notification_notifications_execution_post
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : {"$ref":"#/components/schemas/CreateNotificationRequest"}
+Responses   : 201: #/components/schemas/NotificationResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /notifications/{notification_id}
+OperationId : get_notification_notifications__notification_id__get
+Security    : No operation-level security declaration
+Parameters  : [{"name":"notification_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"N
+              otification Id"}},{"name":"user_id","in":"query","required":true,"schema":{"type":"string","format":"uuid",
+              "title":"User Id"}}]
+RequestBody : 
+Responses   : 200: #/components/schemas/NotificationResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : PATCH
+Path        : /notifications/{notification_id}
+OperationId : update_notification_notifications__notification_id__patch
+Security    : No operation-level security declaration
+Parameters  : [{"name":"notification_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"N
+              otification Id"}},{"name":"user_id","in":"query","required":true,"schema":{"type":"string","format":"uuid",
+              "title":"User Id"}}]
+RequestBody : {"$ref":"#/components/schemas/UpdateNotificationRequest"}
+Responses   : 200: #/components/schemas/NotificationResponse; 422: #/components/schemas/HTTPValidationError
+
+Method      : DELETE
+Path        : /notifications/{notification_id}
+OperationId : delete_notification_notifications__notification_id__delete
+Security    : No operation-level security declaration
+Parameters  : [{"name":"notification_id","in":"path","required":true,"schema":{"type":"string","format":"uuid","title":"N
+              otification Id"}},{"name":"user_id","in":"query","required":true,"schema":{"type":"string","format":"uuid",
+              "title":"User Id"}}]
+RequestBody : 
+Responses   : 204: no JSON schema; 422: #/components/schemas/HTTPValidationError
+
+Method      : GET
+Path        : /
+OperationId : home__get
+Security    : No operation-level security declaration
+Parameters  : 
+RequestBody : 
+Responses   : 200: no JSON schema
+
+
+

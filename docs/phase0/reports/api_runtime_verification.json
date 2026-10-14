@@ -1,0 +1,161 @@
+{
+  "generated_at_utc": "2026-10-14T14:02:58.354852+00:00",
+  "check_type": "local FastAPI TestClient smoke tests",
+  "total_checks": 6,
+  "passed": 6,
+  "failed": 0,
+  "results": [
+    {
+      "name": "Root endpoint",
+      "method": "GET",
+      "path": "/",
+      "purpose": "Basic application response",
+      "expected_statuses": [
+        200
+      ],
+      "actual_status": 200,
+      "passed": true,
+      "response_content_type": "application/json",
+      "response_body_excerpt": {
+        "message": "Welcome to Quantitative Backtesting Platform!"
+      },
+      "error": null
+    },
+    {
+      "name": "Strategies require authentication",
+      "method": "GET",
+      "path": "/strategies",
+      "purpose": "Reject unauthenticated access",
+      "expected_statuses": [
+        401
+      ],
+      "actual_status": 401,
+      "passed": true,
+      "response_content_type": "application/json",
+      "response_body_excerpt": {
+        "detail": "Not authenticated"
+      },
+      "error": null
+    },
+    {
+      "name": "Broker accounts require authentication",
+      "method": "GET",
+      "path": "/brokers/accounts",
+      "purpose": "Reject unauthenticated access",
+      "expected_statuses": [
+        401
+      ],
+      "actual_status": 401,
+      "passed": true,
+      "response_content_type": "application/json",
+      "response_body_excerpt": {
+        "detail": "Not authenticated"
+      },
+      "error": null
+    },
+    {
+      "name": "Portfolio accounts require authentication",
+      "method": "GET",
+      "path": "/portfolio/accounts",
+      "purpose": "Reject unauthenticated access",
+      "expected_statuses": [
+        401
+      ],
+      "actual_status": 401,
+      "passed": true,
+      "response_content_type": "application/json",
+      "response_body_excerpt": {
+        "detail": "Not authenticated"
+      },
+      "error": null
+    },
+    {
+      "name": "Login rejects missing fields",
+      "method": "POST",
+      "path": "/auth/login",
+      "purpose": "Request schema validation before handler execution",
+      "expected_statuses": [
+        422
+      ],
+      "actual_status": 422,
+      "passed": true,
+      "response_content_type": "application/json",
+      "response_body_excerpt": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "email"
+            ],
+            "msg": "Field required",
+            "input": {}
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "password"
+            ],
+            "msg": "Field required",
+            "input": {}
+          }
+        ]
+      },
+      "error": null
+    },
+    {
+      "name": "Registration rejects missing fields",
+      "method": "POST",
+      "path": "/auth/register",
+      "purpose": "Request schema validation before handler execution",
+      "expected_statuses": [
+        422
+      ],
+      "actual_status": 422,
+      "passed": true,
+      "response_content_type": "application/json",
+      "response_body_excerpt": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "full_name"
+            ],
+            "msg": "Field required",
+            "input": {}
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "email"
+            ],
+            "msg": "Field required",
+            "input": {}
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "password"
+            ],
+            "msg": "Field required",
+            "input": {}
+          }
+        ]
+      },
+      "error": null
+    }
+  ],
+  "scope_limitations": [
+    "These are local in-process HTTP checks, not deployed-server tests.",
+    "Only the listed requests were exercised.",
+    "No valid registration or login was attempted.",
+    "No authenticated database-backed CRUD operation was attempted.",
+    "No resource ownership or cross-user isolation was verified.",
+    "A passing authentication rejection does not prove all routes are protected.",
+    "Security-sensitive routes remain unverified until dedicated tests exist."
+  ]
+}

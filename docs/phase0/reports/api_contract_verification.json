@@ -1,0 +1,15 @@
+{
+  "generated_at_utc": "2026-10-14T13:58:10.534301+00:00",
+  "saved_spec": "frontend\\openapi.json",
+  "live_app_title": "Quantitative Backtesting Platform",
+  "saved_operation_count": 65,
+  "live_operation_count": 65,
+  "missing_from_live_app": [],
+  "unexpected_in_live_app": [],
+  "operation_id_changes": [],
+  "response_status_changes": [],
+  "inventory_matches": true,
+  "endpoint_runtime_verified": false,
+  "security_verified": false,
+  "note": "This compares OpenAPI inventories only. It does not send HTTP requests and does not verify runtime behavior, authorization, resource ownership, or database effects."
+}

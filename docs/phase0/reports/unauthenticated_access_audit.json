@@ -1,0 +1,174 @@
+{
+  "generated_at_utc": "2026-10-14T14:04:33.752617+00:00",
+  "total_checks": 20,
+  "results": [
+    {
+      "category": "Public",
+      "method": "GET",
+      "path": "/",
+      "status_code": 200,
+      "assessment": "PUBLIC_ROUTE_RESPONDED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Protected",
+      "method": "GET",
+      "path": "/users/me",
+      "status_code": 401,
+      "assessment": "AUTH_REJECTED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Protected",
+      "method": "GET",
+      "path": "/strategies",
+      "status_code": 401,
+      "assessment": "AUTH_REJECTED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Protected",
+      "method": "GET",
+      "path": "/strategies/00000000-0000-0000-0000-000000000001",
+      "status_code": 401,
+      "assessment": "AUTH_REJECTED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Catalogue policy unresolved",
+      "method": "GET",
+      "path": "/instruments",
+      "status_code": 200,
+      "assessment": "RESPONDED_WITHOUT_AUTH_REVIEW_REQUIRED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Catalogue policy unresolved",
+      "method": "GET",
+      "path": "/instruments/00000000-0000-0000-0000-000000000001",
+      "status_code": 404,
+      "assessment": "NOT_FOUND_IN_THIS_REQUEST",
+      "response_body_saved": false
+    },
+    {
+      "category": "Protected",
+      "method": "GET",
+      "path": "/brokers/accounts",
+      "status_code": 401,
+      "assessment": "AUTH_REJECTED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Protected",
+      "method": "GET",
+      "path": "/brokers/accounts/00000000-0000-0000-0000-000000000001",
+      "status_code": 401,
+      "assessment": "AUTH_REJECTED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/executions",
+      "status_code": 200,
+      "assessment": "RESPONDED_WITHOUT_AUTH_REVIEW_REQUIRED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/executions/00000000-0000-0000-0000-000000000001",
+      "status_code": 404,
+      "assessment": "NOT_FOUND_IN_THIS_REQUEST",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/orders",
+      "status_code": 200,
+      "assessment": "RESPONDED_WITHOUT_AUTH_REVIEW_REQUIRED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/orders/00000000-0000-0000-0000-000000000001",
+      "status_code": 404,
+      "assessment": "NOT_FOUND_IN_THIS_REQUEST",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/trades",
+      "status_code": 200,
+      "assessment": "RESPONDED_WITHOUT_AUTH_REVIEW_REQUIRED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/trades/00000000-0000-0000-0000-000000000001",
+      "status_code": 404,
+      "assessment": "NOT_FOUND_IN_THIS_REQUEST",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/positions",
+      "status_code": 200,
+      "assessment": "RESPONDED_WITHOUT_AUTH_REVIEW_REQUIRED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/positions/00000000-0000-0000-0000-000000000001",
+      "status_code": 404,
+      "assessment": "NOT_FOUND_IN_THIS_REQUEST",
+      "response_body_saved": false
+    },
+    {
+      "category": "Protected",
+      "method": "GET",
+      "path": "/portfolio/accounts",
+      "status_code": 401,
+      "assessment": "AUTH_REJECTED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/portfolio/accounts/00000000-0000-0000-0000-000000000001",
+      "status_code": 401,
+      "assessment": "AUTH_REJECTED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/notifications",
+      "status_code": 422,
+      "assessment": "INCONCLUSIVE_REVIEW_REQUIRED",
+      "response_body_saved": false
+    },
+    {
+      "category": "Security review required",
+      "method": "GET",
+      "path": "/notifications/00000000-0000-0000-0000-000000000001",
+      "status_code": 422,
+      "assessment": "INCONCLUSIVE_REVIEW_REQUIRED",
+      "response_body_saved": false
+    }
+  ],
+  "limitations": [
+    "GET-only local in-process checks; no mutations intentionally performed.",
+    "A response is a signal for review, not proof of an exploitable vulnerability.",
+    "A 404 does not establish that authentication is enforced.",
+    "A 500 or request error is inconclusive.",
+    "Ownership isolation and authenticated cross-user access were not tested.",
+    "Catalogue write authorization requires separate review."
+  ]
+}
