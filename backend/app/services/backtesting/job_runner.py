@@ -6,6 +6,7 @@ from unittest.mock import Mock
 from datetime import datetime
 from uuid import UUID
 
+from app.backtesting.broker import SimulatedBroker
 from app.db import SessionLocal
 from app.exceptions.backtesting_errors import classify_backtest_error
 from app.services.backtesting.artifact_manager import BacktestArtifactManager
@@ -14,7 +15,11 @@ from app.services.backtesting.job_logging import (
     close_job_logging,
     configure_job_logging,
 )
-from app.strategies.registry import StrategyRegistry
+from app.strategies.factory import (
+    build_strategy,
+    effective_parameters as strategy_parameters,
+    instrument_layout,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -37,7 +42,9 @@ class BacktestJobRunner:
         start_timestamp: datetime | None = None,
         end_timestamp: datetime | None = None,
         quantity: int = 1,
+        run_options: dict | None = None,
     ):
+        options = run_options or {}
         log_dir, job_logger = configure_job_logging(execution_id)
         job_logger.info(
             "Backtest job logging initialized: execution_id=%s log_dir=%s",
@@ -56,10 +63,7 @@ class BacktestJobRunner:
             )
 
             try:
-                strategy = StrategyRegistry.get(
-                    strategy_key,
-                    **(strategy_config or {}),
-                )
+                strategy = build_strategy(strategy_key, strategy_config)
             except Exception as exc:
                 classification = classify_backtest_error(
                     exc,
@@ -113,9 +117,8 @@ class BacktestJobRunner:
                     status=execution.status.value,
                 )
 
-                effective_parameters = StrategyRegistry.effective_parameters(
-                    strategy_key,
-                    **(strategy_config or {}),
+                effective_parameters = strategy_parameters(
+                    strategy_key, strategy_config
                 )
                 artifact_manager.write_reproducibility_manifest(
                     {
@@ -165,6 +168,18 @@ class BacktestJobRunner:
                     }
                 )
 
+            extra = {}
+            if options.get("other_instrument_ids"):
+                extra["other_instrument_ids"] = [
+                    UUID(str(value)) for value in options["other_instrument_ids"]
+                ]
+                extra["instrument_layout"] = instrument_layout(strategy_key)
+            if options.get("slippage_bps") or options.get("brokerage_rate"):
+                extra["broker"] = SimulatedBroker(
+                    slippage_bps=float(options.get("slippage_bps") or 0),
+                    brokerage_rate=float(options.get("brokerage_rate") or 0),
+                )
+
             return execution_service.run(
                 execution=execution,
                 strategy=strategy,
@@ -172,6 +187,7 @@ class BacktestJobRunner:
                 end_timestamp=end_timestamp,
                 quantity=quantity,
                 strategy_key=strategy_key,
+                **extra,
             )
 
         except Exception:

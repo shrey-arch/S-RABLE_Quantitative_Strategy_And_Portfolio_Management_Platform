@@ -62,6 +62,14 @@ class Execution(BaseModelMixin, Base):
         nullable=True,
     )
 
+    # How a backtest was requested (strategy key, dates, quantity, instruments,
+    # costs), so it can be shown and re-run. execution_config stays the
+    # strategy's parameters only.
+    run_settings: Mapped[dict | None] = mapped_column(
+        JSONB,
+        nullable=True,
+    )
+
     error_message: Mapped[str | None] = mapped_column(
         String,
         nullable=True,

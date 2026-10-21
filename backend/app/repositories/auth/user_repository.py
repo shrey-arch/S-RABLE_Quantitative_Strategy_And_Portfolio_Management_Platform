@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -42,15 +44,21 @@ class UserRepository:
         if full_name is not None:
             user.full_name = full_name
 
+        # An empty value clears the field.
         if phone_number is not None:
-            user.phone_number = phone_number
+            user.phone_number = phone_number or None
 
         if profile_image_url is not None:
-            user.profile_image_url = profile_image_url
+            user.profile_image_url = profile_image_url or None
 
         self.db.commit()
         self.db.refresh(user)
 
+        return user
+
+    def record_login(self, user: User) -> User:
+        user.last_login_at = datetime.now(timezone.utc)
+        self.db.commit()
         return user
 
     def update_password(

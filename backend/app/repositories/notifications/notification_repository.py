@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models import Notification
@@ -114,3 +114,32 @@ class NotificationRepository:
     ) -> None:
         self.db.delete(notification)
         self.db.commit()
+
+    def list_filtered_for_user(
+        self,
+        *,
+        user_id: UUID,
+        is_read: bool | None = None,
+        notification_type=None,
+        priority=None,
+    ) -> list[Notification]:
+        statement = select(Notification).where(Notification.user_id == user_id)
+        if is_read is not None:
+            statement = statement.where(Notification.is_read == is_read)
+        if notification_type is not None:
+            statement = statement.where(Notification.notification_type == notification_type)
+        if priority is not None:
+            statement = statement.where(Notification.priority == priority)
+        statement = statement.order_by(Notification.created_at.desc(), Notification.id)
+        return list(self.db.scalars(statement).all())
+
+    def count_unread_for_user(
+        self,
+        *,
+        user_id: UUID,
+    ) -> int:
+        statement = select(func.count(Notification.id)).where(
+            Notification.user_id == user_id,
+            Notification.is_read.is_(False),
+        )
+        return int(self.db.scalar(statement) or 0)

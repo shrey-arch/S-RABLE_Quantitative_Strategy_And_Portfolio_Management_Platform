@@ -27,7 +27,12 @@ class MarketData(BaseModelMixin, Base):
     )
 
     timeframe: Mapped[Timeframe] = mapped_column(
-        Enum(Timeframe, name="timeframe"),
+        # The database enum stores the values ("1D"), not the member names ("ONE_DAY").
+        Enum(
+            Timeframe,
+            name="timeframe",
+            values_callable=lambda members: [member.value for member in members],
+        ),
         nullable=False,
     )
 
@@ -59,5 +64,5 @@ class MarketData(BaseModelMixin, Base):
     instrument: Mapped["Instrument"] = relationship(
         "Instrument",
         back_populates="market_data",
-        lazy="selectin",
+        lazy="select",
     )

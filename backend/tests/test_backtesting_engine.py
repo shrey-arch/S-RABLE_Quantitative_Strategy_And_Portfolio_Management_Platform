@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 from pathlib import Path
 
 from app.backtesting.engine import BacktestEngine
@@ -152,7 +152,7 @@ class BuyThenSellStrategy(Strategy):
         )
 
 
-def test_engine_closes_position_after_sell_signal():
+def test_engine_sell_after_buy_closes_the_long_and_opens_a_short():
     data = pd.DataFrame(
         {
             "close": [100.0, 110.0, 120.0],
@@ -178,9 +178,13 @@ def test_engine_closes_position_after_sell_signal():
     )
 
     # Golden regression baseline for the deterministic zero-fee scenario.
+    # A signal sets the position: BUY = +10, SELL = -10, so the SELL trades 20
+    # (closes the long of 10 and opens a short of 10).
     assert len(result.trades) == 2
     assert [trade["side"] for trade in result.trades] == ["BUY", "SELL"]
-    assert [trade["quantity"] for trade in result.trades] == [10, 10]
+    assert [trade["quantity"] for trade in result.trades] == [10, 20]
+    assert [trade["closed_quantity"] for trade in result.trades] == [0, 10]
+    assert [trade["opened_quantity"] for trade in result.trades] == [10, 10]
     assert [trade["price"] for trade in result.trades] == [100.0, 120.0]
     assert [trade["total_charges"] for trade in result.trades] == [0.0, 0.0]
     assert [trade["realized_pnl"] for trade in result.trades] == [0.0, 200.0]
@@ -194,6 +198,56 @@ def test_engine_closes_position_after_sell_signal():
     assert [
         point["portfolio_value"] for point in result.equity_curve
     ] == [100000.0, 100100.0, 100200.0]
+class SignalSequenceStrategy(Strategy):
+    def __init__(self, actions):
+        self.actions = list(actions)
+
+    def generate_signal(self, context):
+        return StrategySignal(action=self.actions.pop(0), timestamp=context.timestamp)
+
+
+def _daily(closes):
+    return pd.DataFrame(
+        {"close": closes},
+        index=pd.date_range("2026-01-01", periods=len(closes), freq="D", tz="UTC"),
+    )
+
+
+def test_repeated_signals_hold_one_position_instead_of_piling_up():
+    """Momentum says BUY on every bar above its average. That must buy once, not
+    once per bar (which ran out of cash on real prices and failed the backtest)."""
+    B, S, H = SignalAction.BUY, SignalAction.SELL, SignalAction.HOLD
+    result = BacktestEngine().run(
+        strategy=SignalSequenceStrategy([B] * 300 + [H, S, S, S, H, B]),
+        data=_daily([1000.0] * 306),
+        initial_capital=100000.0,
+        execution_id=uuid4(),
+        instrument_id=uuid4(),
+        quantity=50,
+    )
+    assert [(t["side"], t["quantity"]) for t in result.trades] == [
+        ("BUY", 50),
+        ("SELL", 100),
+        ("BUY", 100),
+    ]
+    assert result.final_capital == pytest.approx(100000.0)
+
+
+def test_hold_keeps_whatever_is_held():
+    H = SignalAction.HOLD
+    result = BacktestEngine().run(
+        strategy=SignalSequenceStrategy([H, H, SignalAction.SELL, H, H]),
+        data=_daily([100.0, 101.0, 102.0, 99.0, 98.0]),
+        initial_capital=10000.0,
+        execution_id=uuid4(),
+        instrument_id=uuid4(),
+        quantity=3,
+    )
+    assert [(t["side"], t["quantity"]) for t in result.trades] == [("SELL", 3)]
+    # Short 3 from 102 to 98: +12.
+    assert result.final_capital == pytest.approx(10012.0)
+
+
 def test_signal_to_orders_supports_two_leg_allocations():
     engine = BacktestEngine()
 
@@ -677,7 +731,7 @@ def test_backtest_service_runs_execution_to_completion(tmp_path, monkeypatch):
         return_value=SimpleNamespace(ohlcv=data, metadata=provenance)
     )
 
-    service.execution_service.start = MagicMock(
+    service.execution_service.start_execution = MagicMock(
         side_effect=lambda execution: setattr(
             execution,
             "status",
@@ -685,7 +739,7 @@ def test_backtest_service_runs_execution_to_completion(tmp_path, monkeypatch):
         )
     )
 
-    service.execution_service.complete = MagicMock(
+    service.execution_service.complete_execution = MagicMock(
         side_effect=lambda execution: setattr(
             execution,
             "status",
@@ -710,7 +764,7 @@ def test_backtest_service_runs_execution_to_completion(tmp_path, monkeypatch):
     assert returned is result
     assert execution.status == ExecutionStatus.COMPLETED
 
-    service.execution_service.start.assert_called_once_with(
+    service.execution_service.start_execution.assert_called_once_with(
         execution=execution,
     )
 
@@ -766,7 +820,7 @@ def test_backtest_service_runs_execution_to_completion(tmp_path, monkeypatch):
         "trades": "results/trades.json",
     }
 
-    service.execution_service.complete.assert_called_once_with(
+    service.execution_service.complete_execution.assert_called_once_with(
         execution=execution,
     )
 
@@ -790,12 +844,12 @@ def test_backtest_service_marks_execution_failed_on_engine_error():
 
     service.dataset_loader.load = MagicMock(
         return_value=SimpleNamespace(
-            ohlcv=__import__("pandas").DataFrame(),
+            ohlcv=__import__("pandas").DataFrame({"close": [100.0]}),
             metadata={"cache_hit": False, "row_count": 0},
         )
     )
 
-    service.execution_service.start = MagicMock(
+    service.execution_service.start_execution = MagicMock(
         side_effect=lambda execution: setattr(
             execution,
             "status",
@@ -810,7 +864,7 @@ def test_backtest_service_marks_execution_failed_on_engine_error():
         )
     )
 
-    service.execution_service.complete = MagicMock()
+    service.execution_service.complete_execution = MagicMock()
 
     with patch.object(
         service.engine,
@@ -838,7 +892,7 @@ def test_backtest_service_marks_execution_failed_on_engine_error():
         "engine", "market_data"
     }
 
-    service.execution_service.complete.assert_not_called()
+    service.execution_service.complete_execution.assert_not_called()
 
 def test_backtest_job_runner_uses_its_own_database_session():
     from unittest.mock import patch
@@ -865,7 +919,7 @@ def test_backtest_job_runner_uses_its_own_database_session():
         "app.services.backtesting.job_runner.BacktestService",
         return_value=mock_backtest_service,
     ), patch(
-        "app.services.backtesting.job_runner.StrategyRegistry.get",
+        "app.strategies.factory.StrategyRegistry.get",
         return_value=mock_strategy,
     ) as registry_get:
         result = BacktestJobRunner().run(
@@ -911,7 +965,7 @@ def test_backtest_job_runner_closes_session_on_strategy_lookup_failure():
         "app.services.backtesting.job_runner.SessionLocal",
         return_value=db,
     ), patch(
-        "app.services.backtesting.job_runner.StrategyRegistry.get",
+        "app.strategies.factory.StrategyRegistry.get",
         side_effect=LookupError("strategy not found"),
     ):
         with pytest.raises(LookupError, match="strategy not found"):
@@ -959,29 +1013,7 @@ def _hard_timeout_test_worker():
     time.sleep(5)
 
 
-def test_backtest_executor_hard_timeout_terminates_process():
-    from app.services.backtesting.executor import BacktestExecutor
-
-    executor = BacktestExecutor(
-        max_workers=1,
-        timeout_seconds=1,
-    )
-
-    try:
-        future = executor.submit(
-            execution_id=uuid4(),
-            strategy_key="momentum",
-            quantity=1,
-        )
-
-        with pytest.raises(TimeoutError):
-            future.result(timeout=5)
-
-        assert future.done()
-    finally:
-        executor.shutdown(wait=True)
-
-def _hard_timeout_test_worker():
+def _hard_timeout_test_worker(*_args, **_kwargs):
     import time
     time.sleep(5)
 
@@ -993,13 +1025,14 @@ def test_backtest_executor_hard_timeout_terminates_process():
         max_workers=1,
         timeout_seconds=1,
     )
-    executor._worker_target = _hard_timeout_test_worker
 
     try:
+        # A worker that outlives the 1-second limit, whatever the machine's speed.
         future = executor.submit(
             execution_id=uuid4(),
             strategy_key="momentum",
             quantity=1,
+            worker_target=_hard_timeout_test_worker,
         )
 
         with pytest.raises(TimeoutError):
@@ -1171,12 +1204,12 @@ def test_backtest_service_preserves_original_error_if_failure_persistence_fails(
 
     service.dataset_loader.load = MagicMock(
         return_value=SimpleNamespace(
-            ohlcv=__import__("pandas").DataFrame(),
+            ohlcv=__import__("pandas").DataFrame({"close": [100.0]}),
             metadata={"cache_hit": False, "row_count": 0},
         )
     )
 
-    service.execution_service.start = MagicMock(
+    service.execution_service.start_execution = MagicMock(
         side_effect=lambda execution: setattr(
             execution,
             "status",
@@ -1319,7 +1352,7 @@ def test_backtest_service_marks_execution_failed_on_market_data_load_error():
         execution_metrics=None,
     )
 
-    service.execution_service.start = MagicMock(
+    service.execution_service.start_execution = MagicMock(
         side_effect=lambda execution: setattr(
             execution,
             "status",

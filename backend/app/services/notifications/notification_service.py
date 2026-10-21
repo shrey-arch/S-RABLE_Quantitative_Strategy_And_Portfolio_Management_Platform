@@ -230,3 +230,41 @@ class NotificationService:
                 raise ValueError(
                     "Read timestamp cannot be in the future."
                 )
+
+
+    def search_notifications(
+        self,
+        *,
+        user_id: UUID,
+        is_read: bool | None = None,
+        notification_type: NotificationType | None = None,
+        priority: NotificationPriority | None = None,
+    ) -> list[Notification]:
+        return self.repository.list_filtered_for_user(
+            user_id=user_id,
+            is_read=is_read,
+            notification_type=notification_type,
+            priority=priority,
+        )
+
+    def count_unread(
+        self,
+        *,
+        user_id: UUID,
+    ) -> int:
+        return self.repository.count_unread_for_user(user_id=user_id)
+
+    def set_read(
+        self,
+        *,
+        notification: Notification,
+        is_read: bool,
+    ) -> Notification:
+        """Mark read (read_at = now) or unread (read_at cleared); the server sets the time."""
+        if is_read and notification.is_read:
+            return notification
+        return self.update_notification(
+            notification=notification,
+            is_read=is_read,
+            read_at=datetime.now(timezone.utc) if is_read else None,
+        )

@@ -63,26 +63,28 @@ class Instrument(BaseModelMixin, Base):
         nullable=False,
     )
 
+    # Loaded only when accessed. Loading these eagerly pulled every stored bar,
+    # order, position and execution into memory each time an instrument was read.
     executions: Mapped[list["Execution"]] = relationship(
         "Execution",
         back_populates="instrument",
-        lazy="selectin",
+        lazy="select",
     )
 
     orders: Mapped[list["Order"]] = relationship(
         "Order",
         back_populates="instrument",
-        lazy="selectin",
+        lazy="select",
     )
 
     positions: Mapped[list["Position"]] = relationship(
         "Position",
         back_populates="instrument",
-        lazy="selectin",
+        lazy="select",
     )
 
     market_data: Mapped[list["MarketData"]] = relationship(
         "MarketData",
         back_populates="instrument",
-        lazy="selectin",
+        lazy="select",
     )

@@ -131,6 +131,9 @@ def test_delete_instrument():
 
     instrument = MagicMock(spec=Instrument)
 
+    service.repository.has_dependent_records = MagicMock(
+        return_value=False
+    )
     service.repository.delete = MagicMock(
         return_value=None
     )
@@ -211,3 +214,21 @@ def test_get_required_instrument_not_found():
         service.get_required_instrument(
             instrument_id=instrument_id,
         )
+
+
+def test_delete_instrument_in_use_is_refused():
+    import pytest
+
+    from app.services.instruments.instrument_service import InstrumentInUseError
+
+    db = MagicMock()
+    service = InstrumentService(db)
+    instrument = MagicMock(spec=Instrument)
+
+    service.repository.has_dependent_records = MagicMock(return_value=True)
+    service.repository.delete = MagicMock()
+
+    with pytest.raises(InstrumentInUseError, match="Deactivate it instead"):
+        service.delete_instrument(instrument=instrument)
+
+    service.repository.delete.assert_not_called()

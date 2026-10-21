@@ -1,12 +1,21 @@
+"""Phase 16: the logged-in user's notifications.
+
+Every route works on the current user's own notifications; another user's id
+answers 404. Notifications are created by the backend (a run finishing), not
+through the API. A user marks them read / unread or deletes them."""
+
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_user
 from app.db import get_db
+from app.enums import NotificationPriority, NotificationType
+from app.models import User
 from app.schemas.notifications import (
-    CreateNotificationRequest,
     NotificationResponse,
+    UnreadCount,
     UpdateNotificationRequest,
 )
 from app.services.notifications.notification_service import NotificationService
@@ -17,8 +26,17 @@ router = APIRouter(
     tags=["Notifications"],
 )
 
+NOT_FOUND = "Notification not found."
+
+
+def _value(item):
+    return getattr(item, "value", item)
+
 
 def _to_response(notification) -> NotificationResponse:
+    execution = (
+        notification.execution if notification.execution_id is not None else None
+    )
     return NotificationResponse(
         id=str(notification.id),
         user_id=str(notification.user_id),
@@ -27,8 +45,10 @@ def _to_response(notification) -> NotificationResponse:
             if notification.execution_id is not None
             else None
         ),
-        notification_type=notification.notification_type,
-        priority=notification.priority,
+        execution_type=_value(execution.execution_type) if execution is not None else None,
+        execution_status=_value(execution.status) if execution is not None else None,
+        notification_type=_value(notification.notification_type),
+        priority=_value(notification.priority),
         title=notification.title,
         message=notification.message,
         is_read=notification.is_read,
@@ -43,28 +63,14 @@ def _to_response(notification) -> NotificationResponse:
     )
 
 
-@router.post(
-    "",
-    response_model=NotificationResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-def create_notification(
-    request: CreateNotificationRequest,
-    db: Session = Depends(get_db),
-):
-    notification_service = NotificationService(db)
-
-    notification = notification_service.create_notification(
-        user_id=request.user_id,
-        execution_id=request.execution_id,
-        notification_type=request.notification_type,
-        priority=request.priority,
-        title=request.title,
-        message=request.message,
-        notification_data=request.notification_data,
+def _owned(service: NotificationService, notification_id: UUID, user: User):
+    notification = service.get_notification(
+        notification_id=notification_id,
+        user_id=user.id,
     )
-
-    return _to_response(notification)
+    if not notification:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND)
+    return notification
 
 
 @router.get(
@@ -72,40 +78,32 @@ def create_notification(
     response_model=list[NotificationResponse],
 )
 def list_notifications(
-    user_id: UUID,
+    is_read: bool | None = None,
+    notification_type: NotificationType | None = None,
+    priority: NotificationPriority | None = None,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    notification_service = NotificationService(db)
-
-    notifications = notification_service.list_notifications(
-        user_id=user_id,
+    """Newest first. Filters: is_read (false = the Unread tab), type, priority."""
+    notifications = NotificationService(db).search_notifications(
+        user_id=current_user.id,
+        is_read=is_read,
+        notification_type=notification_type,
+        priority=priority,
     )
-
     return [_to_response(notification) for notification in notifications]
 
 
-@router.post(
-    "/execution",
-    response_model=NotificationResponse,
-    status_code=status.HTTP_201_CREATED,
+@router.get(
+    "/unread-count",
+    response_model=UnreadCount,
 )
-def create_execution_notification(
-    request: CreateNotificationRequest,
+def unread_count(
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    notification_service = NotificationService(db)
-
-    notification = notification_service.create_execution_notification(
-        user_id=request.user_id,
-        execution_id=request.execution_id,
-        notification_type=request.notification_type,
-        priority=request.priority,
-        title=request.title,
-        message=request.message,
-        notification_data=request.notification_data,
-    )
-
-    return _to_response(notification)
+    """The header bell: how many of the user's notifications are unread."""
+    return UnreadCount(unread=NotificationService(db).count_unread(user_id=current_user.id))
 
 
 @router.get(
@@ -114,23 +112,11 @@ def create_execution_notification(
 )
 def get_notification(
     notification_id: UUID,
-    user_id: UUID,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    notification_service = NotificationService(db)
-
-    notification = notification_service.get_notification(
-        notification_id=notification_id,
-        user_id=user_id,
-    )
-
-    if not notification:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Notification not found.",
-        )
-
-    return _to_response(notification)
+    service = NotificationService(db)
+    return _to_response(_owned(service, notification_id, current_user))
 
 
 @router.patch(
@@ -139,35 +125,17 @@ def get_notification(
 )
 def update_notification(
     notification_id: UUID,
-    user_id: UUID,
     request: UpdateNotificationRequest,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    notification_service = NotificationService(db)
-
-    notification = notification_service.get_notification(
-        notification_id=notification_id,
-        user_id=user_id,
-    )
-
-    if not notification:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Notification not found.",
-        )
-
-    notification = notification_service.update_notification(
-        notification=notification,
-        execution_id=request.execution_id,
-        notification_type=request.notification_type,
-        priority=request.priority,
-        title=request.title,
-        message=request.message,
-        is_read=request.is_read,
-        read_at=request.read_at,
-        notification_data=request.notification_data,
-    )
-
+    """Mark read or unread. read_at is set by the server."""
+    service = NotificationService(db)
+    notification = _owned(service, notification_id, current_user)
+    try:
+        notification = service.set_read(notification=notification, is_read=request.is_read)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
     return _to_response(notification)
 
 
@@ -177,22 +145,8 @@ def update_notification(
 )
 def delete_notification(
     notification_id: UUID,
-    user_id: UUID,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    notification_service = NotificationService(db)
-
-    notification = notification_service.get_notification(
-        notification_id=notification_id,
-        user_id=user_id,
-    )
-
-    if not notification:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Notification not found.",
-        )
-
-    notification_service.delete_notification(
-        notification=notification,
-    )
+    service = NotificationService(db)
+    service.delete_notification(notification=_owned(service, notification_id, current_user))

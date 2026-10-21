@@ -1,9 +1,9 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import exists, select
 from sqlalchemy.orm import Session
 
-from app.models import Instrument
+from app.models import Instrument, MarketData, Order, Position
 
 
 class InstrumentRepository:
@@ -119,3 +119,14 @@ class InstrumentRepository:
     ) -> None:
         self.db.delete(instrument)
         self.db.commit()
+
+    def has_dependent_records(
+        self,
+        *,
+        instrument_id: UUID,
+    ) -> bool:
+        """True if market data, orders or positions reference the instrument."""
+        return any(
+            self.db.scalar(select(exists().where(model.instrument_id == instrument_id)))
+            for model in (MarketData, Order, Position)
+        )

@@ -20,12 +20,16 @@ class StrategyDefinition:
     default_parameters: dict[str, Any]
     parameter_schema: dict[str, dict[str, Any]]
     required_indicators: tuple[str, ...] = ()
+    # How many instruments a backtest needs: "single" (one), "pair" (exactly two,
+    # instrument_a and instrument_b) or "universe" (two or more, at least top_k).
+    instruments: str = "single"
 
 
 def _definition(
     key: str,
     strategy_class: type[Strategy],
     required_indicators: tuple[str, ...] = ("close",),
+    instruments: str = "single",
 ) -> StrategyDefinition:
     parameters: dict[str, Any] = {}
     schema: dict[str, dict[str, Any]] = {}
@@ -63,6 +67,7 @@ def _definition(
         default_parameters=parameters,
         parameter_schema=schema,
         required_indicators=required_indicators,
+        instruments=instruments,
     )
 
 
@@ -77,11 +82,13 @@ class StrategyRegistry:
             "statistical_arbitrage",
             StatisticalArbitrageStrategy,
             required_indicators=("instrument_a", "instrument_b"),
+            instruments="pair",
         ),
         "tactical_asset_allocation": _definition(
             "tactical_asset_allocation",
             TacticalAssetAllocationStrategy,
             required_indicators=(),
+            instruments="universe",
         ),
     }
 

@@ -11,6 +11,18 @@ from .strategy import Strategy
 from .trade import Trade
 from .user import User
 from .market_data import MarketData
+from .regime_model import RegimeModelRecord
+from .paper import (
+    PaperAccount,
+    PaperCashEntry,
+    PaperDeployment,
+    PaperDeploymentDay,
+    PaperEquitySnapshot,
+    PaperFill,
+    PaperHolding,
+    PaperOrder,
+)
+from .live import LiveBar, LiveSession, LiveSessionEvent
 
 
 __all__ = [
@@ -27,4 +39,16 @@ __all__ = [
     "Portfolio",
     "PortfolioHolding",
     "MarketData",
+    "RegimeModelRecord",
+    "PaperAccount",
+    "PaperOrder",
+    "PaperFill",
+    "PaperHolding",
+    "PaperCashEntry",
+    "PaperDeployment",
+    "PaperDeploymentDay",
+    "PaperEquitySnapshot",
+    "LiveBar",
+    "LiveSession",
+    "LiveSessionEvent",
 ]

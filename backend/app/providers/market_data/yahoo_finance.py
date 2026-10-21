@@ -11,6 +11,43 @@ from app.providers.market_data.schemas import MarketDataPoint
 from app.services.instruments.instrument_service import InstrumentService
 
 
+# NSE indices on Yahoo Finance (Step 0 of the 7-feature roadmap: Nifty 50 and
+# India VIX for the regime models). An index named with its Yahoo symbol
+# (starting with ^) is used as it is.
+INDEX_SYMBOLS = {
+    "NIFTY50": "^NSEI",
+    "NIFTY 50": "^NSEI",
+    "NIFTY": "^NSEI",
+    "NSEI": "^NSEI",
+    "INDIAVIX": "^INDIAVIX",
+    "INDIA VIX": "^INDIAVIX",
+    "BANKNIFTY": "^NSEBANK",
+    "NIFTYBANK": "^NSEBANK",
+    "NIFTY BANK": "^NSEBANK",
+}
+
+UNSUPPORTED = (
+    "Yahoo Finance provider supports NSE equities, ETFs and indices only "
+    "(for an index, name it NIFTY50 or INDIAVIX, or use its Yahoo symbol such as ^NSEI)."
+)
+
+
+def yahoo_symbol_for(instrument: Instrument) -> str:
+    """The instrument's Yahoo Finance symbol: SYMBOL.NS for NSE equities and ETFs,
+    ^NSEI / ^INDIAVIX / ... for NSE indices."""
+    if instrument.exchange is not Exchange.NSE:
+        raise ValueError(UNSUPPORTED)
+    if instrument.instrument_type in (InstrumentType.EQUITY, InstrumentType.ETF):
+        return f"{instrument.symbol}.NS"
+    if instrument.instrument_type is InstrumentType.INDEX:
+        symbol = instrument.symbol.strip().upper()
+        if symbol.startswith("^"):
+            return symbol
+        if symbol in INDEX_SYMBOLS:
+            return INDEX_SYMBOLS[symbol]
+    raise ValueError(UNSUPPORTED)
+
+
 class YahooFinanceProvider(MarketDataProvider):
     def __init__(self, db):
         self.instrument_service = InstrumentService(db)
@@ -20,15 +57,7 @@ class YahooFinanceProvider(MarketDataProvider):
         *,
         instrument: Instrument,
     ) -> str:
-        if (
-            instrument.exchange is not Exchange.NSE
-            or instrument.instrument_type is not InstrumentType.EQUITY
-        ):
-            raise ValueError(
-                "Yahoo Finance provider currently supports NSE equity instruments only."
-            )
-
-        return f"{instrument.symbol}.NS"
+        return yahoo_symbol_for(instrument)
 
     def fetch(
         self,
@@ -100,6 +129,9 @@ class YahooFinanceProvider(MarketDataProvider):
         points: list[MarketDataPoint] = []
 
         for timestamp, row in data.iterrows():
+            prices = [row["Open"], row["High"], row["Low"], row["Close"]]
+            if any(pd.isna(value) for value in prices):
+                continue  # Yahoo leaves some index days without prices
             if timestamp.tzinfo is None:
                 timestamp = timestamp.tz_localize("UTC")
             else:
@@ -112,7 +144,8 @@ class YahooFinanceProvider(MarketDataProvider):
                     high=float(row["High"]),
                     low=float(row["Low"]),
                     close=float(row["Close"]),
-                    volume=int(row["Volume"]),
+                    # Indices such as India VIX have no volume.
+                    volume=0 if pd.isna(row["Volume"]) else int(row["Volume"]),
                 )
             )
 

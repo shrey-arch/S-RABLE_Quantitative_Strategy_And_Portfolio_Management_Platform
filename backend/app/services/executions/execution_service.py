@@ -1,9 +1,13 @@
-﻿from datetime import datetime, timezone
+from datetime import datetime, timezone
 from uuid import UUID
 
 from app.enums import ExecutionStatus
 from app.executions.lifecycle import can_transition
 from app.models import Execution
+from app.services.notifications.execution_events import (
+    FINISHED,
+    notify_execution_finished,
+)
 from app.repositories.executions.execution_repository import (
     ExecutionRepository,
 )
@@ -24,6 +28,7 @@ class ExecutionService:
         timeframe: str,
         initial_capital,
         execution_config: dict | None,
+        run_settings: dict | None = None,
     ) -> Execution:
         return self.repository.create(
             strategy_id=strategy_id,
@@ -34,10 +39,20 @@ class ExecutionService:
             timeframe=timeframe,
             initial_capital=initial_capital,
             execution_config=execution_config,
+            run_settings=run_settings,
         )
 
     def list_executions(self) -> list[Execution]:
         return self.repository.list()
+
+    def list_for_user(self, *, user_id: UUID, **filters) -> list[Execution]:
+        return self.repository.list_for_user(user_id=user_id, **filters)
+
+    def get_for_user(self, *, execution_id: UUID, user_id: UUID) -> Execution | None:
+        return self.repository.get_by_id_for_user(
+            execution_id=execution_id,
+            user_id=user_id,
+        )
 
     def get_execution(
         self,
@@ -81,6 +96,11 @@ class ExecutionService:
         error_message: str | None = None,
         error_details: dict | None = None,
     ) -> Execution:
+        # Decide on the stored status, not a stale in-memory copy, and keep the
+        # row locked until this change is committed.
+        if isinstance(execution, Execution):
+            self.repository.lock(execution)
+
         current_status = execution.status
 
         if not can_transition(
@@ -125,9 +145,15 @@ class ExecutionService:
 
         execution.status = target_status
 
-        return self.repository.update(
+        updated = self.repository.update(
             execution=execution,
         )
+
+        # Phase 16: tell the owner the run finished (a real run only).
+        if isinstance(updated, Execution) and target_status in FINISHED:
+            notify_execution_finished(self.repository.db, updated)
+
+        return updated
 
     def start_execution(
         self,

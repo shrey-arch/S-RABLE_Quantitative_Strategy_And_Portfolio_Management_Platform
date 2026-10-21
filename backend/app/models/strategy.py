@@ -41,6 +41,13 @@ class Strategy(BaseModelMixin, Base):
         nullable=False,
     )
 
+    # Source of a PYTHON strategy (defines generate_signal(context)). It is run
+    # only inside the isolated sandbox (Feature 6), never in the app's process.
+    python_code: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
     version: Mapped[int] = mapped_column(
         Integer,
         default=1,

@@ -29,8 +29,13 @@ def _run_backtest_job(
     start_timestamp: datetime | None,
     end_timestamp: datetime | None,
     quantity: int,
+    run_options: dict | None = None,
 ):
     runner = BacktestJobRunner()
+
+    # run_options (instruments, costs) is only passed when set, so workers and
+    # tests written for the original six arguments keep working.
+    extra = {"run_options": run_options} if run_options else {}
 
     return runner.run(
         execution_id=execution_id,
@@ -39,6 +44,7 @@ def _run_backtest_job(
         start_timestamp=start_timestamp,
         end_timestamp=end_timestamp,
         quantity=quantity,
+        **extra,
     )
 
 
@@ -220,8 +226,34 @@ class BacktestExecutor:
         self._timeout_seconds = timeout_seconds
         self._context = multiprocessing.get_context("spawn")
         self._processes: set[multiprocessing.Process] = set()
+        self._by_execution: dict[UUID, multiprocessing.Process] = {}
         self._monitor_threads: set[Thread] = set()
         self._process_lock = Lock()
+
+    def has_capacity(self) -> bool:
+        """True when a new backtest can start now."""
+        with self._process_lock:
+            return len(self._processes) < self._max_workers
+
+    def cancel(self, execution_id: UUID) -> bool:
+        """Stop the worker running this execution. Returns True if one was stopped.
+
+        The caller marks the execution CANCELLED first; the worker's own status
+        changes then fail (the lifecycle forbids leaving CANCELLED), so a stopped
+        or late worker can never overwrite the cancellation.
+        """
+        with self._process_lock:
+            process = self._by_execution.pop(execution_id, None)
+
+        if process is None or not process.is_alive():
+            return False
+
+        process.terminate()
+        process.join(timeout=5)
+        if process.is_alive():
+            process.kill()
+            process.join()
+        return True
 
     def submit(
         self,
@@ -233,7 +265,11 @@ class BacktestExecutor:
         end_timestamp: datetime | None = None,
         quantity: int = 1,
         worker_target=None,
+        run_options: dict | None = None,
+        timeout_seconds: int | None = None,
     ) -> Future:
+        """Start one job in its own process. timeout_seconds overrides the
+        executor's limit for this job (validation runs take longer)."""
         if quantity <= 0:
             raise ValueError("quantity must be greater than 0.")
 
@@ -249,6 +285,7 @@ class BacktestExecutor:
                 end_timestamp,
                 quantity,
             ),
+            kwargs={"run_options": run_options} if run_options else {},
         )
 
         with self._process_lock:
@@ -258,6 +295,12 @@ class BacktestExecutor:
                 )
 
             self._processes.add(process)
+            self._by_execution = {
+                key: value
+                for key, value in self._by_execution.items()
+                if value in self._processes
+            }
+            self._by_execution[execution_id] = process
 
         try:
             process.start()
@@ -284,7 +327,7 @@ class BacktestExecutor:
                 "process": process,
                 "future": future,
                 "execution_id": execution_id,
-                "timeout_seconds": self._timeout_seconds,
+                "timeout_seconds": timeout_seconds or self._timeout_seconds,
                 "processes": self._processes,
                 "process_lock": self._process_lock,
             },

@@ -1,7 +1,8 @@
 from datetime import datetime
+from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.enums import PositionStatus
 
@@ -11,7 +12,8 @@ class PositionResponse(BaseModel):
     execution_id: UUID
     instrument_id: UUID
     broker_account_id: UUID | None
-    quantity: int
+    direction: Literal["LONG", "SHORT"] = "LONG"
+    quantity: int = Field(description="Size of the position (0 once closed).")
     average_price: float
     current_price: float | None
     market_value: float | None

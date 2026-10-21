@@ -11,12 +11,24 @@ export type FieldErrors = Record<string, string>;
 export class ApiError extends Error {
   readonly status: number;
   readonly fieldErrors: FieldErrors;
+  /**
+   * A structured `detail` object the backend sent instead of a message, such as
+   * Feature 6's STRATEGY_CODE_ERROR (the line, the exception and the traceback of
+   * a refused Python strategy). Undefined for the usual string or field-list details.
+   */
+  readonly detail?: Record<string, unknown>;
 
-  constructor(status: number, message: string, fieldErrors: FieldErrors = {}) {
+  constructor(
+    status: number,
+    message: string,
+    fieldErrors: FieldErrors = {},
+    detail?: Record<string, unknown>,
+  ) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.fieldErrors = fieldErrors;
+    this.detail = detail;
   }
 
   /** Backend could not be reached (server down, network error). */
@@ -70,6 +82,19 @@ export function toApiError(status: number, body: unknown): ApiError {
   // Never show server internals for 5xx; never reveal ownership for 404.
   if (status >= 500) return new ApiError(status, 'The server had a problem. Please try again.');
   if (status === 404) return new ApiError(status, DEFAULT_MESSAGES[404]!);
+
+  // A structured detail (Feature 6: STRATEGY_CODE_ERROR) is kept whole, so the
+  // editor can point at the line instead of showing a generic message.
+  if (detail && typeof detail === 'object' && !Array.isArray(detail)) {
+    const structured = detail as Record<string, unknown>;
+    const text = typeof structured.message === 'string' ? structured.message : undefined;
+    return new ApiError(
+      status,
+      text || (DEFAULT_MESSAGES[status] ?? `Request failed (${status}).`),
+      {},
+      structured,
+    );
+  }
 
   const message =
     typeof detail === 'string' && detail.trim()

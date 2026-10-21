@@ -165,6 +165,22 @@ class PortfolioOrchestrator:
             limits=limits,
         )
 
+        return cls.plan_rebalance(
+            state,
+            target,
+            prices,
+            minimum_trade_value=minimum_trade_value,
+        )
+
+    @staticmethod
+    def plan_rebalance(
+        state: PortfolioState,
+        target: TargetPortfolio,
+        prices: dict[str, Decimal | int | float | str],
+        *,
+        minimum_trade_value: Decimal | int | float | str = Decimal("0.00"),
+    ) -> PortfolioRebalancePlan:
+        """Simulated trades that move `state` toward `target`'s asset values."""
         target_values = target.target_values()
 
         # A target asset needs a market price for quantity-based rebalancing.

@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, Numeric
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
@@ -61,6 +61,14 @@ class Position(BaseModelMixin, Base):
         Numeric(18, 2),
         default=0,
         nullable=False,
+    )
+
+    # LONG or SHORT; quantity is always the size (0 or more).
+    direction: Mapped[str] = mapped_column(
+        String(5),
+        nullable=False,
+        default="LONG",
+        server_default="LONG",
     )
 
     position_status: Mapped[PositionStatus] = mapped_column(

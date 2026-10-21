@@ -18,6 +18,7 @@ class StrategyService:
         description: str | None,
         strategy_type,
         strategy_config: dict,
+        python_code: str | None = None,
     ) -> Strategy:
         return self.repository.create_for_user(
             user_id=user_id,
@@ -25,6 +26,7 @@ class StrategyService:
             description=description,
             strategy_type=strategy_type,
             strategy_config=strategy_config,
+            python_code=python_code,
         )
 
     def list_strategies(
@@ -54,6 +56,7 @@ class StrategyService:
         name: str | None = None,
         description: str | None = None,
         strategy_config: dict | None = None,
+        python_code: str | None = None,
         is_active: bool | None = None,
     ) -> Strategy:
         return self.repository.update_for_user(
@@ -61,6 +64,7 @@ class StrategyService:
             name=name,
             description=description,
             strategy_config=strategy_config,
+            python_code=python_code,
             is_active=is_active,
         )
 

@@ -25,6 +25,9 @@ class RiskConstraintResult:
     cash_reserve: Decimal
     available_capital: Decimal
     invested_capital: Decimal
+    # The limits that reduced the allocation: dicts with "limit", "value",
+    # "affected" (strategies or assets) and a plain-English "detail".
+    binding_limits: tuple[dict, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -129,13 +132,55 @@ class PortfolioRiskService:
                 amount, f"allocation[{strategy!r}]"
             )
 
+        binding: list[dict] = []
+        if reserve > 0:
+            binding.append(
+                {
+                    "limit": "cash_reserve",
+                    "value": str(reserve),
+                    "affected": [],
+                    "detail": f"{reserve} of the {total} capital is kept as cash.",
+                }
+            )
+
         strategy_cap = (total * strategy_limit).quantize(
             cls.CENT, rounding=ROUND_DOWN
         )
+        over_cap = sorted(
+            name for name, amount in requested.items() if amount > strategy_cap
+        )
+        if over_cap:
+            binding.append(
+                {
+                    "limit": "max_strategy_weight",
+                    "value": str(strategy_limit),
+                    "affected": over_cap,
+                    "detail": (
+                        f"Strategies above {strategy_limit:.2%} of capital were "
+                        f"cut to {strategy_cap}; the rest stays as cash."
+                    ),
+                }
+            )
         capped = {
             name: min(amount, strategy_cap)
             for name, amount in requested.items()
         }
+        before_scaling = sum(capped.values(), Decimal("0.00"))
+        if (
+            limits.max_invested_capital is not None
+            and max_invested < available
+            and before_scaling > max_invested
+        ):
+            binding.append(
+                {
+                    "limit": "max_invested_capital",
+                    "value": str(max_invested),
+                    "affected": [],
+                    "detail": (
+                        f"Investments were scaled down to at most {max_invested}."
+                    ),
+                }
+            )
         capped = cls._scale(capped, max_invested)
 
         asset_cap = (total * asset_limit).quantize(
@@ -162,6 +207,7 @@ class PortfolioRiskService:
             # Repeatedly reduce strategies sharing an overweight asset.
             # Each pass only decreases allocations, so caps cannot be
             # invalidated by a later pass.
+            reduced_assets: set[str] = set()
             for _ in range(len(capped) + 1):
                 exposure: dict[str, Decimal] = {}
                 for strategy, asset in strategy_assets.items():
@@ -178,6 +224,7 @@ class PortfolioRiskService:
                 }
                 if not overweight:
                     break
+                reduced_assets.update(overweight)
 
                 for asset in sorted(overweight):
                     strategies = sorted(
@@ -189,6 +236,20 @@ class PortfolioRiskService:
                     reduced = cls._scale(group, asset_cap)
                     for name, amount in reduced.items():
                         capped[name] = amount
+
+            if reduced_assets:
+                binding.append(
+                    {
+                        "limit": "max_asset_weight",
+                        "value": str(asset_limit),
+                        "affected": sorted(reduced_assets),
+                        "detail": (
+                            f"Assets above {asset_limit:.2%} of capital, counting "
+                            "every strategy that holds them, were cut to "
+                            f"{asset_cap}; the rest stays as cash."
+                        ),
+                    }
+                )
 
         elif asset_exposures is not None:
             if not isinstance(asset_exposures, Mapping) or not asset_exposures:
@@ -228,4 +289,5 @@ class PortfolioRiskService:
             cash_reserve=total - invested,
             available_capital=available,
             invested_capital=invested,
+            binding_limits=tuple(binding),
         )

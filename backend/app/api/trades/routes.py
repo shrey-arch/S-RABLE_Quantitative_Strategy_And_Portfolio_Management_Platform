@@ -1,14 +1,22 @@
+"""Simulated trades (fills) of the user's backtests (Phase 15).
+
+Each trade belongs to an order of one of the user's executions. They are stored
+from completed backtests and cannot be created here. Every route needs a login
+and only sees the user's own records (404 otherwise).
+"""
+
+from datetime import date
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_user
 from app.db import get_db
-from app.schemas.trades import (
-    CreateTradeRequest,
-    TradeResponse,
-    UpdateTradeRequest,
-)
+from app.enums import OrderSide
+from app.models import User
+from app.schemas.trades import TradeResponse, UpdateTradeRequest
+from app.services.records import service as records
 from app.services.trades.trade_service import TradeService
 
 
@@ -19,9 +27,13 @@ router = APIRouter(
 
 
 def _to_response(trade) -> TradeResponse:
+    order = trade.order
     return TradeResponse(
         id=trade.id,
         order_id=trade.order_id,
+        execution_id=order.execution_id if order is not None else None,
+        instrument_id=order.instrument_id if order is not None else None,
+        order_side=order.order_side if order is not None else None,
         broker_trade_id=trade.broker_trade_id,
         executed_quantity=trade.executed_quantity,
         executed_price=trade.executed_price,
@@ -33,52 +45,14 @@ def _to_response(trade) -> TradeResponse:
     )
 
 
-@router.post(
-    "",
-    response_model=TradeResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-def create_trade(
-    request: CreateTradeRequest,
-    db: Session = Depends(get_db),
-):
-    trade_service = TradeService(db)
-
-    trade = trade_service.create_trade(
-        order_id=request.order_id,
-        broker_trade_id=request.broker_trade_id,
-        executed_quantity=request.executed_quantity,
-        executed_price=request.executed_price,
-        brokerage=request.brokerage,
-        total_charges=request.total_charges,
-        trade_timestamp=request.trade_timestamp,
-    )
-
-    return _to_response(trade)
-
-
-@router.post(
-    "/execute",
-    response_model=TradeResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-def execute_trade(
-    request: CreateTradeRequest,
-    db: Session = Depends(get_db),
-):
-    trade_service = TradeService(db)
-
-    trade = trade_service.execute_trade(
-        order_id=request.order_id,
-        broker_trade_id=request.broker_trade_id,
-        executed_quantity=request.executed_quantity,
-        executed_price=request.executed_price,
-        brokerage=request.brokerage,
-        total_charges=request.total_charges,
-        trade_timestamp=request.trade_timestamp,
-    )
-
-    return _to_response(trade)
+def _owned(db: Session, user: User, trade_id: UUID):
+    trade = records.owned_trade(db, user.id, trade_id)
+    if not trade:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Trade not found.",
+        )
+    return trade
 
 
 @router.get(
@@ -86,12 +60,28 @@ def execute_trade(
     response_model=list[TradeResponse],
 )
 def list_trades(
+    execution_id: UUID | None = None,
+    instrument_id: UUID | None = None,
+    order_id: UUID | None = None,
+    side: OrderSide | None = None,
+    start_date: date | None = None,
+    end_date: date | None = None,
+    limit: int = Query(default=1000, ge=1, le=5000),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-    trade_service = TradeService(db)
-
-    trades = trade_service.list_trades()
-
+    """The user's simulated trades, newest first. Dates are IST days."""
+    trades = records.list_trades(
+        db,
+        current_user.id,
+        execution_id=execution_id,
+        instrument_id=instrument_id,
+        order_id=order_id,
+        side=side,
+        start=start_date,
+        end=end_date,
+        limit=limit,
+    )
     return [_to_response(trade) for trade in trades]
 
 
@@ -102,20 +92,9 @@ def list_trades(
 def get_trade(
     trade_id: UUID,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-    trade_service = TradeService(db)
-
-    trade = trade_service.get_trade(
-        trade_id=trade_id,
-    )
-
-    if not trade:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Trade not found.",
-        )
-
-    return _to_response(trade)
+    return _to_response(_owned(db, current_user, trade_id))
 
 
 @router.patch(
@@ -126,29 +105,24 @@ def update_trade(
     trade_id: UUID,
     request: UpdateTradeRequest,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-    trade_service = TradeService(db)
-
-    trade = trade_service.get_trade(
-        trade_id=trade_id,
-    )
-
-    if not trade:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Trade not found.",
+    trade = _owned(db, current_user, trade_id)
+    try:
+        trade = TradeService(db).update_trade(
+            trade=trade,
+            broker_trade_id=request.broker_trade_id,
+            executed_quantity=request.executed_quantity,
+            executed_price=request.executed_price,
+            brokerage=request.brokerage,
+            total_charges=request.total_charges,
+            trade_timestamp=request.trade_timestamp,
         )
-
-    trade = trade_service.update_trade(
-        trade=trade,
-        broker_trade_id=request.broker_trade_id,
-        executed_quantity=request.executed_quantity,
-        executed_price=request.executed_price,
-        brokerage=request.brokerage,
-        total_charges=request.total_charges,
-        trade_timestamp=request.trade_timestamp,
-    )
-
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
     return _to_response(trade)
 
 
@@ -159,19 +133,7 @@ def update_trade(
 def delete_trade(
     trade_id: UUID,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-    trade_service = TradeService(db)
-
-    trade = trade_service.get_trade(
-        trade_id=trade_id,
-    )
-
-    if not trade:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Trade not found.",
-        )
-
-    trade_service.delete_trade(
-        trade=trade,
-    )
+    """Deletes the trade record. Its order and the position are not changed."""
+    TradeService(db).delete_trade(trade=_owned(db, current_user, trade_id))

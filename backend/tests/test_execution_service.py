@@ -41,6 +41,7 @@ def test_create_execution():
         timeframe="1D",
         initial_capital=100000,
         execution_config={"lookback": 100},
+        run_settings=None,
     )
 
 

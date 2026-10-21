@@ -1,13 +1,65 @@
 from unittest.mock import MagicMock
 from uuid import uuid4
 
+import pytest
 from fastapi.testclient import TestClient
 
+from app.core.dependencies import get_current_user
 from app.main import app
 from app.enums import Exchange, InstrumentType
+from app.models import User
+from app.services.instruments.instrument_service import (
+    IN_USE_MESSAGE,
+    InstrumentInUseError,
+)
 
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def logged_in():
+    """Instrument routes require login: every test here runs as a logged-in user."""
+    app.dependency_overrides[get_current_user] = lambda: User(
+        id=uuid4(), email="instrument-test@example.com"
+    )
+    try:
+        yield
+    finally:
+        app.dependency_overrides.pop(get_current_user, None)
+
+
+@pytest.mark.parametrize(
+    "method, path",
+    [
+        ("get", "/instruments"),
+        ("post", "/instruments"),
+        ("get", f"/instruments/{uuid4()}"),
+        ("patch", f"/instruments/{uuid4()}"),
+        ("delete", f"/instruments/{uuid4()}"),
+    ],
+)
+def test_instrument_routes_require_login(method, path):
+    app.dependency_overrides.pop(get_current_user, None)  # no user for this test
+    assert getattr(client, method)(path).status_code == 401
+
+
+def test_delete_instrument_in_use_is_conflict():
+    import app.api.instruments.routes as instrument_routes
+
+    original_service = instrument_routes.InstrumentService
+    try:
+        mock_service = MagicMock()
+        mock_service.get_instrument.return_value = make_mock_instrument()
+        mock_service.delete_instrument.side_effect = InstrumentInUseError(IN_USE_MESSAGE)
+        instrument_routes.InstrumentService = lambda db: mock_service
+
+        response = client.delete(f"/instruments/{uuid4()}")
+
+        assert response.status_code == 409
+        assert response.json()["detail"] == IN_USE_MESSAGE
+    finally:
+        instrument_routes.InstrumentService = original_service
 
 
 def make_mock_instrument():

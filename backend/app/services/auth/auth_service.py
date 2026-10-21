@@ -50,6 +50,9 @@ class AuthService:
         if user.account_status.value != "ACTIVE":
             raise ValueError("User account is not active.")
 
+        # Phase 16: the profile shows when the user last logged in.
+        self.user_repository.record_login(user)
+
         return create_access_token(str(user.id))
 
     def update_profile(

@@ -1,10 +1,10 @@
-
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.dependencies import get_current_user
 from app.db import get_db
@@ -17,6 +17,14 @@ from app.schemas.portfolio.requests import (
     TargetPortfolioRequest,
     UpdatePortfolioStateRequest,
 )
+from app.schemas.portfolio.responses import (
+    AssetPrice,
+    PortfolioAccount,
+    PortfolioSummary,
+    RebalancePlanResponse,
+    TargetPortfolioResponse,
+)
+from app.services.portfolio import user_portfolio
 from app.services.portfolio.orchestrator import PortfolioOrchestrator
 from app.services.portfolio.portfolio_persistence_service import (
     PortfolioPersistenceService,
@@ -30,6 +38,8 @@ router = APIRouter(
     prefix="/portfolio",
     tags=["Portfolio"],
 )
+
+WEIGHT = Decimal("0.000001")
 
 
 def _candidates(
@@ -65,30 +75,73 @@ def _limits(
     )
 
 
-def _target_response(target: Any) -> dict[str, Any]:
-    return {
-        "capital": str(target.capital),
-        "regime": target.regime,
-        "invested_capital": str(target.invested_capital),
-        "cash_reserve": str(target.cash_reserve),
-        "positions": [
+def _weight(value: Any, total: Decimal) -> Decimal:
+    if total <= 0:
+        return Decimal("0")
+    return (Decimal(str(value)) / total).quantize(WEIGHT, rounding=ROUND_HALF_UP)
+
+
+def _target_response(target: Any, about: dict | None = None) -> dict[str, Any]:
+    capital = Decimal(str(target.capital))
+    strategies = (about or {}).get("strategies", {})
+    positions = []
+    strategy_weights: dict[str, Decimal] = {}
+    asset_weights: dict[str, Decimal] = {}
+    for position in target.positions:
+        weight = _weight(position.amount, capital)
+        strategy_weights[position.strategy] = weight
+        if position.asset is not None:
+            asset_weights[position.asset] = (
+                asset_weights.get(position.asset, Decimal("0")) + weight
+            )
+        meta = strategies.get(position.strategy, {})
+        positions.append(
             {
                 "strategy": position.strategy,
+                "strategy_id": meta.get("strategy_id"),
+                "name": meta.get("name"),
+                "strategy_key": meta.get("strategy_key"),
                 "asset": position.asset,
                 "score": position.score,
                 "amount": str(position.amount),
+                "weight": str(weight),
+                "validation": meta.get("validation"),
             }
-            for position in target.positions
+        )
+    cash_weight = Decimal("1") - sum(strategy_weights.values(), Decimal("0"))
+
+    return {
+        "capital": str(target.capital),
+        "regime": target.regime,
+        "regime_label": (about or {}).get("regime"),
+        "invested_capital": str(target.invested_capital),
+        "cash_reserve": str(target.cash_reserve),
+        "positions": positions,
+        "excluded": [
+            {**item, "score": item["score"]}
+            for item in (about or {}).get("excluded", [])
         ],
         "target_values": {
             asset: str(amount)
             for asset, amount in target.target_values().items()
         },
+        "strategy_weights": {k: str(v) for k, v in strategy_weights.items()},
+        "asset_weights": {k: str(v) for k, v in asset_weights.items()},
+        "cash_weight": str(cash_weight),
+        "binding_limits": list(
+            getattr(target.risk_result, "binding_limits", ()) or ()
+        ),
+        "require_validated": (about or {}).get("require_validated"),
+        "simulation_only": True,
     }
 
 
-def _rebalance_response(plan: Any) -> dict[str, Any]:
-    return {
+def _rebalance_response(
+    plan: Any,
+    about: dict | None = None,
+    prices: dict | None = None,
+) -> dict[str, Any]:
+    response = {
         "current_state": {
             "cash": str(plan.current_state.cash),
             "invested_value": str(plan.current_state.invested_value),
@@ -103,7 +156,7 @@ def _rebalance_response(plan: Any) -> dict[str, Any]:
                 for holding in plan.current_state.holdings
             ],
         },
-        "target": _target_response(plan.target),
+        "target": _target_response(plan.target, about),
         "rebalancing": {
             "starting_cash": str(plan.rebalancing.starting_cash),
             "ending_cash": str(plan.rebalancing.ending_cash),
@@ -122,25 +175,82 @@ def _rebalance_response(plan: Any) -> dict[str, Any]:
                 for trade in plan.rebalancing.trades
             ],
         },
+        "assets": [],
+        "ending_state": None,
+        "prices": [],
+        "simulation_only": True,
+    }
+    if prices is not None:
+        assets = user_portfolio.rebalance_assets(plan, prices)
+        ending = user_portfolio.ending_state(plan, assets)
+        response["assets"] = [
+            {k: (str(v) if isinstance(v, Decimal) else v) for k, v in row.items()}
+            for row in assets
+        ]
+        response["ending_state"] = {
+            "cash": str(ending["cash"]),
+            "invested_value": str(ending["invested_value"]),
+            "total_equity": str(ending["total_equity"]),
+            "holdings": [
+                {**h, "price": str(h["price"])} for h in ending["holdings"]
+            ],
+        }
+    return response
+
+
+def _summary(portfolio: Any) -> dict[str, Any]:
+    holdings = [h for h in (portfolio.holdings or []) if h.quantity > 0]
+    invested = sum(
+        (
+            (Decimal(str(h.current_price)) * h.quantity).quantize(Decimal("0.01"))
+            for h in holdings
+        ),
+        Decimal("0.00"),
+    )
+    cash = Decimal(str(portfolio.cash_balance))
+    return {
+        "id": portfolio.id,
+        "name": portfolio.name,
+        "description": portfolio.description,
+        "initial_capital": str(portfolio.initial_capital),
+        "cash": str(portfolio.cash_balance),
+        "invested_value": str(invested),
+        "total_equity": str(cash + invested),
+        "holdings_count": len(holdings),
         "simulation_only": True,
     }
 
 
-def _state_response(state: Any) -> dict[str, Any]:
+def _account_response(snapshot: dict) -> dict[str, Any]:
+    portfolio = snapshot["portfolio"]
+    state = snapshot["state"]
+    averages = snapshot["average_prices"]
+    weights = state.allocation_weights()
+    cash_weight = (
+        Decimal("1") - sum((Decimal(str(w)) for w in weights.values()), Decimal("0"))
+        if Decimal(str(state.total_equity)) > 0
+        else Decimal("0")
+    )
     return {
+        "id": portfolio.id,
+        "name": portfolio.name,
+        "description": portfolio.description,
+        "initial_capital": str(portfolio.initial_capital),
         "cash": str(state.cash),
         "invested_value": str(state.invested_value),
         "total_equity": str(state.total_equity),
         "allocation_weights": {
-            asset: str(weight)
-            for asset, weight in state.allocation_weights().items()
+            asset: str(weight) for asset, weight in weights.items()
         },
+        "cash_weight": str(cash_weight),
         "holdings": [
             {
                 "asset": holding.asset,
                 "quantity": holding.quantity,
                 "price": str(holding.price),
+                "average_price": str(averages.get(holding.asset, holding.price)),
                 "market_value": str(holding.market_value),
+                "weight": str(weights.get(holding.asset, Decimal("0"))),
             }
             for holding in state.holdings
         ],
@@ -148,12 +258,25 @@ def _state_response(state: Any) -> dict[str, Any]:
     }
 
 
-@router.post("/target")
+@router.post("/target", response_model=TargetPortfolioResponse)
 def calculate_target(
     request: TargetPortfolioRequest,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """A target allocation. Calculation only: nothing is saved, no order is placed."""
     try:
+        if request.strategy_ids:
+            target, about = user_portfolio.build_user_target(
+                db,
+                current_user.id,
+                request.capital,
+                request.strategy_ids,
+                regime_code=request.regime,
+                limits=_limits(request.limits),
+                require_validated=request.require_validated,
+            )
+            return _target_response(target, about)
         target = PortfolioOrchestrator.build_target(
             request.capital,
             _candidates(request.candidates),
@@ -166,19 +289,49 @@ def calculate_target(
     return _target_response(target)
 
 
-@router.post("/rebalance")
+@router.post("/rebalance", response_model=RebalancePlanResponse)
 def propose_rebalance(
     request: PortfolioRebalanceRequest,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Simulated trades toward a target. Calculation only: nothing is saved, no order is placed."""
+    holdings = {
+        asset: (holding.quantity, holding.price)
+        for asset, holding in request.holdings.items()
+    }
     try:
+        if request.strategy_ids:
+            state = PortfolioStateService.create(request.cash, holdings)
+            if state.total_equity <= 0:
+                raise ValueError("Portfolio total equity must be greater than zero.")
+            target, about = user_portfolio.build_user_target(
+                db,
+                current_user.id,
+                state.total_equity,
+                request.strategy_ids,
+                regime_code=request.regime,
+                limits=_limits(request.limits),
+                require_validated=request.require_validated,
+            )
+            prices, used = user_portfolio.fill_prices(
+                db, target, request.prices, holdings
+            )
+            plan = PortfolioOrchestrator.plan_rebalance(
+                state,
+                target,
+                prices,
+                minimum_trade_value=request.minimum_trade_value,
+            )
+            response = _rebalance_response(plan, about, prices)
+            response["prices"] = [
+                {**item, "price": str(item["price"])} for item in used
+            ]
+            return response
         plan = PortfolioOrchestrator.build_rebalance(
             _candidates(request.candidates),
             cash=request.cash,
-            holdings={
-                asset: (holding.quantity, holding.price)
-                for asset, holding in request.holdings.items()
-            },
+            holdings=holdings,
             prices=request.prices,
             regime=request.regime,
             limits=_limits(request.limits),
@@ -187,10 +340,23 @@ def propose_rebalance(
     except (ValueError, TypeError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    return _rebalance_response(plan)
+    return _rebalance_response(plan, None, request.prices)
 
 
-@router.post("/accounts", status_code=201)
+@router.get("/prices", response_model=list[AssetPrice])
+def latest_prices(
+    asset: list[str] = Query(default=[], max_length=50),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Each asset's latest stored daily close (by trading symbol), to prefill prices."""
+    return [
+        {**item, "price": None if item["price"] is None else str(item["price"])}
+        for item in user_portfolio.latest_prices(db, asset)
+    ]
+
+
+@router.post("/accounts", status_code=201, response_model=PortfolioSummary)
 def create_portfolio(
     request: CreatePortfolioRequest,
     db: Session = Depends(get_db),
@@ -219,50 +385,32 @@ def create_portfolio(
         db.rollback()
         raise
 
-    return {
-        "id": str(portfolio.id),
-        "name": portfolio.name,
-        "description": portfolio.description,
-        "initial_capital": str(portfolio.initial_capital),
-        "cash": str(portfolio.cash_balance),
-        "simulation_only": True,
-    }
+    return _summary(portfolio)
 
 
-@router.get("/accounts")
+@router.get("/accounts", response_model=list[PortfolioSummary])
 def list_portfolios(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    from sqlalchemy import select
-
     portfolios = db.scalars(
         select(Portfolio)
+        .options(selectinload(Portfolio.holdings))
         .where(Portfolio.user_id == current_user.id)
         .order_by(Portfolio.created_at.desc())
     ).all()
 
-    return [
-        {
-            "id": str(portfolio.id),
-            "name": portfolio.name,
-            "description": portfolio.description,
-            "initial_capital": str(portfolio.initial_capital),
-            "cash": str(portfolio.cash_balance),
-            "simulation_only": True,
-        }
-        for portfolio in portfolios
-    ]
+    return [_summary(portfolio) for portfolio in portfolios]
 
 
-@router.get("/accounts/{portfolio_id}")
+@router.get("/accounts/{portfolio_id}", response_model=PortfolioAccount)
 def get_portfolio_state(
     portfolio_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     try:
-        state = PortfolioPersistenceService.load(
+        snapshot = PortfolioPersistenceService.snapshot(
             db,
             portfolio_id,
             current_user.id,
@@ -270,10 +418,10 @@ def get_portfolio_state(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-    return _state_response(state)
+    return _account_response(snapshot)
 
 
-@router.put("/accounts/{portfolio_id}/state")
+@router.put("/accounts/{portfolio_id}/state", response_model=PortfolioAccount)
 def update_portfolio_state(
     portfolio_id: UUID,
     request: UpdatePortfolioStateRequest,
@@ -289,11 +437,16 @@ def update_portfolio_state(
             },
         )
 
-        saved = PortfolioPersistenceService.save(
+        PortfolioPersistenceService.save(
             db,
             portfolio_id,
             current_user.id,
             state,
+        )
+        snapshot = PortfolioPersistenceService.snapshot(
+            db,
+            portfolio_id,
+            current_user.id,
         )
     except ValueError as exc:
         status_code = (
@@ -306,4 +459,4 @@ def update_portfolio_state(
             detail=str(exc),
         ) from exc
 
-    return _state_response(saved)
+    return _account_response(snapshot)

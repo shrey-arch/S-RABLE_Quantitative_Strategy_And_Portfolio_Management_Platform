@@ -54,6 +54,7 @@ def test_create_strategy():
             "fast_period": 10,
             "slow_period": 30,
         }
+        mock_strategy.python_code = None
         mock_strategy.version = 1
         mock_strategy.is_active = True
         mock_strategy.created_at = MagicMock()
@@ -110,6 +111,7 @@ def test_create_strategy():
                 "entry_conditions": [],
                 "exit_conditions": [],
             },
+            python_code=None,
         )
 
     finally:
@@ -141,6 +143,7 @@ def test_get_strategy():
             "fast_period": 10,
             "slow_period": 30,
         }
+        mock_strategy.python_code = None
         mock_strategy.version = 1
         mock_strategy.is_active = True
         mock_strategy.created_at = MagicMock()
@@ -242,6 +245,7 @@ def test_update_strategy():
             "fast_period": 20,
             "slow_period": 50,
         }
+        mock_strategy.python_code = None
         mock_strategy.version = 1
         mock_strategy.is_active = False
         mock_strategy.created_at = MagicMock()
@@ -301,6 +305,7 @@ def test_update_strategy():
                 "entry_conditions": [],
                 "exit_conditions": [],
             },
+            python_code=None,
             is_active=False,
         )
 

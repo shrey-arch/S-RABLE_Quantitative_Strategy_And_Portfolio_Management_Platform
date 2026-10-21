@@ -8,6 +8,16 @@ from app.repositories.instruments.instrument_repository import (
 )
 
 
+class InstrumentInUseError(ValueError):
+    """The instrument has stored price data or trading records."""
+
+
+IN_USE_MESSAGE = (
+    "This instrument has stored price data or trading records, so it cannot be "
+    "deleted. Deactivate it instead."
+)
+
+
 class InstrumentService:
     def __init__(self, db):
         self.repository = InstrumentRepository(db)
@@ -111,6 +121,18 @@ class InstrumentService:
         *,
         instrument: Instrument,
     ) -> None:
-        self.repository.delete(
-            instrument=instrument,
-        )
+        """
+        Deletes an instrument nothing depends on. Market data, orders and positions
+        reference instruments without cascading, so an instrument in use is refused
+        (deactivate it instead). Executions keep their row with the instrument cleared.
+        """
+        if self.repository.has_dependent_records(instrument_id=instrument.id):
+            raise InstrumentInUseError(IN_USE_MESSAGE)
+
+        try:
+            self.repository.delete(
+                instrument=instrument,
+            )
+        except IntegrityError as exc:
+            self.repository.db.rollback()
+            raise InstrumentInUseError(IN_USE_MESSAGE) from exc

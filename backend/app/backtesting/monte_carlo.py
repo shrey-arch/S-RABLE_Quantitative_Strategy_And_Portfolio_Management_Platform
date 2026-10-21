@@ -8,6 +8,20 @@ import numpy as np
 from app.backtesting.analytics import calculate_periodic_returns
 
 
+def _histogram(values: np.ndarray, bins: int) -> dict:
+    """Equal-width bins over the simulated values: edges (bins + 1) and counts."""
+    low, high = float(np.min(values)), float(np.max(values))
+    if low == high:
+        # Every simulation gave the same value: one bin around it.
+        low, high = low - 0.5e-9, high + 0.5e-9
+        bins = 1
+    counts, edges = np.histogram(values, bins=bins, range=(low, high))
+    return {
+        "edges": [float(edge) for edge in edges],
+        "counts": [int(count) for count in counts],
+    }
+
+
 class MonteCarloSimulator:
     """Bootstrap daily portfolio returns with replacement.
 
@@ -26,7 +40,20 @@ class MonteCarloSimulator:
         simulations: int = 1000,
         seed: int = 42,
         periods: int | None = None,
+        histogram_bins: int | None = None,
     ) -> dict:
+        """histogram_bins (optional): also return histograms of the simulated
+        cumulative returns and maximum drawdowns, with that many equal-width bins."""
+        if (
+            histogram_bins is not None
+            and (
+                isinstance(histogram_bins, bool)
+                or not isinstance(histogram_bins, Integral)
+                or not 1 <= histogram_bins <= 200
+            )
+        ):
+            raise ValueError("histogram_bins must be an integer from 1 to 200.")
+
         if (
             isinstance(initial_capital, bool)
             or not isinstance(initial_capital, Real)
@@ -100,7 +127,7 @@ class MonteCarloSimulator:
             [5, 25, 50, 75, 95],
         )
 
-        return {
+        result = {
             "method": "daily_return_bootstrap_with_replacement",
             "input_series": "simple returns between consecutive equity observations",
             "assumptions": [
@@ -151,6 +178,12 @@ class MonteCarloSimulator:
                 },
             },
         }
+        if histogram_bins is not None:
+            result["histograms"] = {
+                "cumulative_return": _histogram(cumulative_returns, int(histogram_bins)),
+                "maximum_drawdown": _histogram(max_drawdowns, int(histogram_bins)),
+            }
+        return result
 
     def test_mean_return_significance(
         self,

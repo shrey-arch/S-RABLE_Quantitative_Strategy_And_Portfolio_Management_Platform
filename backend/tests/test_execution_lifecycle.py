@@ -37,15 +37,15 @@ def test_pending_cannot_transition_to_completed():
     )
 
 
-def test_pending_cannot_transition_to_failed():
-    assert not can_transition(
+def test_pending_can_transition_to_failed():
+    assert can_transition(
         ExecutionStatus.PENDING,
         ExecutionStatus.FAILED,
     )
 
 
-def test_pending_cannot_transition_to_cancelled():
-    assert not can_transition(
+def test_pending_can_transition_to_cancelled():
+    assert can_transition(
         ExecutionStatus.PENDING,
         ExecutionStatus.CANCELLED,
     )

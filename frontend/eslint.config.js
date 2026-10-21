@@ -6,7 +6,16 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'openapi', 'src/api/schema.d.ts'] },
+  {
+    ignores: [
+      'dist',
+      'node_modules',
+      'openapi',
+      'src/api/schema.d.ts',
+      'playwright-report',
+      'test-results',
+    ],
+  },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended, prettier],
@@ -18,5 +27,10 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
+  },
+  {
+    // shadcn/ui files export style helpers (e.g. buttonVariants) next to components.
+    files: ['src/components/ui/**/*.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
 );

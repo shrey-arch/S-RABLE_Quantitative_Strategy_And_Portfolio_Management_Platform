@@ -86,7 +86,8 @@ def test_save_updates_cash_and_existing_holding():
     assert portfolio.cash_balance == Decimal("500.00")
     assert holding.quantity == 4
     assert holding.current_price == Decimal("22.00")
-    assert holding.average_price == Decimal("15.00")
+    # Buying 2 more at 22.00 blends the average cost: (2 x 15 + 2 x 22) / 4.
+    assert holding.average_price == Decimal("18.50")
     assert saved.cash == Decimal("500.00")
     db.commit.assert_called_once()
 

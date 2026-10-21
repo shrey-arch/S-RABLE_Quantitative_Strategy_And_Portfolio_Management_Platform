@@ -1,4 +1,4 @@
-﻿from dataclasses import dataclass
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import StrEnum
 from uuid import UUID
@@ -104,7 +104,7 @@ def build_backtest_error_payload(
 
     classification = classify_backtest_error(error, context=context)
 
-    return {
+    payload = {
         "category": classification.category.value,
         "code": classification.code.value,
         "message": str(error) or type(error).__name__,
@@ -112,3 +112,15 @@ def build_backtest_error_payload(
         "execution_id": str(execution_id),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+    # Feature 6: a custom Python strategy error carries its own structured detail
+    # (line, exception type, cleaned traceback, bar date). Surface it to the API.
+    detail = getattr(error, "detail", None)
+    if isinstance(detail, dict):
+        payload["code"] = detail.get("code", payload["code"])
+        payload["category"] = BacktestErrorCategory.STRATEGY.value
+        payload["strategy_error"] = {
+            key: detail.get(key)
+            for key in ("phase", "exception", "message", "line", "bar_date", "traceback", "problems")
+            if detail.get(key) is not None
+        }
+    return payload

@@ -69,7 +69,10 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Update Current User Profile */
+        /**
+         * Update Current User Profile
+         * @description Only full name, phone number and profile image URL can be changed.
+         */
         patch: operations["update_current_user_profile_users_me_patch"];
         trace?: never;
     };
@@ -181,6 +184,105 @@ export interface paths {
         patch: operations["update_strategy_strategies__strategy_id__patch"];
         trace?: never;
     };
+    "/sandbox/reference": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Sandbox Reference
+         * @description The context API, the rules and the limits, as the backend enforces them.
+         */
+        get: operations["sandbox_reference_sandbox_reference_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/strategies/{strategy_id}/test-run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Test Run
+         * @description Run the saved Python code over the last `bars` stored daily bars. Nothing
+         *     is stored: the signals, the logs and any error come straight back.
+         */
+        post: operations["test_run_strategies__strategy_id__test_run_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/strategy-registry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Registry Strategies
+         * @description The built-in strategies the backtest engine can run, in registry order.
+         */
+        get: operations["list_registry_strategies_strategy_registry_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/strategy-registry/{strategy_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Registry Strategy */
+        get: operations["get_registry_strategy_strategy_registry__strategy_key__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/strategy-registry/{strategy_key}/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate Registry Parameters
+         * @description Check parameters exactly as a backtest would (StrategyRegistry.get),
+         *     without running anything. Invalid values return 422 with the reason.
+         */
+        post: operations["validate_registry_parameters_strategy_registry__strategy_key__validate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/instruments": {
         parameters: {
             query?: never;
@@ -218,6 +320,148 @@ export interface paths {
         patch: operations["update_instrument_instruments__instrument_id__patch"];
         trace?: never;
     };
+    "/instruments/{instrument_id}/market-data": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Market Data
+         * @description Stored OHLCV bars for the instrument, oldest first.
+         */
+        get: operations["list_market_data_instruments__instrument_id__market_data_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/instruments/{instrument_id}/market-data/coverage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Coverage
+         * @description What is stored for the instrument: row count, first and last bar, when data was
+         *     last imported, expected NSE trading days without data, and data-quality checks.
+         */
+        get: operations["get_coverage_instruments__instrument_id__market_data_coverage_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/instruments/{instrument_id}/market-data/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import Market Data
+         * @description Downloads daily bars from the provider for the date range and stores the new ones.
+         *     Historical data only: the range cannot end after today (IST).
+         */
+        post: operations["import_market_data_instruments__instrument_id__market_data_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/indicators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Indicators
+         * @description Indicator types a strategy configuration may use.
+         */
+        get: operations["list_indicators_indicators_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/indicators/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Indicator Info */
+        get: operations["get_indicator_info_indicators__key__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/indicators/{key}/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate Indicator Parameters
+         * @description Checks parameters the same way saving a strategy does; 422 with the reason.
+         */
+        post: operations["validate_indicator_parameters_indicators__key__validate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/instruments/{instrument_id}/indicators/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Indicator Series
+         * @description The indicator computed on the instrument's stored daily bars. Bars before
+         *     start_date are used as warm-up, so values match a calculation over the full
+         *     history; one point is returned per stored bar in the range, with the bar's
+         *     timestamp (null while the indicator has too few bars).
+         */
+        post: operations["indicator_series_instruments__instrument_id__indicators__key__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/executions": {
         parameters: {
             query?: never;
@@ -225,11 +469,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Executions */
+        /**
+         * List Executions
+         * @description The current user's executions, newest first.
+         */
         get: operations["list_executions_executions_get"];
         put?: never;
-        /** Create Execution */
-        post: operations["create_execution_executions_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -251,55 +497,24 @@ export interface paths {
         delete: operations["delete_execution_executions__execution_id__delete"];
         options?: never;
         head?: never;
-        /** Update Execution */
-        patch: operations["update_execution_executions__execution_id__patch"];
-        trace?: never;
-    };
-    "/executions/{execution_id}/start": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Start Execution */
-        post: operations["start_execution_executions__execution_id__start_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
         patch?: never;
         trace?: never;
     };
-    "/executions/{execution_id}/complete": {
+    "/executions/{execution_id}/results": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get Execution Results
+         * @description Analytics of a completed run, computed on the server from its stored result
+         *     (equity curve and fills). Annualised with 252 bars a year and a 6.5% risk-free rate.
+         */
+        get: operations["get_execution_results_executions__execution_id__results_get"];
         put?: never;
-        /** Complete Execution */
-        post: operations["complete_execution_executions__execution_id__complete_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/executions/{execution_id}/fail": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Fail Execution */
-        post: operations["fail_execution_executions__execution_id__fail_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -315,7 +530,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Cancel Execution */
+        /**
+         * Cancel Execution
+         * @description Cancel a PENDING or RUNNING execution and stop its worker.
+         */
         post: operations["cancel_execution_executions__execution_id__cancel_post"];
         delete?: never;
         options?: never;
@@ -340,6 +558,217 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/validations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Validations
+         * @description The current user's validation runs, newest first, with their verdicts.
+         */
+        get: operations["list_validations_validations_get"];
+        put?: never;
+        /** Create Validation */
+        post: operations["create_validation_validations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/validations/{execution_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Validation
+         * @description The validation's stages, checks, thresholds and configuration. While it runs,
+         *     the stages that have finished are already filled in.
+         */
+        get: operations["get_validation_validations__execution_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regime/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Models
+         * @description Every regime model, newest first.
+         */
+        get: operations["list_models_regime_models_get"];
+        put?: never;
+        /**
+         * Train Model
+         * @description Start training a new model on the reference instrument. When it is READY it
+         *     becomes the active model for everyone.
+         */
+        post: operations["train_model_regime_models_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regime/models/{model_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Model */
+        get: operations["get_model_regime_models__model_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regime/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Current Regime
+         * @description The active model's regime on the reference instrument's last stored bar.
+         */
+        get: operations["current_regime_regime_current_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regime/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Regime History
+         * @description The reference instrument's closes with the regime of each day, its periods and
+         *     the transitions between them. Features use all stored bars before each day, so
+         *     a range's first days are classified like any other day.
+         */
+        get: operations["regime_history_regime_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scoring/definitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Scoring Definitions
+         * @description How scores are made: factors, directions, default weights and regime rules.
+         */
+        get: operations["scoring_definitions_scoring_definitions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scoring": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Score
+         * @description Score and rank the current user's strategies (nothing is saved).
+         */
+        post: operations["score_scoring_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scoring/regime-fit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Regime Fit
+         * @description Each core strategy's compatibility with the current regime, by the rule table.
+         */
+        get: operations["regime_fit_scoring_regime_fit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/executions/{execution_id}/records": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Record Counts
+         * @description How many orders, trades and positions this run has stored.
+         */
+        get: operations["record_counts_executions__execution_id__records_get"];
+        put?: never;
+        /**
+         * Store Records
+         * @description Store a completed backtest's simulated orders, trades and positions (for runs
+         *     completed before records were stored automatically).
+         */
+        post: operations["store_records_executions__execution_id__records_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/orders": {
         parameters: {
             query?: never;
@@ -347,11 +776,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Orders */
+        /**
+         * List Orders
+         * @description The user's simulated orders, newest first. Dates are IST days.
+         */
         get: operations["list_orders_orders_get"];
         put?: never;
-        /** Create Order */
-        post: operations["create_order_orders_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -369,7 +800,10 @@ export interface paths {
         get: operations["get_order_orders__order_id__get"];
         put?: never;
         post?: never;
-        /** Delete Order */
+        /**
+         * Delete Order
+         * @description Deletes the order record and its trades. Positions are not changed.
+         */
         delete: operations["delete_order_orders__order_id__delete"];
         options?: never;
         head?: never;
@@ -377,7 +811,7 @@ export interface paths {
         patch: operations["update_order_orders__order_id__patch"];
         trace?: never;
     };
-    "/orders/{order_id}/reject": {
+    "/orders/{order_id}/open": {
         parameters: {
             query?: never;
             header?: never;
@@ -386,25 +820,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Reject Order */
-        post: operations["reject_order_orders__order_id__reject_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/orders/{order_id}/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Cancel Order */
-        post: operations["cancel_order_orders__order_id__cancel_post"];
+        /** Open Order */
+        post: operations["open_order_orders__order_id__open_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -428,7 +845,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/orders/{order_id}/open": {
+    "/orders/{order_id}/cancel": {
         parameters: {
             query?: never;
             header?: never;
@@ -437,8 +854,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Open Order */
-        post: operations["open_order_orders__order_id__open_post"];
+        /** Cancel Order */
+        post: operations["cancel_order_orders__order_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders/{order_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Order */
+        post: operations["reject_order_orders__order_id__reject_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -452,28 +886,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Trades */
+        /**
+         * List Trades
+         * @description The user's simulated trades, newest first. Dates are IST days.
+         */
         get: operations["list_trades_trades_get"];
         put?: never;
-        /** Create Trade */
-        post: operations["create_trade_trades_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/trades/execute": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Execute Trade */
-        post: operations["execute_trade_trades_execute_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -491,7 +910,10 @@ export interface paths {
         get: operations["get_trade_trades__trade_id__get"];
         put?: never;
         post?: never;
-        /** Delete Trade */
+        /**
+         * Delete Trade
+         * @description Deletes the trade record. Its order and the position are not changed.
+         */
         delete: operations["delete_trade_trades__trade_id__delete"];
         options?: never;
         head?: never;
@@ -506,11 +928,14 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Positions */
+        /**
+         * List Positions
+         * @description The user's simulated positions, latest update first. Dates (IST days) apply
+         *     to the last update.
+         */
         get: operations["list_positions_positions_get"];
         put?: never;
-        /** Create Position */
-        post: operations["create_position_positions_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -528,7 +953,10 @@ export interface paths {
         get: operations["get_position_positions__position_id__get"];
         put?: never;
         post?: never;
-        /** Delete Position */
+        /**
+         * Delete Position
+         * @description Deletes the position record. Orders and trades are not changed.
+         */
         delete: operations["delete_position_positions__position_id__delete"];
         options?: never;
         head?: never;
@@ -545,7 +973,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Calculate Target */
+        /**
+         * Calculate Target
+         * @description A target allocation. Calculation only: nothing is saved, no order is placed.
+         */
         post: operations["calculate_target_portfolio_target_post"];
         delete?: never;
         options?: never;
@@ -562,8 +993,31 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Propose Rebalance */
+        /**
+         * Propose Rebalance
+         * @description Simulated trades toward a target. Calculation only: nothing is saved, no order is placed.
+         */
         post: operations["propose_rebalance_portfolio_rebalance_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/portfolio/prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Latest Prices
+         * @description Each asset's latest stored daily close (by trading symbol), to prefill prices.
+         */
+        get: operations["latest_prices_portfolio_prices_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -622,25 +1076,182 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/notifications": {
+    "/portfolio-backtests": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Notifications */
-        get: operations["list_notifications_notifications_get"];
+        /**
+         * List Portfolio Backtests
+         * @description The user's portfolio backtests, newest first.
+         */
+        get: operations["list_portfolio_backtests_portfolio_backtests_get"];
         put?: never;
-        /** Create Notification */
-        post: operations["create_notification_notifications_post"];
+        /** Create Portfolio Backtest */
+        post: operations["create_portfolio_backtest_portfolio_backtests_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/notifications/execution": {
+    "/portfolio-backtests/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Portfolio Backtest */
+        get: operations["get_portfolio_backtest_portfolio_backtests__run_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/portfolio-backtests/{run_id}/results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Portfolio Backtest Results
+         * @description Everything the results page shows, as stored when the run completed.
+         */
+        get: operations["get_portfolio_backtest_results_portfolio_backtests__run_id__results_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Sessions
+         * @description The user's live sessions, newest first.
+         */
+        get: operations["list_sessions_live_sessions_get"];
+        put?: never;
+        /** Create Session */
+        post: operations["create_session_live_sessions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Session */
+        get: operations["get_session_live_sessions__session_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}/bars": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Bars
+         * @description The day's closed bars by the session clock and the forming one.
+         */
+        get: operations["get_bars_live_sessions__session_id__bars_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Events
+         * @description The audit log in order: every bar, signal, order, fill, risk check and data event.
+         */
+        get: operations["get_events_live_sessions__session_id__events_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}/fills": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Fills */
+        get: operations["get_fills_live_sessions__session_id__fills_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Stream
+         * @description Server-Sent Events: the audit log as it grows (event: bar, signal, fill,
+         *     equity, risk, data, status...), the forming bar and the session snapshot every
+         *     second, and a heartbeat every 15 seconds. It ends when the session has ended.
+         */
+        get: operations["stream_live_sessions__session_id__stream_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}/pause": {
         parameters: {
             query?: never;
             header?: never;
@@ -649,8 +1260,163 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create Execution Notification */
-        post: operations["create_execution_notification_notifications_execution_post"];
+        /** Pause Session */
+        post: operations["pause_session_live_sessions__session_id__pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resume Session */
+        post: operations["resume_session_live_sessions__session_id__resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/sessions/{session_id}/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stop Session
+         * @description The kill switch: the runner stops the session on its next tick (within a
+         *     second): square off now, or leave the position for the 15:20 square-off.
+         */
+        post: operations["stop_session_live_sessions__session_id__stop_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/stop-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stop All
+         * @description Stop every running session of the user and square off now.
+         */
+        post: operations["stop_all_live_stop_all_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/replay-days": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Replay Days
+         * @description Days with recorded 1-minute bars of the instrument, newest first.
+         */
+        get: operations["replay_days_live_replay_days_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Status */
+        get: operations["status_live_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/live/charges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Charges
+         * @description The intraday (MIS) charges every live fill pays.
+         */
+        get: operations["charges_live_charges_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Notifications
+         * @description Newest first. Filters: is_read (false = the Unread tab), type, priority.
+         */
+        get: operations["list_notifications_notifications_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notifications/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Unread Count
+         * @description The header bell: how many of the user's notifications are unread.
+         */
+        get: operations["unread_count_notifications_unread_count_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -672,8 +1438,397 @@ export interface paths {
         delete: operations["delete_notification_notifications__notification_id__delete"];
         options?: never;
         head?: never;
-        /** Update Notification */
+        /**
+         * Update Notification
+         * @description Mark read or unread. read_at is set by the server.
+         */
         patch: operations["update_notification_notifications__notification_id__patch"];
+        trace?: never;
+    };
+    "/paper/account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Account
+         * @description The account (created with Rs 10,00,000 on first use). Open orders are
+         *     matched against the latest quotes first.
+         */
+        get: operations["get_account_paper_account_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/account/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Account
+         * @description Delete every order, fill and holding and start again with the given cash.
+         */
+        post: operations["reset_account_paper_account_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/account/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Settings */
+        patch: operations["update_settings_paper_account_settings_patch"];
+        trace?: never;
+    };
+    "/paper/watchlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set Watchlist */
+        put: operations["set_watchlist_paper_watchlist_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Quotes
+         * @description Latest quotes (cached 60 s; may be delayed up to about 15 minutes).
+         */
+        get: operations["get_quotes_paper_quotes_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/charges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Charges
+         * @description The charge rates applied to every paper fill.
+         */
+        get: operations["get_charges_paper_charges_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/orders/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Order
+         * @description Estimated price, value, charges and funds check. Nothing is placed.
+         */
+        post: operations["preview_order_paper_orders_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Orders
+         * @description Newest first. `open_only` = OPEN and TRIGGER_PENDING.
+         */
+        get: operations["list_orders_paper_orders_get"];
+        put?: never;
+        /** Place Order */
+        post: operations["place_order_paper_orders_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/orders/{order_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Order */
+        get: operations["get_order_paper_orders__order_id__get"];
+        put?: never;
+        post?: never;
+        /**
+         * Cancel Order
+         * @description Cancel an open order (it stays in the order book as CANCELLED).
+         */
+        delete: operations["cancel_order_paper_orders__order_id__delete"];
+        options?: never;
+        head?: never;
+        /** Modify Order */
+        patch: operations["modify_order_paper_orders__order_id__patch"];
+        trace?: never;
+    };
+    "/paper/holdings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Holdings */
+        get: operations["list_holdings_paper_holdings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/fills": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Fills
+         * @description Every fill, newest first, with its charge breakdown.
+         */
+        get: operations["list_fills_paper_fills_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/orders/{order_id}/journal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Journal
+         * @description Your note and tags on an order (any status).
+         */
+        patch: operations["update_journal_paper_orders__order_id__journal_patch"];
+        trace?: never;
+    };
+    "/paper/deployments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Deployments */
+        get: operations["list_deployments_paper_deployments_get"];
+        put?: never;
+        /**
+         * Create Deployment
+         * @description The strategy trades the paper account at each close from the next session.
+         */
+        post: operations["create_deployment_paper_deployments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/deployments/from-validation/{validation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Paper Stage
+         * @description Validation stage 5: the validated strategy, instruments and parameters run
+         *     on the paper account for 30 days; the result is written into the report.
+         */
+        post: operations["start_paper_stage_paper_deployments_from_validation__validation_id__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/deployments/run-due": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Due Now
+         * @description Process your deployments up to the latest settled close now (the daily job
+         *     also does this on its own). Safe to repeat.
+         */
+        post: operations["run_due_now_paper_deployments_run_due_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/deployments/{deployment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Deployment */
+        get: operations["get_deployment_paper_deployments__deployment_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/deployments/{deployment_id}/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause Deployment */
+        post: operations["pause_deployment_paper_deployments__deployment_id__pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/deployments/{deployment_id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resume Deployment */
+        post: operations["resume_deployment_paper_deployments__deployment_id__resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/deployments/{deployment_id}/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Stop Deployment */
+        post: operations["stop_deployment_paper_deployments__deployment_id__stop_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/paper/performance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Account Performance
+         * @description The account's value at each close the daily job recorded, and its metrics.
+         */
+        get: operations["account_performance_paper_performance_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/": {
@@ -697,6 +1852,267 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AccountOut */
+        AccountOut: {
+            /** Id */
+            id: string;
+            /** Initial Cash */
+            initial_cash: number;
+            /** Cash */
+            cash: number;
+            /** Blocked Cash */
+            blocked_cash: number;
+            /** Available Cash */
+            available_cash: number;
+            /** Invested */
+            invested: number;
+            /** Holdings Value */
+            holdings_value: number | null;
+            /**
+             * Live Positions Value
+             * @description Open intraday positions of live paper sessions at their last price (a short is negative).
+             * @default 0
+             */
+            live_positions_value: number;
+            /** Unrealised Pnl */
+            unrealised_pnl: number | null;
+            /** Realised Pnl */
+            realised_pnl: number;
+            /** Total Charges */
+            total_charges: number;
+            /** Equity */
+            equity: number | null;
+            /** Total Pnl */
+            total_pnl: number | null;
+            /** Holdings Count */
+            holdings_count: number;
+            /** All Priced */
+            all_priced: boolean;
+            /** Slippage Bps */
+            slippage_bps: number;
+            /** Brokerage Per Order */
+            brokerage_per_order: number;
+            /** Watchlist */
+            watchlist: string[];
+            /** Reset Count */
+            reset_count: number;
+            /** Last Reset At */
+            last_reset_at: string | null;
+            /** Created At */
+            created_at: string;
+            market: components["schemas"]["MarketStatus"];
+            price_source: components["schemas"]["PriceSource"];
+            /**
+             * Simulation Only
+             * @default true
+             */
+            simulation_only: boolean;
+        };
+        /** AccountPerformance */
+        AccountPerformance: {
+            /** Initial Cash */
+            initial_cash: number;
+            /** Snapshots */
+            snapshots: components["schemas"]["SnapshotOut"][];
+            performance: components["schemas"]["Performance"];
+            /** Basis */
+            basis: string[];
+        };
+        /** AssetPrice */
+        AssetPrice: {
+            /** Asset */
+            asset: string;
+            /** Instrument Id */
+            instrument_id: string | null;
+            /** Price */
+            price: string | null;
+            /** As Of */
+            as_of: string | null;
+            /** Reason */
+            reason: string | null;
+        };
+        /**
+         * BacktestLimits
+         * @description Risk limits as shares of the portfolio's value on each rebalance day.
+         */
+        BacktestLimits: {
+            /**
+             * Cash Reserve
+             * @description Share always kept in cash.
+             * @default 0
+             */
+            cash_reserve: number;
+            /**
+             * Max Strategy Weight
+             * @description Most any one strategy may get.
+             * @default 1
+             */
+            max_strategy_weight: number;
+            /**
+             * Max Asset Weight
+             * @description Most any one instrument may get (strategies on it together).
+             * @default 1
+             */
+            max_asset_weight: number;
+        };
+        /** BacktestStage */
+        BacktestStage: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "NOT_RUN" | "RUNNING" | "PASS" | "FAIL" | "ERROR" | "PLANNED";
+            /**
+             * Checks
+             * @default []
+             */
+            checks: components["schemas"]["Check"][];
+            /** Reason */
+            reason?: string | null;
+            /** Error */
+            error?: string | null;
+            metrics?: components["schemas"]["BacktestStageMetrics"] | null;
+            /**
+             * Null Reasons
+             * @default {}
+             */
+            null_reasons: {
+                [key: string]: string;
+            };
+            /**
+             * Yearly Returns
+             * @default []
+             */
+            yearly_returns: components["schemas"]["YearReturn"][];
+            /**
+             * Equity Curve
+             * @default []
+             */
+            equity_curve: components["schemas"]["app__schemas__validation__report__EquityPoint"][];
+        };
+        /** BacktestStageMetrics */
+        BacktestStageMetrics: {
+            /** Initial Capital */
+            initial_capital: number;
+            /** Final Capital */
+            final_capital: number;
+            /** Total Return */
+            total_return: number;
+            /** Cagr */
+            cagr: number | null;
+            /** Sharpe Ratio */
+            sharpe_ratio: number | null;
+            /** Sortino Ratio */
+            sortino_ratio: number | null;
+            /** Annualized Volatility */
+            annualized_volatility: number | null;
+            /** Max Drawdown */
+            max_drawdown: number | null;
+            /** Trade Count */
+            trade_count: number;
+            /** Bars */
+            bars: number;
+            /** Positive Year Share */
+            positive_year_share: number;
+        };
+        /** Bar */
+        Bar: {
+            /**
+             * Time
+             * Format: date-time
+             * @description Bar start.
+             */
+            time: string;
+            /** Open */
+            open: number;
+            /** High */
+            high: number;
+            /** Low */
+            low: number;
+            /** Close */
+            close: number;
+            /** Volume */
+            volume: number;
+        };
+        /** Baseline */
+        Baseline: {
+            /** Accuracy */
+            accuracy: number;
+            /** Balanced Accuracy */
+            balanced_accuracy: number;
+            /**
+             * Name
+             * @enum {string}
+             */
+            name: "majority" | "persistence";
+            /** Label */
+            label: string;
+            /** Description */
+            description: string;
+            /** Rows */
+            rows: number;
+        };
+        /** Benchmark */
+        Benchmark: {
+            /** Kind */
+            kind: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Equity Curve */
+            equity_curve: components["schemas"]["BenchmarkPoint"][];
+            /** Total Return */
+            total_return: number;
+        };
+        /** BenchmarkPoint */
+        BenchmarkPoint: {
+            /** Timestamp */
+            timestamp: string;
+            /** Portfolio Value */
+            portfolio_value: number;
+        };
+        /** BenchmarkRef */
+        BenchmarkRef: {
+            /** Instrument Id */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string | null;
+        };
+        /** BindingLimit */
+        BindingLimit: {
+            /** Limit */
+            limit: string;
+            /** Value */
+            value: string;
+            /** Affected */
+            affected: string[];
+            /** Detail */
+            detail: string;
+        };
+        /** Bootstrap */
+        Bootstrap: {
+            /** Method */
+            method: string;
+            /** Input Series */
+            input_series: string;
+            /** Assumptions */
+            assumptions: string[];
+            /** Seed */
+            seed: number;
+            /** Simulations */
+            simulations: number;
+            /** Periods */
+            periods: number;
+            /** Initial Capital */
+            initial_capital: number;
+            cumulative_return: components["schemas"]["ReturnDistribution"];
+            final_value: components["schemas"]["Distribution"];
+            maximum_drawdown: components["schemas"]["Distribution"];
+            histograms: components["schemas"]["Histograms"];
+        };
         /** BrokerAccountResponse */
         BrokerAccountResponse: {
             /** Id */
@@ -721,6 +2137,25 @@ export interface components {
          * @enum {string}
          */
         BrokerName: "ZERODHA" | "UPSTOX" | "ANGEL_ONE" | "DHAN";
+        /** Candidate */
+        Candidate: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "RF" | "XGB";
+            /** Kind Name */
+            kind_name: string;
+            /** Params */
+            params: {
+                [key: string]: unknown;
+            };
+            /** Cv Balanced Accuracy */
+            cv_balanced_accuracy: number | null;
+            /** Grid */
+            grid: components["schemas"]["GridResult"][];
+            validation: components["schemas"]["Scores"];
+        };
         /** ChangePasswordRequest */
         ChangePasswordRequest: {
             /** Current Password */
@@ -728,17 +2163,116 @@ export interface components {
             /** New Password */
             new_password: string;
         };
+        /** ChargeRate */
+        ChargeRate: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Rate */
+            rate: number;
+            /** Applies To */
+            applies_to: string;
+            /** Basis */
+            basis: string;
+        };
+        /** ChargesTable */
+        ChargesTable: {
+            /** As Of */
+            as_of: string;
+            /** Product */
+            product: string;
+            /** Rates */
+            rates: components["schemas"]["ChargeRate"][];
+            /** Brokerage */
+            brokerage: string;
+            /** Not Included */
+            not_included: string;
+        };
+        /** Check */
+        Check: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /**
+             * Operator
+             * @enum {string}
+             */
+            operator: ">" | ">=" | "<" | "<=";
+            /** Threshold */
+            threshold: number;
+            /** Value */
+            value: number | null;
+            /** Passed */
+            passed: boolean;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "ratio" | "fraction" | "count" | "p_value";
+            /** Explanation */
+            explanation: string;
+            /**
+             * Reason
+             * @description Why the value is missing.
+             */
+            reason?: string | null;
+        };
+        /** ChosenRegime */
+        ChosenRegime: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Volatility State */
+            volatility_state: string;
+            /** Trend State */
+            trend_state: string;
+            /** Model Number */
+            model_number: number;
+        };
+        /** ClassProbability */
+        ClassProbability: {
+            /** Label */
+            label: string;
+            /** Probability */
+            probability: number;
+        };
+        /** ClassScore */
+        ClassScore: {
+            /** Label */
+            label: string;
+            /** Precision */
+            precision: number;
+            /** Recall */
+            recall: number;
+            /** F1 */
+            f1: number;
+            /** Support */
+            support: number;
+        };
+        /** Compatibility */
+        Compatibility: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "COMPATIBLE" | "NOT_COMPATIBLE" | "UNKNOWN";
+            /** Reason */
+            reason: string;
+        };
         /** Condition */
         Condition: {
             /** Left */
-            left: components["schemas"]["ValueOperand"] | components["schemas"]["IndicatorOperand"];
+            left: components["schemas"]["ValueOperand"] | components["schemas"]["IndicatorOperand"] | components["schemas"]["PriceOperand"];
             /**
              * Operator
              * @enum {string}
              */
             operator: "<" | "<=" | ">" | ">=" | "==";
             /** Right */
-            right: components["schemas"]["ValueOperand"] | components["schemas"]["IndicatorOperand"];
+            right: components["schemas"]["ValueOperand"] | components["schemas"]["IndicatorOperand"] | components["schemas"]["PriceOperand"];
         };
         /** ConnectBrokerAccountRequest */
         ConnectBrokerAccountRequest: {
@@ -754,22 +2288,32 @@ export interface components {
              * Format: uuid
              */
             strategy_id: string;
-            /** Strategy Key */
-            strategy_key: string;
+            /**
+             * Strategy Key
+             * @description Optional. The built-in strategy to run is taken from the saved strategy (its core template); if given, it must match.
+             */
+            strategy_key?: string | null;
             /**
              * Instrument Id
              * Format: uuid
              */
             instrument_id: string;
-            /** Timeframe */
-            timeframe: string;
+            /**
+             * Other Instrument Ids
+             * @description More instruments for strategies that need them: exactly one for statistical arbitrage (instrument B), one or more for tactical asset allocation (the rest of the universe). Empty for the others.
+             */
+            other_instrument_ids?: string[];
+            timeframe: components["schemas"]["Timeframe"];
             /** Initial Capital */
             initial_capital: number;
             /** Start Timestamp */
             start_timestamp?: string | null;
             /** End Timestamp */
             end_timestamp?: string | null;
-            /** Execution Config */
+            /**
+             * Execution Config
+             * @description The strategy's parameters (as in GET /strategy-registry).
+             */
             execution_config?: {
                 [key: string]: unknown;
             } | null;
@@ -778,6 +2322,18 @@ export interface components {
              * @default 1
              */
             quantity: number;
+            /**
+             * Slippage Bps
+             * @description Slippage in basis points applied to every fill (10 = 0.10%).
+             * @default 0
+             */
+            slippage_bps: number;
+            /**
+             * Brokerage Rate
+             * @description Brokerage as a fraction of trade value (0.0003 = 0.03%).
+             * @default 0
+             */
+            brokerage_rate: number;
         };
         /** CreateBrokerAccountRequest */
         CreateBrokerAccountRequest: {
@@ -790,31 +2346,6 @@ export interface components {
             api_key: string;
             /** Api Secret */
             api_secret: string;
-        };
-        /** CreateExecutionRequest */
-        CreateExecutionRequest: {
-            /**
-             * Strategy Id
-             * Format: uuid
-             */
-            strategy_id: string;
-            /** Broker Account Id */
-            broker_account_id?: string | null;
-            /**
-             * Instrument Id
-             * Format: uuid
-             */
-            instrument_id: string;
-            execution_type: components["schemas"]["ExecutionType"];
-            status: components["schemas"]["ExecutionStatus"];
-            /** Timeframe */
-            timeframe: string;
-            /** Initial Capital */
-            initial_capital: number;
-            /** Execution Config */
-            execution_config?: {
-                [key: string]: unknown;
-            } | null;
         };
         /** CreateInstrumentRequest */
         CreateInstrumentRequest: {
@@ -844,54 +2375,142 @@ export interface components {
              */
             is_active: boolean;
         };
-        /** CreateNotificationRequest */
-        CreateNotificationRequest: {
+        /** CreateLiveSessionRequest */
+        CreateLiveSessionRequest: {
             /**
-             * User Id
+             * Strategy Id
              * Format: uuid
              */
-            user_id: string;
-            /** Execution Id */
-            execution_id?: string | null;
-            notification_type: components["schemas"]["NotificationType"];
-            /** @default MEDIUM */
-            priority: components["schemas"]["NotificationPriority"];
-            /** Title */
-            title: string;
-            /** Message */
-            message: string;
-            /** Notification Data */
-            notification_data?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        /** CreateOrderRequest */
-        CreateOrderRequest: {
-            /**
-             * Execution Id
-             * Format: uuid
-             */
-            execution_id: string;
+            strategy_id: string;
             /**
              * Instrument Id
              * Format: uuid
              */
             instrument_id: string;
-            /** Broker Order Id */
-            broker_order_id?: string | null;
-            order_type: components["schemas"]["OrderType"];
-            order_side: components["schemas"]["OrderSide"];
-            status: components["schemas"]["OrderStatus"];
-            /** Quantity */
+            /**
+             * Name
+             * @description Defaults to the strategy's name.
+             */
+            name?: string | null;
+            /**
+             * Timeframe
+             * @default 5M
+             * @enum {string}
+             */
+            timeframe: "1M" | "5M" | "15M";
+            /**
+             * Mode
+             * @default DELAYED
+             * @enum {string}
+             */
+            mode: "DELAYED" | "REPLAY";
+            /**
+             * Replay Date
+             * @description REPLAY: the recorded day to replay.
+             */
+            replay_date?: string | null;
+            /**
+             * Speed
+             * @description REPLAY: 1x, 5x or 10x.
+             * @default 1
+             * @enum {integer}
+             */
+            speed: 1 | 5 | 10;
+            /**
+             * Capital
+             * @description The slice of the paper account the session may use.
+             */
+            capital: number;
+            /**
+             * Quantity
+             * @description Shares per position (as in a backtest).
+             */
             quantity: number;
-            /** Filled Quantity */
-            filled_quantity: number;
-            /** Price */
-            price: number;
-            /** Average Fill Price */
-            average_fill_price?: number | null;
-            /** Order Timestamp */
-            order_timestamp?: string | null;
+            /**
+             * Slippage Bps
+             * @default 5
+             */
+            slippage_bps: number;
+            /**
+             * Loss Limit Pct
+             * @description Daily loss limit, % of the capital.
+             * @default 2
+             */
+            loss_limit_pct: number | null;
+            /**
+             * Max Position Value
+             * @description Most a position may be worth.
+             */
+            max_position_value?: number | null;
+        };
+        /** CreatePortfolioBacktestRequest */
+        CreatePortfolioBacktestRequest: {
+            /** Name */
+            name: string;
+            /** Strategy Ids */
+            strategy_ids: string[];
+            /**
+             * Benchmark Instrument Id
+             * Format: uuid
+             * @description Nifty 50 (an NSE index, e.g. NIFTY50).
+             */
+            benchmark_instrument_id: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /**
+             * Frequency
+             * @default WEEKLY
+             * @enum {string}
+             */
+            frequency: "WEEKLY" | "MONTHLY";
+            /**
+             * Capital
+             * @default 1000000
+             */
+            capital: number;
+            /**
+             * Brokerage Rate
+             * @description Of the traded value.
+             * @default 0.0003
+             */
+            brokerage_rate: number;
+            /**
+             * Slippage Bps
+             * @default 5
+             */
+            slippage_bps: number;
+            limits?: components["schemas"]["BacktestLimits"];
+            /**
+             * Regime Filter
+             * @description Leave out strategies whose rule does not suit the regime of the day.
+             * @default true
+             */
+            regime_filter: boolean;
+            /**
+             * Regime Model Id
+             * @description With the regime filter: the model (default: the active one).
+             */
+            regime_model_id?: string | null;
+            /**
+             * Sixty Forty
+             * @description Also compare with 60% Nifty 50 / 40% debt.
+             * @default false
+             */
+            sixty_forty: boolean;
+            /**
+             * Require Validated
+             * @description Feature 5: only strategies with a passing validation of their current version.
+             * @default false
+             */
+            require_validated: boolean;
         };
         /** CreatePortfolioRequest */
         CreatePortfolioRequest: {
@@ -902,48 +2521,6 @@ export interface components {
             /** Description */
             description?: string | null;
         };
-        /** CreatePositionRequest */
-        CreatePositionRequest: {
-            /**
-             * Execution Id
-             * Format: uuid
-             */
-            execution_id: string;
-            /**
-             * Instrument Id
-             * Format: uuid
-             */
-            instrument_id: string;
-            /** Broker Account Id */
-            broker_account_id?: string | null;
-            /** Quantity */
-            quantity: number;
-            /** Average Price */
-            average_price: number;
-            /** Current Price */
-            current_price?: number | null;
-            /** Market Value */
-            market_value?: number | null;
-            /**
-             * Realized Pnl
-             * @default 0
-             */
-            realized_pnl: number;
-            /**
-             * Unrealized Pnl
-             * @default 0
-             */
-            unrealized_pnl: number;
-            /** @default OPEN */
-            position_status: components["schemas"]["PositionStatus"];
-            /**
-             * Last Updated At
-             * Format: date-time
-             */
-            last_updated_at: string;
-            /** Closed At */
-            closed_at?: string | null;
-        };
         /** CreateStrategyRequest */
         CreateStrategyRequest: {
             /** Name */
@@ -952,38 +2529,546 @@ export interface components {
             description?: string | null;
             strategy_type: components["schemas"]["StrategyType"];
             strategy_config: components["schemas"]["StrategyConfig"];
-        };
-        /** CreateTradeRequest */
-        CreateTradeRequest: {
             /**
-             * Order Id
+             * Python Code
+             * @description Source of a PYTHON strategy that defines generate_signal(context). Checked for syntax and stored only; it is never run.
+             */
+            python_code?: string | null;
+        };
+        /**
+         * CreateValidationRequest
+         * @description A backtest request plus the settings of the validation stages.
+         */
+        CreateValidationRequest: {
+            /**
+             * Strategy Id
              * Format: uuid
              */
-            order_id: string;
-            /** Broker Trade Id */
-            broker_trade_id?: string | null;
-            /** Executed Quantity */
-            executed_quantity: number;
-            /** Executed Price */
-            executed_price: number;
+            strategy_id: string;
             /**
-             * Brokerage
+             * Strategy Key
+             * @description Optional. The built-in strategy to run is taken from the saved strategy (its core template); if given, it must match.
+             */
+            strategy_key?: string | null;
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            /**
+             * Other Instrument Ids
+             * @description More instruments for strategies that need them: exactly one for statistical arbitrage (instrument B), one or more for tactical asset allocation (the rest of the universe). Empty for the others.
+             */
+            other_instrument_ids?: string[];
+            timeframe: components["schemas"]["Timeframe"];
+            /** Initial Capital */
+            initial_capital: number;
+            /** Start Timestamp */
+            start_timestamp?: string | null;
+            /** End Timestamp */
+            end_timestamp?: string | null;
+            /**
+             * Execution Config
+             * @description The strategy's parameters (as in GET /strategy-registry).
+             */
+            execution_config?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Quantity
+             * @default 1
+             */
+            quantity: number;
+            /**
+             * Slippage Bps
+             * @description Slippage in basis points applied to every fill (10 = 0.10%).
              * @default 0
              */
-            brokerage: number;
+            slippage_bps: number;
             /**
-             * Total Charges
+             * Brokerage Rate
+             * @description Brokerage as a fraction of trade value (0.0003 = 0.03%).
              * @default 0
              */
-            total_charges: number;
-            /** Trade Timestamp */
-            trade_timestamp?: string | null;
+            brokerage_rate: number;
+            walk_forward?: components["schemas"]["WalkForwardSettings"];
+            regimes?: components["schemas"]["RegimeSettings"];
+            monte_carlo?: components["schemas"]["MonteCarloSettings"];
+            /**
+             * Source Execution Id
+             * @description Optional: the backtest this validation was started from (shown as a link).
+             */
+            source_execution_id?: string | null;
+        };
+        /** CurrentRegime */
+        CurrentRegime: {
+            /**
+             * Statement
+             * @default The regime is the model's classification of the market's recent behaviour (volatility and trend). It describes the past; it is not a forecast.
+             */
+            statement: string;
+            model: components["schemas"]["RegimeModelSummary"];
+            instrument: components["schemas"]["InstrumentRef"];
+            /**
+             * As Of
+             * @description The last stored daily bar the regime was classified on.
+             */
+            as_of: string;
+            regime: components["schemas"]["RegimeLabel"];
+            /**
+             * Confidence
+             * @description GMM: the probability of this cluster. Supervised: the three dimensions' probabilities multiplied.
+             */
+            confidence: number;
+            /** Probabilities */
+            probabilities: components["schemas"]["RegimeProbability"][];
+            /**
+             * Horizon Days
+             * @description Supervised: the days the labels describe.
+             */
+            horizon_days?: number | null;
+            /**
+             * Dimensions
+             * @description Supervised only.
+             */
+            dimensions?: components["schemas"]["DimensionReading"][] | null;
+        };
+        /** CurrentState */
+        CurrentState: {
+            /** Cash */
+            cash: string;
+            /** Invested Value */
+            invested_value: string;
+            /** Total Equity */
+            total_equity: string;
+            /** Holdings */
+            holdings: components["schemas"]["StateHolding"][];
+        };
+        /**
+         * DataQuality
+         * @description Results of app.data.validators on the stored rows.
+         */
+        DataQuality: {
+            /** Missing Values */
+            missing_values: {
+                [key: string]: number;
+            };
+            /** Duplicate Timestamps */
+            duplicate_timestamps: number;
+            /** Invalid Prices */
+            invalid_prices: {
+                [key: string]: number;
+            };
+            /** Zero Volume Rows */
+            zero_volume_rows: number;
+            /** Negative Volume Rows */
+            negative_volume_rows: number;
+        };
+        /** DatasetInfo */
+        DatasetInfo: {
+            /** Bars */
+            bars: number;
+            /** First Bar */
+            first_bar: string;
+            /** Last Bar */
+            last_bar: string;
+            /** Dropped Warm Up Rows */
+            dropped_warm_up_rows: number;
+            /** Ratios */
+            ratios: {
+                [key: string]: number;
+            };
+            /** Splits */
+            splits: components["schemas"]["DatasetSplitInfo"][];
+            /** Data Fingerprint */
+            data_fingerprint: string | null;
+            /** Provider */
+            provider: string | null;
+            /** Purges */
+            purges?: components["schemas"]["PurgeGap"][] | null;
+            /**
+             * Unlabelled Rows
+             * @description Supervised: the last days, whose next days are not known yet.
+             */
+            unlabelled_rows?: number | null;
+            /** Vix Bars */
+            vix_bars?: number | null;
+        };
+        /** DatasetSplitInfo */
+        DatasetSplitInfo: {
+            /**
+             * Name
+             * @enum {string}
+             */
+            name: "train" | "validation" | "test";
+            /** Rows */
+            rows: number;
+            /** Start */
+            start: string;
+            /** End */
+            end: string;
+            /**
+             * Label Window End
+             * @description Supervised: the last day any of this split's labels looks at.
+             */
+            label_window_end?: string | null;
+        };
+        /**
+         * DeployRequest
+         * @description Deploy a saved strategy (core template or no-code rules) to the paper account.
+         */
+        DeployRequest: {
+            /**
+             * Strategy Id
+             * Format: uuid
+             */
+            strategy_id: string;
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            /** Other Instrument Ids */
+            other_instrument_ids?: string[];
+            /** Execution Config */
+            execution_config?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Quantity
+             * @default 1
+             */
+            quantity: number;
+            /** Capital */
+            capital: number | string;
+            /** Loss Limit */
+            loss_limit?: number | null;
+            /** Duration Days */
+            duration_days?: number | null;
+        };
+        /** DeploymentDayOut */
+        DeploymentDayOut: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Closes */
+            closes: {
+                [key: string]: number | null;
+            };
+            /** Signal */
+            signal: string | null;
+            /** Allocations */
+            allocations: {
+                [key: string]: number;
+            } | null;
+            /** Targets */
+            targets: {
+                [key: string]: number;
+            };
+            /** Orders */
+            orders: {
+                [key: string]: unknown;
+            }[];
+            /** Cash */
+            cash: number | null;
+            /** Positions Value */
+            positions_value: number | null;
+            /** Equity */
+            equity: number | null;
+            /** Drawdown */
+            drawdown: number | null;
+            /** Note */
+            note: string | null;
+        };
+        /** DeploymentDetail */
+        DeploymentDetail: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Strategy Id */
+            strategy_id: string | null;
+            /** Strategy Key */
+            strategy_key: string;
+            /** Strategy Version */
+            strategy_version: number | null;
+            /** Validation Id */
+            validation_id: string | null;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Rules */
+            rules: {
+                [key: string]: unknown;
+            } | null;
+            /** Layout */
+            layout: string;
+            /** Instruments */
+            instruments: {
+                [key: string]: string;
+            }[];
+            /** Quantity */
+            quantity: number;
+            /** Capital */
+            capital: number;
+            /** Loss Limit */
+            loss_limit: number | null;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /** End Date */
+            end_date: string | null;
+            /** Status */
+            status: string;
+            /** Status Reason */
+            status_reason: string | null;
+            /** Last Processed Date */
+            last_processed_date: string | null;
+            /** Cash */
+            cash: number;
+            /** Holdings */
+            holdings: {
+                [key: string]: number;
+            };
+            /** Breaches */
+            breaches: number;
+            /** Created At */
+            created_at: string;
+            /** Completed At */
+            completed_at: string | null;
+            performance: components["schemas"]["Performance"];
+            /** Days */
+            days: components["schemas"]["DeploymentDayOut"][];
+        };
+        /** DeploymentOut */
+        DeploymentOut: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Strategy Id */
+            strategy_id: string | null;
+            /** Strategy Key */
+            strategy_key: string;
+            /** Strategy Version */
+            strategy_version: number | null;
+            /** Validation Id */
+            validation_id: string | null;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Rules */
+            rules: {
+                [key: string]: unknown;
+            } | null;
+            /** Layout */
+            layout: string;
+            /** Instruments */
+            instruments: {
+                [key: string]: string;
+            }[];
+            /** Quantity */
+            quantity: number;
+            /** Capital */
+            capital: number;
+            /** Loss Limit */
+            loss_limit: number | null;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /** End Date */
+            end_date: string | null;
+            /** Status */
+            status: string;
+            /** Status Reason */
+            status_reason: string | null;
+            /** Last Processed Date */
+            last_processed_date: string | null;
+            /** Cash */
+            cash: number;
+            /** Holdings */
+            holdings: {
+                [key: string]: number;
+            };
+            /** Breaches */
+            breaches: number;
+            /** Created At */
+            created_at: string;
+            /** Completed At */
+            completed_at: string | null;
+            performance: components["schemas"]["Performance"];
+        };
+        /** DimensionEvaluation */
+        DimensionEvaluation: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "volatility" | "trend" | "risk";
+            /** Name */
+            name: string;
+            /** Classes */
+            classes: string[];
+            /**
+             * Chosen Kind
+             * @enum {string}
+             */
+            chosen_kind: "RF" | "XGB";
+            /** Chosen Kind Name */
+            chosen_kind_name: string;
+            /** Chosen Params */
+            chosen_params: {
+                [key: string]: unknown;
+            };
+            /** Candidates */
+            candidates: components["schemas"]["Candidate"][];
+            test: components["schemas"]["TestScores"];
+            /** Class Counts */
+            class_counts: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /** Feature Importance */
+            feature_importance: components["schemas"]["Importance"][];
+            /** Importance Method */
+            importance_method: string;
+        };
+        /** DimensionPeriod */
+        DimensionPeriod: {
+            /** Label */
+            label: string | null;
+            /** Start */
+            start: string;
+            /** End */
+            end: string;
+            /** Bars */
+            bars: number;
+        };
+        /** DimensionPeriods */
+        DimensionPeriods: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "volatility" | "trend" | "risk";
+            /** Name */
+            name: string;
+            /** Classes */
+            classes: string[];
+            /** Periods */
+            periods: components["schemas"]["DimensionPeriod"][];
+        };
+        /** DimensionReading */
+        DimensionReading: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "volatility" | "trend" | "risk";
+            /** Name */
+            name: string;
+            /** Label */
+            label: string;
+            /** Probability */
+            probability: number;
+            /** Probabilities */
+            probabilities: components["schemas"]["ClassProbability"][];
+        };
+        /** DimensionRegimes */
+        DimensionRegimes: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Rows */
+            rows: components["schemas"]["RegimeRow"][];
+            /** Periods */
+            periods: components["schemas"]["RegimePeriod"][];
+        };
+        /** Distribution */
+        Distribution: {
+            /** Mean */
+            mean: number;
+            /** Median */
+            median: number;
+            percentiles: components["schemas"]["Percentiles"];
+        };
+        /** EndingHolding */
+        EndingHolding: {
+            /** Asset */
+            asset: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: string;
+        };
+        /** EndingState */
+        EndingState: {
+            /** Cash */
+            cash: string;
+            /** Invested Value */
+            invested_value: string;
+            /** Total Equity */
+            total_equity: string;
+            /** Holdings */
+            holdings: components["schemas"]["EndingHolding"][];
+        };
+        /** Evaluation */
+        Evaluation: {
+            /** Validation Bic */
+            validation_bic: number;
+            /** Test Bic */
+            test_bic: number;
+            /** Test Sample Count */
+            test_sample_count: number;
+            /** Test Component Counts */
+            test_component_counts: {
+                [key: string]: number;
+            };
+            /** Test Mean Max Probability */
+            test_mean_max_probability: number;
+            /** Test Mean Entropy */
+            test_mean_entropy: number;
+        };
+        /** EvaluationSummary */
+        EvaluationSummary: {
+            /** Mean Accuracy */
+            mean_accuracy: number;
+            /** Dimensions */
+            dimensions: number;
+            /** Dimensions Meeting Target */
+            dimensions_meeting_target: number;
         };
         /**
          * Exchange
          * @enum {string}
          */
         Exchange: "NSE" | "BSE" | "MCX" | "NSE_FO";
+        /**
+         * ExecutionErrorInfo
+         * @description Why a run failed, as the backend classified it.
+         */
+        ExecutionErrorInfo: {
+            /** Category */
+            category?: string | null;
+            /** Code */
+            code?: string | null;
+            /** Message */
+            message?: string | null;
+            /** Stage */
+            stage?: string | null;
+            /** @description Set when custom Python code was refused or failed while running. */
+            strategy_error?: components["schemas"]["StrategyCodeErrorInfo"] | null;
+        };
         /** ExecutionResponse */
         ExecutionResponse: {
             /**
@@ -1014,8 +3099,13 @@ export interface components {
             execution_metrics: {
                 [key: string]: unknown;
             } | null;
+            /** Run Settings */
+            run_settings?: {
+                [key: string]: unknown;
+            } | null;
             /** Error Message */
             error_message: string | null;
+            error?: components["schemas"]["ExecutionErrorInfo"] | null;
             /** Started At */
             started_at: string | null;
             /** Completed At */
@@ -1031,6 +3121,36 @@ export interface components {
              */
             updated_at: string;
         };
+        /** ExecutionResultsResponse */
+        ExecutionResultsResponse: {
+            /**
+             * Execution Id
+             * Format: uuid
+             */
+            execution_id: string;
+            basis: components["schemas"]["ResultsBasis"];
+            summary: components["schemas"]["ResultsSummary"];
+            trade_stats: components["schemas"]["TradeStats"];
+            /**
+             * Null Reasons
+             * @description Why a value is null, by field name.
+             */
+            null_reasons: {
+                [key: string]: string;
+            };
+            /** Equity Curve */
+            equity_curve: components["schemas"]["app__schemas__executions__results__EquityPoint"][];
+            benchmark: components["schemas"]["Benchmark"] | null;
+            /** Benchmark Unavailable Reason */
+            benchmark_unavailable_reason: string | null;
+            /** Monthly Returns */
+            monthly_returns: components["schemas"]["MonthlyReturn"][];
+            /** Round Trips */
+            round_trips: components["schemas"]["RoundTrip"][];
+            records: components["schemas"]["SimulatedRecords"];
+            configuration: components["schemas"]["ResultsConfiguration"];
+            provenance: components["schemas"]["ResultsProvenance"];
+        };
         /**
          * ExecutionStatus
          * @enum {string}
@@ -1040,16 +3160,250 @@ export interface components {
          * ExecutionType
          * @enum {string}
          */
-        ExecutionType: "BACKTEST" | "PAPER" | "LIVE" | "REGIME_TEST";
-        /** FailExecutionRequest */
-        FailExecutionRequest: {
-            /** Error Message */
-            error_message: string;
+        ExecutionType: "BACKTEST" | "PAPER" | "LIVE" | "REGIME_TEST" | "VALIDATION" | "PORTFOLIO_BACKTEST";
+        /** FactorDefinition */
+        FactorDefinition: {
+            /** Name */
+            name: string;
+            /** Label */
+            label: string;
+            /**
+             * Raw
+             * @description What the raw value measures.
+             */
+            raw: string;
+            /**
+             * Normalization
+             * @description How the raw value is normalised.
+             */
+            normalization: string;
+        };
+        /** FactorScore */
+        FactorScore: {
+            /** Factor */
+            factor: string;
+            /** Label */
+            label: string;
+            /** Definition */
+            definition?: string | null;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "higher_is_better" | "lower_is_better" | "magnitude" | "suitability";
+            /**
+             * Raw
+             * @description The measurement before normalisation.
+             */
+            raw: number;
+            /** Normalized */
+            normalized: number;
+            /**
+             * Suitability
+             * @description The normalised value as a suitability in 0..1.
+             */
+            suitability: number;
+            /** Weight */
+            weight: number;
+            /**
+             * Weight Share
+             * @description weight / sum of the strategy's weights.
+             */
+            weight_share: number;
+            /**
+             * Contribution
+             * @description suitability x weight share; they add up to the composite.
+             */
+            contribution: number;
+        };
+        /** FeatureInfo */
+        FeatureInfo: {
+            /** Name */
+            name: string;
+            /** Description */
+            description: string;
+        };
+        /** FillOut */
+        FillOut: {
+            /** Id */
+            id: string;
+            /** Order Id */
+            order_id: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string;
+            /** Side */
+            side: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: number;
+            /** Quote Price */
+            quote_price: number;
+            /** Quote Time */
+            quote_time: string;
+            /** Trade Value */
+            trade_value: number;
+            /** Charges */
+            charges: {
+                [key: string]: number;
+            };
+            /** Total Charges */
+            total_charges: number;
+            /** Net Amount */
+            net_amount: number;
+            /** Realised Pnl */
+            realised_pnl: number | null;
+            /** Filled At */
+            filled_at: string;
+        };
+        /** FormingBar */
+        FormingBar: {
+            /**
+             * Time
+             * Format: date-time
+             * @description Bar start.
+             */
+            time: string;
+            /** Open */
+            open: number;
+            /** High */
+            high: number;
+            /** Low */
+            low: number;
+            /** Close */
+            close: number;
+            /** Volume */
+            volume: number;
+            /**
+             * Minutes
+             * @description Complete 1-minute bars in it so far.
+             */
+            minutes: number;
+            /**
+             * Of
+             * @description Minutes in a full bar.
+             */
+            of: number;
+        };
+        /**
+         * FromValidationRequest
+         * @description Start validation stage 5: the validated strategy on the paper account for 30 days.
+         */
+        FromValidationRequest: {
+            /** Capital */
+            capital: number | string;
+            /** Loss Limit */
+            loss_limit?: number | null;
+        };
+        /** GridResult */
+        GridResult: {
+            /** Params */
+            params: {
+                [key: string]: unknown;
+            };
+            /** Cv Balanced Accuracy */
+            cv_balanced_accuracy: number | null;
+            /** Cv Folds Scored */
+            cv_folds_scored: number;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** Headline */
+        Headline: {
+            /** Portfolio Return */
+            portfolio_return: number | null;
+            /** Nifty Return */
+            nifty_return: number | null;
+            /** Sharpe Met */
+            sharpe_met: boolean;
+            /** Drawdown Met */
+            drawdown_met: boolean;
+        };
+        /** Histogram */
+        Histogram: {
+            /** Edges */
+            edges: number[];
+            /** Counts */
+            counts: number[];
+        };
+        /** Histograms */
+        Histograms: {
+            cumulative_return: components["schemas"]["Histogram"];
+            maximum_drawdown: components["schemas"]["Histogram"];
+        };
+        /** HistoryPoint */
+        HistoryPoint: {
+            /** Timestamp */
+            timestamp: string;
+            /** Close */
+            close: number;
+            /**
+             * Regime Id
+             * @description None during warm-up (features not complete yet).
+             */
+            regime_id: number | null;
+            /** Confidence */
+            confidence: number | null;
+            /**
+             * Dimensions
+             * @description Supervised: each dimension's predicted class for the next days.
+             */
+            dimensions?: {
+                [key: string]: string;
+            } | null;
+        };
+        /** HoldingOut */
+        HoldingOut: {
+            /** Instrument Id */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string;
+            /** Quantity */
+            quantity: number;
+            /** Average Price */
+            average_price: number;
+            /** Invested */
+            invested: number;
+            /** Last Price */
+            last_price: number | null;
+            quote: components["schemas"]["QuoteOut"] | null;
+            /** Quote Problem */
+            quote_problem: string | null;
+            /** Market Value */
+            market_value: number | null;
+            /** Unrealised Pnl */
+            unrealised_pnl: number | null;
+        };
+        /** Importance */
+        Importance: {
+            /** Feature */
+            feature: string;
+            /** Importance */
+            importance: number;
+        };
+        /** InSample */
+        InSample: {
+            /** Days */
+            days: number;
+            /** Of Days */
+            of_days: number;
+            /** Training Start */
+            training_start: string | null;
+            /**
+             * Training End
+             * @description The last day the model saw in training.
+             */
+            training_end: string | null;
+            /**
+             * Flag
+             * @description Set when some backtest days were in the model's training period.
+             */
+            flag: string | null;
         };
         /** IndicatorConfig */
         IndicatorConfig: {
@@ -1062,15 +3416,139 @@ export interface components {
                 [key: string]: unknown;
             };
         };
-        /** IndicatorOperand */
+        /** IndicatorInfo */
+        IndicatorInfo: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /**
+             * Panel
+             * @enum {string}
+             */
+            panel: "price" | "separate";
+            /** Definition */
+            definition: string;
+            /** Outputs */
+            outputs: string[];
+            /** Parameters */
+            parameters: components["schemas"]["IndicatorParameterInfo"][];
+            /** Rules */
+            rules: string[];
+            /** Required Columns */
+            required_columns: string[];
+            /** Used By */
+            used_by: string[];
+        };
+        /**
+         * IndicatorOperand
+         * @description One line of a defined indicator. `output` names the line (GET /indicators
+         *     lists each indicator's outputs). It may be left out only for indicators with a
+         *     single line; it is then filled in, so the stored config is always explicit.
+         */
         IndicatorOperand: {
             /**
-             * Type
-             * @constant
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
             type: "indicator";
             /** Name */
             name: string;
+            /** Output */
+            output?: string | null;
+        };
+        /** IndicatorParameterInfo */
+        IndicatorParameterInfo: {
+            /** Name */
+            name: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "int" | "float";
+            /** Description */
+            description: string;
+            /** Required */
+            required: boolean;
+            /** Default */
+            default?: number | null;
+            /** Minimum */
+            minimum?: number | null;
+            /**
+             * Exclusive Minimum
+             * @default false
+             */
+            exclusive_minimum: boolean;
+        };
+        /** IndicatorParameters */
+        IndicatorParameters: {
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            };
+        };
+        /** IndicatorPoint */
+        IndicatorPoint: {
+            /**
+             * Timestamp
+             * Format: date-time
+             */
+            timestamp: string;
+            /** Values */
+            values: {
+                [key: string]: number | null;
+            };
+        };
+        /** IndicatorSeries */
+        IndicatorSeries: {
+            /** Instrument Id */
+            instrument_id: string;
+            /** Key */
+            key: string;
+            /**
+             * Panel
+             * @enum {string}
+             */
+            panel: "price" | "separate";
+            /** Parameters */
+            parameters: {
+                [key: string]: number;
+            };
+            /** Outputs */
+            outputs: string[];
+            /** Points */
+            points: components["schemas"]["IndicatorPoint"][];
+        };
+        /** IndicatorSeriesRequest */
+        IndicatorSeriesRequest: {
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            };
+            /** Start Date */
+            start_date?: string | null;
+            /** End Date */
+            end_date?: string | null;
+        };
+        /** IndicatorValidationResult */
+        IndicatorValidationResult: {
+            /** Key */
+            key: string;
+            /** Parameters */
+            parameters: {
+                [key: string]: number;
+            };
+        };
+        /** InstrumentRef */
+        InstrumentRef: {
+            /** Id */
+            id: string | null;
+            /** Symbol */
+            symbol: string | null;
+            /** Trading Symbol */
+            trading_symbol: string | null;
         };
         /** InstrumentResponse */
         InstrumentResponse: {
@@ -1111,6 +3589,262 @@ export interface components {
          * @enum {string}
          */
         InstrumentType: "EQUITY" | "FUTURES" | "OPTIONS" | "ETF" | "INDEX";
+        /** InsufficientRegime */
+        InsufficientRegime: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Days */
+            days: number;
+        };
+        /** JournalRequest */
+        JournalRequest: {
+            /** Note */
+            note?: string | null;
+            /** Tags */
+            tags?: string[];
+        };
+        /** LabelDefinition */
+        LabelDefinition: {
+            /** Horizon Days */
+            horizon_days: number;
+            /**
+             * Volatility Threshold
+             * @description Annualised; the median of the training days.
+             */
+            volatility_threshold: number;
+            /** Trend Threshold */
+            trend_threshold: number;
+            /** Drawdown Threshold */
+            drawdown_threshold: number;
+            /** Uses Vix */
+            uses_vix: boolean;
+            /** Vix Median Window */
+            vix_median_window: number;
+            /** Rules */
+            rules: components["schemas"]["LabelRule"][];
+        };
+        /** LabelRule */
+        LabelRule: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Classes */
+            classes: string[];
+            /** Rule */
+            rule: string;
+        };
+        /** LiveBars */
+        LiveBars: {
+            /**
+             * Market Time
+             * Format: date-time
+             */
+            market_time: string;
+            /** Timeframe */
+            timeframe: string;
+            /** Bars */
+            bars: components["schemas"]["Bar"][];
+            forming: components["schemas"]["FormingBar"] | null;
+        };
+        /** LiveEvent */
+        LiveEvent: {
+            /** Id */
+            id: number;
+            /** Kind */
+            kind: string;
+            /** Market Time */
+            market_time: string | null;
+            /** Message */
+            message: string;
+            /** Data */
+            data: {
+                [key: string]: unknown;
+            };
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** LiveFill */
+        LiveFill: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Order Id
+             * Format: uuid
+             */
+            order_id: string;
+            /** Side */
+            side: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: number;
+            /** Bar Close */
+            bar_close: number;
+            /** Trade Value */
+            trade_value: number;
+            /** Charges */
+            charges: {
+                [key: string]: unknown;
+            };
+            /** Total Charges */
+            total_charges: number;
+            /** Net Amount */
+            net_amount: number;
+            /** Realised Pnl */
+            realised_pnl: number | null;
+            /**
+             * Filled At
+             * Format: date-time
+             */
+            filled_at: string;
+            /** Reason */
+            reason: string | null;
+        };
+        /** LiveSessionOut */
+        LiveSessionOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Strategy Id */
+            strategy_id: string | null;
+            /** Strategy Key */
+            strategy_key: string;
+            /** Strategy Version */
+            strategy_version: number | null;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Rules */
+            rules: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string | null;
+            /** Tick Size */
+            tick_size: number | null;
+            /** Timeframe */
+            timeframe: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "DELAYED" | "REPLAY";
+            /**
+             * Session Date
+             * Format: date
+             */
+            session_date: string;
+            /** Speed */
+            speed: number;
+            /** Delay Minutes */
+            delay_minutes: number;
+            clock: components["schemas"]["SessionClock"];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "PENDING" | "RUNNING" | "STALE" | "PAUSED" | "STOPPED" | "COMPLETED" | "FAILED";
+            /** Status Reason */
+            status_reason: string | null;
+            /** Stop Requested */
+            stop_requested: string | null;
+            /** Capital */
+            capital: number;
+            /** Quantity */
+            quantity: number;
+            /** Slippage Bps */
+            slippage_bps: number;
+            /** Loss Limit Pct */
+            loss_limit_pct: number | null;
+            /** Max Position Value */
+            max_position_value: number | null;
+            /** Max Orders Per Bar */
+            max_orders_per_bar: number;
+            /** Position Qty */
+            position_qty: number;
+            /** Average Price */
+            average_price: number | null;
+            /** Last Price */
+            last_price: number | null;
+            /** Last Price At */
+            last_price_at: string | null;
+            /** Last Bar At */
+            last_bar_at: string | null;
+            /**
+             * Data Age Seconds
+             * @description Market seconds since the last bar's close.
+             */
+            data_age_seconds: number | null;
+            /** Squared Off */
+            squared_off: boolean;
+            money: components["schemas"]["Money"];
+            risk: components["schemas"]["Risk"];
+            /** Order Count */
+            order_count: number;
+            /** Summary */
+            summary: {
+                [key: string]: unknown;
+            } | null;
+            /** Label */
+            label: string;
+            /** Execution Id */
+            execution_id: string | null;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Simulation Only
+             * @default true
+             */
+            simulation_only: boolean;
+        };
+        /** LiveStatusOut */
+        LiveStatusOut: {
+            /** Market */
+            market: {
+                [key: string]: unknown;
+            };
+            /**
+             * Delayed Day
+             * @description The day a delayed session started now would trade; null when closed.
+             */
+            delayed_day: string | null;
+            /** Delay Minutes */
+            delay_minutes: number;
+            /** Runner Enabled */
+            runner_enabled: boolean;
+            /** Feed */
+            feed: {
+                [key: string]: unknown;
+            } | null;
+            /** Label */
+            label: string;
+        };
         /** LoginRequest */
         LoginRequest: {
             /**
@@ -1131,6 +3865,244 @@ export interface components {
              */
             token_type: string;
         };
+        /** MarketDataCoverage */
+        MarketDataCoverage: {
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            timeframe: components["schemas"]["Timeframe"];
+            /** Provider */
+            provider: string;
+            /** Requested Start */
+            requested_start: string | null;
+            /** Requested End */
+            requested_end: string | null;
+            /** Row Count */
+            row_count: number;
+            /** First Timestamp */
+            first_timestamp: string | null;
+            /** Last Timestamp */
+            last_timestamp: string | null;
+            /** Last Imported At */
+            last_imported_at: string | null;
+            trading_days: components["schemas"]["TradingDayCheck"];
+            quality: components["schemas"]["DataQuality"];
+        };
+        /** MarketDataImportRequest */
+        MarketDataImportRequest: {
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+        };
+        /** MarketDataImportResult */
+        MarketDataImportResult: {
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            /** Provider */
+            provider: string;
+            timeframe: components["schemas"]["Timeframe"];
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Fetched */
+            fetched: number;
+            /** Inserted */
+            inserted: number;
+            /** Skipped Existing */
+            skipped_existing: number;
+            /** Rejected */
+            rejected: number;
+            /** Rejected Reasons */
+            rejected_reasons: {
+                [key: string]: number;
+            };
+        };
+        /**
+         * MarketDataRow
+         * @description One stored OHLCV bar.
+         */
+        MarketDataRow: {
+            /**
+             * Timestamp
+             * Format: date-time
+             */
+            timestamp: string;
+            /** Open */
+            open: number;
+            /** High */
+            high: number;
+            /** Low */
+            low: number;
+            /** Close */
+            close: number;
+            /** Volume */
+            volume: number;
+        };
+        /** MarketStatus */
+        MarketStatus: {
+            /** Is Open */
+            is_open: boolean;
+            /** Now */
+            now: string;
+            /** Session */
+            session: string;
+            /** Closes At */
+            closes_at: string | null;
+            /** Next Open */
+            next_open: string | null;
+        };
+        /** MissingPeriod */
+        MissingPeriod: {
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /**
+             * End
+             * Format: date
+             */
+            end: string;
+            /** Days */
+            days: number;
+        };
+        /** ModelCard */
+        ModelCard: {
+            /**
+             * Model Kind
+             * @enum {string}
+             */
+            model_kind: "GMM" | "RF" | "XGB" | "AUTO";
+            /** Model Type */
+            model_type: string;
+            /** Model Version */
+            model_version: string;
+            /** Training Start */
+            training_start: string;
+            /** Training End */
+            training_end: string;
+            /** Selection */
+            selection: string;
+            /** Random State */
+            random_state: number;
+            /** Features */
+            features: components["schemas"]["FeatureInfo"][];
+            /** Performance Note */
+            performance_note: string;
+            labels: components["schemas"]["RegimeLabels"];
+            dataset: components["schemas"]["DatasetInfo"];
+            /** Scikit Learn Version */
+            scikit_learn_version: string;
+            /** Created At */
+            created_at: string;
+            /** N Components */
+            n_components?: number | null;
+            /** Candidate Components */
+            candidate_components?: number[] | null;
+            /** Feature Parameters */
+            feature_parameters?: {
+                [key: string]: number;
+            } | null;
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            } | null;
+            evaluation?: components["schemas"]["Evaluation"] | null;
+            supervised?: components["schemas"]["SupervisedCard"] | null;
+        };
+        /** ModifyOrderRequest */
+        ModifyOrderRequest: {
+            /** Quantity */
+            quantity?: number | null;
+            /** Price */
+            price?: number | string | null;
+            /** Trigger Price */
+            trigger_price?: number | string | null;
+        };
+        /** Money */
+        Money: {
+            /** Equity */
+            equity: number;
+            /** Realised Pnl */
+            realised_pnl: number;
+            /** Unrealised Pnl */
+            unrealised_pnl: number;
+            /** Charges */
+            charges: number;
+            /** Net Pnl */
+            net_pnl: number;
+            /** Position Value */
+            position_value: number | null;
+        };
+        /** MonteCarloSettings */
+        MonteCarloSettings: {
+            /**
+             * Simulations
+             * @description Bootstrap paths, and sign-flip permutations of the significance test.
+             * @default 1000
+             */
+            simulations: number;
+            /**
+             * Seed
+             * @description Random seed: the same seed and data give the same results.
+             * @default 42
+             */
+            seed: number;
+        };
+        /** MonteCarloStage */
+        MonteCarloStage: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "NOT_RUN" | "RUNNING" | "PASS" | "FAIL" | "ERROR" | "PLANNED";
+            /**
+             * Checks
+             * @default []
+             */
+            checks: components["schemas"]["Check"][];
+            /** Reason */
+            reason?: string | null;
+            /** Error */
+            error?: string | null;
+            /** Resampled Series */
+            resampled_series?: string | null;
+            bootstrap?: components["schemas"]["Bootstrap"] | null;
+            significance?: components["schemas"]["Significance"] | null;
+        };
+        /** MonthlyReturn */
+        MonthlyReturn: {
+            /**
+             * Month
+             * @description YYYY-MM (IST).
+             */
+            month: string;
+            /** Value */
+            value: number | null;
+        };
         /**
          * NotificationPriority
          * @enum {string}
@@ -1144,6 +4116,10 @@ export interface components {
             user_id: string;
             /** Execution Id */
             execution_id: string | null;
+            /** Execution Type */
+            execution_type?: string | null;
+            /** Execution Status */
+            execution_status?: string | null;
             /** Notification Type */
             notification_type: string;
             /** Priority */
@@ -1170,6 +4146,105 @@ export interface components {
          * @enum {string}
          */
         NotificationType: "INFO" | "WARNING" | "ERROR" | "TRADE";
+        /** Objective */
+        Objective: {
+            /** Target */
+            target: number;
+            /** Portfolio */
+            portfolio: number | null;
+            /** Benchmark */
+            benchmark: number | null;
+            /** Value */
+            value: number | null;
+            /** Met */
+            met: boolean;
+            /** Reason */
+            reason: string | null;
+            /** Rule */
+            rule: string;
+        };
+        /** Objectives */
+        Objectives: {
+            sharpe_improvement: components["schemas"]["Objective"];
+            drawdown_reduction: components["schemas"]["Objective"];
+        };
+        /** OrderOut */
+        OrderOut: {
+            /** Id */
+            id: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string;
+            /** Side */
+            side: string;
+            /** Order Type */
+            order_type: string;
+            /** Product */
+            product: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: number | null;
+            /** Trigger Price */
+            trigger_price: number | null;
+            /** Status */
+            status: string;
+            /** Status Message */
+            status_message: string | null;
+            /**
+             * Session Date
+             * Format: date
+             */
+            session_date: string;
+            /** After Market */
+            after_market: boolean;
+            /** Placed At */
+            placed_at: string;
+            /** Triggered At */
+            triggered_at: string | null;
+            /** Filled At */
+            filled_at: string | null;
+            /** Average Price */
+            average_price: number | null;
+            /** Reserved Amount */
+            reserved_amount: number | null;
+            /** Source */
+            source: string;
+            /** Deployment Id */
+            deployment_id?: string | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+        };
+        /** OrderRequest */
+        OrderRequest: {
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            /**
+             * Side
+             * @enum {string}
+             */
+            side: "BUY" | "SELL";
+            /**
+             * Order Type
+             * @enum {string}
+             */
+            order_type: "MARKET" | "LIMIT" | "SL" | "SL_M";
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price?: number | string | null;
+            /** Trigger Price */
+            trigger_price?: number | string | null;
+        };
         /** OrderResponse */
         OrderResponse: {
             /**
@@ -1228,6 +4303,313 @@ export interface components {
          * @enum {string}
          */
         OrderType: "MARKET" | "LIMIT" | "SL" | "SLM";
+        /**
+         * PaperStageInfo
+         * @description Stage 5: the paper deployment running the strategy (Feature 1).
+         */
+        PaperStageInfo: {
+            /** Deployment Id */
+            deployment_id: string;
+            /** Status */
+            status: string;
+            /** Start Date */
+            start_date: string;
+            /** End Date */
+            end_date: string | null;
+            /** Days Done */
+            days_done: number;
+            /** Days Planned */
+            days_planned: number | null;
+            /** Capital */
+            capital: number;
+            /** Equity */
+            equity: number | null;
+            /** Total Return */
+            total_return: number | null;
+            /** Max Drawdown */
+            max_drawdown: number | null;
+            /** Paper Annualized Mean Return */
+            paper_annualized_mean_return: number | null;
+            /** Backtest Annualized Mean Return */
+            backtest_annualized_mean_return: number | null;
+            /** Retention */
+            retention: number | null;
+            /** Loss Limit */
+            loss_limit: number | null;
+            /** Breaches */
+            breaches: number;
+            /** Fills */
+            fills: number;
+        };
+        /** PaperTradingStage */
+        PaperTradingStage: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "NOT_RUN" | "RUNNING" | "PASS" | "FAIL" | "ERROR" | "PLANNED";
+            /**
+             * Checks
+             * @default []
+             */
+            checks: components["schemas"]["Check"][];
+            /** Reason */
+            reason?: string | null;
+            /** Error */
+            error?: string | null;
+            paper?: components["schemas"]["PaperStageInfo"] | null;
+        };
+        /** ParameterChoice */
+        ParameterChoice: {
+            /** Choice */
+            choice: string;
+            /** Windows */
+            windows: number;
+            /** Share */
+            share: number;
+        };
+        /** Percentiles */
+        Percentiles: {
+            /** P05 */
+            p05: number;
+            /** P25 */
+            p25: number;
+            /** P50 */
+            p50: number;
+            /** P75 */
+            p75: number;
+            /** P95 */
+            p95: number;
+        };
+        /** Performance */
+        Performance: {
+            /** Days */
+            days: number;
+            /** Start Value */
+            start_value: number;
+            /** End Value */
+            end_value: number;
+            /** Total Return */
+            total_return: number | null;
+            /** Max Drawdown */
+            max_drawdown: number;
+            /** Annualized Mean Return */
+            annualized_mean_return: number | null;
+            /** Annualized Volatility */
+            annualized_volatility: number | null;
+            /** Sharpe Ratio */
+            sharpe_ratio: number | null;
+            /** Null Reasons */
+            null_reasons: {
+                [key: string]: string;
+            };
+            /** Fills */
+            fills: number;
+            /** Closed Trades */
+            closed_trades: number;
+            /** Winning Trades */
+            winning_trades: number;
+            /** Win Rate */
+            win_rate: number | null;
+            /** Realised Pnl */
+            realised_pnl: number;
+            /** Charges */
+            charges: number;
+        };
+        /** PortfolioAccount */
+        PortfolioAccount: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description: string | null;
+            /** Initial Capital */
+            initial_capital: string;
+            /** Cash */
+            cash: string;
+            /** Invested Value */
+            invested_value: string;
+            /** Total Equity */
+            total_equity: string;
+            /** Allocation Weights */
+            allocation_weights: {
+                [key: string]: string;
+            };
+            /** Cash Weight */
+            cash_weight: string;
+            /** Holdings */
+            holdings: components["schemas"]["SavedHolding"][];
+            /**
+             * Simulation Only
+             * @default true
+             */
+            simulation_only: boolean;
+        };
+        /** PortfolioBacktestDetail */
+        PortfolioBacktestDetail: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            status: components["schemas"]["ExecutionStatus"];
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Frequency */
+            frequency: string;
+            /** Strategy Count */
+            strategy_count: number;
+            /** Benchmark Symbol */
+            benchmark_symbol: string | null;
+            /** Regime Filter */
+            regime_filter: boolean;
+            /** Error Message */
+            error_message: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            headline?: components["schemas"]["Headline"] | null;
+            /** Benchmark Instrument Id */
+            benchmark_instrument_id: string | null;
+            /** Capital */
+            capital: number;
+            /** Brokerage Rate */
+            brokerage_rate: number;
+            /** Slippage Bps */
+            slippage_bps: number;
+            limits: components["schemas"]["BacktestLimits"];
+            /** Sixty Forty */
+            sixty_forty: boolean;
+            /** Strategies */
+            strategies: components["schemas"]["SleeveSetting"][];
+            /** Excluded */
+            excluded: components["schemas"]["app__schemas__portfolio_backtest__ExcludedStrategy"][];
+            regime_model: components["schemas"]["RegimeModelRef"] | null;
+            /**
+             * Require Validated
+             * @default false
+             */
+            require_validated: boolean;
+            /**
+             * Hindsight
+             * @description Strategies validated on data from inside the period (choosing them uses hindsight).
+             */
+            hindsight?: string[];
+        };
+        /** PortfolioBacktestResults */
+        PortfolioBacktestResults: {
+            /** Version */
+            version: string;
+            /** Days */
+            days: string[];
+            /**
+             * Series
+             * @description portfolio, nifty, equal_weight and maybe sixty_forty.
+             */
+            series: {
+                [key: string]: number[];
+            };
+            /** Drawdowns */
+            drawdowns: {
+                [key: string]: number[];
+            };
+            /** Metrics */
+            metrics: {
+                [key: string]: components["schemas"]["SeriesMetrics"];
+            };
+            /** Null Reasons */
+            null_reasons: {
+                [key: string]: {
+                    [key: string]: string;
+                };
+            };
+            relative: components["schemas"]["Relative"];
+            /** Relative Null Reasons */
+            relative_null_reasons: {
+                [key: string]: string;
+            };
+            objectives: components["schemas"]["Objectives"];
+            /** Rebalances */
+            rebalances: components["schemas"]["RebalanceEntry"][];
+            /** Rebalance Count */
+            rebalance_count: number;
+            /** Strategy Names */
+            strategy_names: {
+                [key: string]: string;
+            };
+            /** Sleeves */
+            sleeves: components["schemas"]["SleeveSummary"][];
+            regime_model: components["schemas"]["RegimeModelRef"] | null;
+            regime_in_sample: components["schemas"]["PortfolioInSample"] | null;
+            /** Notes */
+            notes: string[];
+            benchmark: components["schemas"]["BenchmarkRef"];
+        };
+        /** PortfolioBacktestSummary */
+        PortfolioBacktestSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            status: components["schemas"]["ExecutionStatus"];
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Frequency */
+            frequency: string;
+            /** Strategy Count */
+            strategy_count: number;
+            /** Benchmark Symbol */
+            benchmark_symbol: string | null;
+            /** Regime Filter */
+            regime_filter: boolean;
+            /** Error Message */
+            error_message: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            headline?: components["schemas"]["Headline"] | null;
+        };
         /** PortfolioHoldingInput */
         PortfolioHoldingInput: {
             /** Quantity */
@@ -1235,8 +4617,31 @@ export interface components {
             /** Price */
             price: number | string;
         };
+        /**
+         * PortfolioInSample
+         * @description Days of the run inside the regime model's training period (classified in-sample).
+         */
+        PortfolioInSample: {
+            /** Days */
+            days: number;
+            /** Of Days */
+            of_days: number;
+            /** Flag */
+            flag: string | null;
+        };
         /** PortfolioRebalanceRequest */
         PortfolioRebalanceRequest: {
+            /** Candidates */
+            candidates?: components["schemas"]["StrategyCandidateInput"][] | null;
+            /** Strategy Ids */
+            strategy_ids?: string[] | null;
+            /** Regime */
+            regime?: string | null;
+            /**
+             * Require Validated
+             * @default true
+             */
+            require_validated: boolean;
             /** Cash */
             cash: number | string;
             /** Holdings */
@@ -1247,10 +4652,6 @@ export interface components {
             prices: {
                 [key: string]: number | string;
             };
-            /** Candidates */
-            candidates: components["schemas"]["StrategyCandidateInput"][];
-            /** Regime */
-            regime?: string | null;
             limits?: components["schemas"]["PortfolioRiskLimitsInput"] | null;
             /**
              * Minimum Trade Value
@@ -1278,6 +4679,33 @@ export interface components {
             /** Max Invested Capital */
             max_invested_capital?: number | string | null;
         };
+        /** PortfolioSummary */
+        PortfolioSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description: string | null;
+            /** Initial Capital */
+            initial_capital: string;
+            /** Cash */
+            cash: string;
+            /** Invested Value */
+            invested_value: string;
+            /** Total Equity */
+            total_equity: string;
+            /** Holdings Count */
+            holdings_count: number;
+            /**
+             * Simulation Only
+             * @default true
+             */
+            simulation_only: boolean;
+        };
         /** PositionResponse */
         PositionResponse: {
             /**
@@ -1297,7 +4725,16 @@ export interface components {
             instrument_id: string;
             /** Broker Account Id */
             broker_account_id: string | null;
-            /** Quantity */
+            /**
+             * Direction
+             * @default LONG
+             * @enum {string}
+             */
+            direction: "LONG" | "SHORT";
+            /**
+             * Quantity
+             * @description Size of the position (0 once closed).
+             */
             quantity: number;
             /** Average Price */
             average_price: number;
@@ -1333,6 +4770,700 @@ export interface components {
          * @enum {string}
          */
         PositionStatus: "OPEN" | "CLOSED";
+        /** PreviewOut */
+        PreviewOut: {
+            /** Estimated Price */
+            estimated_price: number | null;
+            /** Estimated Value */
+            estimated_value: number | null;
+            /** Charges */
+            charges: {
+                [key: string]: number;
+            } | null;
+            /** Estimated Total */
+            estimated_total: number | null;
+            /** Available Cash */
+            available_cash: number;
+            quote: components["schemas"]["QuoteOut"] | null;
+            /** Quote Problem */
+            quote_problem: string | null;
+            /**
+             * Session Date
+             * Format: date
+             */
+            session_date: string;
+            /** After Market */
+            after_market: boolean;
+            /** Allowed */
+            allowed: boolean;
+            /** Problem */
+            problem: string | null;
+        };
+        /**
+         * PriceOperand
+         * @description A field of the current bar.
+         */
+        PriceOperand: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "price";
+            /**
+             * Field
+             * @enum {string}
+             */
+            field: "open" | "high" | "low" | "close" | "volume";
+        };
+        /** PriceSource */
+        PriceSource: {
+            /** Name */
+            name: string;
+            /** Delayed */
+            delayed: boolean;
+            /** Note */
+            note: string;
+        };
+        /** ProvenanceEntry */
+        ProvenanceEntry: {
+            /** Instrument Id */
+            instrument_id: string | null;
+            /** Provider */
+            provider: string | null;
+            /** Frequency */
+            frequency: string | null;
+            /** Requested Start Date */
+            requested_start_date: string | null;
+            /** Requested End Date */
+            requested_end_date: string | null;
+            /** Row Count */
+            row_count: number | null;
+            /** Cache Hit */
+            cache_hit: boolean | null;
+            /** Dataset Cache Key */
+            dataset_cache_key: string | null;
+            /** Data Fingerprint */
+            data_fingerprint: string | null;
+            /** Data Version */
+            data_version: string | null;
+            /** Data Acquired At */
+            data_acquired_at: string | null;
+        };
+        /** PurgeGap */
+        PurgeGap: {
+            /** Between */
+            between: string;
+            /** Days */
+            days: number;
+            /** Dropped Rows */
+            dropped_rows: number;
+            /** Start */
+            start: string | null;
+            /** End */
+            end: string | null;
+        };
+        /** QuoteOut */
+        QuoteOut: {
+            /** Price */
+            price: number;
+            /** Time */
+            time: string;
+            /** Previous Close */
+            previous_close: number | null;
+            /** Change */
+            change: number | null;
+            /** Change Percent */
+            change_percent: number | null;
+            /** Source */
+            source: string;
+            /** Delayed */
+            delayed: boolean;
+            /** Age Seconds */
+            age_seconds: number;
+        };
+        /** QuoteRow */
+        QuoteRow: {
+            /** Instrument Id */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string;
+            /** Name */
+            name: string;
+            quote: components["schemas"]["QuoteOut"] | null;
+            /** Problem */
+            problem: string | null;
+        };
+        /** RebalanceAsset */
+        RebalanceAsset: {
+            /** Asset */
+            asset: string;
+            /** Price */
+            price: string;
+            /** Current Quantity */
+            current_quantity: number;
+            /** Current Value */
+            current_value: string;
+            /** Current Weight */
+            current_weight: string;
+            /** Target Value */
+            target_value: string;
+            /** Target Weight */
+            target_weight: string;
+            /** Action */
+            action: string;
+            /** Trade Quantity */
+            trade_quantity: number;
+            /** Trade Value */
+            trade_value: string;
+            /** Ending Quantity */
+            ending_quantity: number;
+            /** Ending Value */
+            ending_value: string;
+        };
+        /** RebalanceEntry */
+        RebalanceEntry: {
+            /** Day */
+            day: string;
+            regime: components["schemas"]["RegimeOnDay"] | null;
+            /** Strategies */
+            strategies: components["schemas"]["RebalanceStrategy"][];
+            /** Cash Weight */
+            cash_weight: number;
+            /** Turnover */
+            turnover: number;
+            /** Cost */
+            cost: number;
+            /** Value Before */
+            value_before: number;
+            /** Value After */
+            value_after: number;
+            /** Binding Limits */
+            binding_limits: components["schemas"]["BindingLimit"][];
+            /** Note */
+            note: string | null;
+        };
+        /** RebalancePlanResponse */
+        RebalancePlanResponse: {
+            current_state: components["schemas"]["CurrentState"];
+            target: components["schemas"]["TargetPortfolioResponse"];
+            rebalancing: components["schemas"]["Rebalancing"];
+            /**
+             * Assets
+             * @default []
+             */
+            assets: components["schemas"]["RebalanceAsset"][];
+            ending_state?: components["schemas"]["EndingState"] | null;
+            /**
+             * Prices
+             * @default []
+             */
+            prices: components["schemas"]["UsedPrice"][];
+            /**
+             * Simulation Only
+             * @default true
+             */
+            simulation_only: boolean;
+        };
+        /** RebalanceStrategy */
+        RebalanceStrategy: {
+            /** Strategy Id */
+            strategy_id: string;
+            /** Name */
+            name: string;
+            /** Score */
+            score: number | null;
+            /** Factors */
+            factors: {
+                [key: string]: number;
+            } | null;
+            /** Excluded */
+            excluded: string | null;
+            /** Weight */
+            weight: number;
+        };
+        /** RebalanceTrade */
+        RebalanceTrade: {
+            /** Asset */
+            asset: string;
+            /** Side */
+            side: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: string;
+            /** Value */
+            value: string;
+        };
+        /** Rebalancing */
+        Rebalancing: {
+            /** Starting Cash */
+            starting_cash: string;
+            /** Ending Cash */
+            ending_cash: string;
+            /** Target Values */
+            target_values: {
+                [key: string]: string;
+            };
+            /** Trades */
+            trades: components["schemas"]["RebalanceTrade"][];
+        };
+        /**
+         * RecordCounts
+         * @description How many trading records a backtest has stored (all simulated).
+         */
+        RecordCounts: {
+            /**
+             * Execution Id
+             * Format: uuid
+             */
+            execution_id: string;
+            /** Stored */
+            stored: boolean;
+            /** Orders */
+            orders: number;
+            /** Trades */
+            trades: number;
+            /** Positions */
+            positions: number;
+        };
+        /** RegimeFit */
+        RegimeFit: {
+            regime: components["schemas"]["RegimeSnapshot"] | null;
+            /** Strategies */
+            strategies: components["schemas"]["StrategyRegimeFit"][];
+        };
+        /** RegimeHistory */
+        RegimeHistory: {
+            /**
+             * Statement
+             * @default The regime is the model's classification of the market's recent behaviour (volatility and trend). It describes the past; it is not a forecast.
+             */
+            statement: string;
+            model: components["schemas"]["RegimeModelSummary"];
+            instrument: components["schemas"]["InstrumentRef"];
+            /** Start */
+            start: string;
+            /** End */
+            end: string;
+            /** Training Start */
+            training_start: string;
+            /** Training End */
+            training_end: string;
+            /** Regimes */
+            regimes: components["schemas"]["RegimeLabel"][];
+            /** Points */
+            points: components["schemas"]["HistoryPoint"][];
+            /** Periods */
+            periods: components["schemas"]["RegimeHistoryPeriod"][];
+            /** Transitions */
+            transitions: components["schemas"]["RegimeTransition"][];
+            /** Horizon Days */
+            horizon_days?: number | null;
+            /**
+             * Dimension Periods
+             * @description Supervised: one band row per dimension.
+             */
+            dimension_periods?: components["schemas"]["DimensionPeriods"][] | null;
+        };
+        /** RegimeHistoryPeriod */
+        RegimeHistoryPeriod: {
+            /** Regime Id */
+            regime_id: number | null;
+            /** Code */
+            code: string | null;
+            /** Name */
+            name: string;
+            /** Start */
+            start: string;
+            /** End */
+            end: string;
+            /** Bars */
+            bars: number;
+        };
+        /** RegimeLabel */
+        RegimeLabel: {
+            /**
+             * Regime Id
+             * @description The model's cluster number (GMM) or combined-regime number.
+             */
+            regime_id: number;
+            /**
+             * Code
+             * @description GMM: R1, R2, ... from the calmest to the most volatile. Supervised: e.g. HV-UP-OFF.
+             */
+            code: string;
+            /** Name */
+            name: string;
+            /**
+             * Volatility State
+             * @enum {string}
+             */
+            volatility_state: "High volatility" | "Low volatility";
+            /**
+             * Trend State
+             * @enum {string}
+             */
+            trend_state: "Uptrend" | "Downtrend" | "Sideways";
+            /** Risk State */
+            risk_state?: ("Risk-on" | "Risk-off") | null;
+            /** Mean Log Return */
+            mean_log_return?: number | null;
+            /** Mean Realized Volatility */
+            mean_realized_volatility?: number | null;
+            /** Mean Trend Strength */
+            mean_trend_strength?: number | null;
+            /** Annualized Return */
+            annualized_return?: number | null;
+            /** Annualized Volatility */
+            annualized_volatility?: number | null;
+            /** Training Days */
+            training_days: number;
+            /** Training Share */
+            training_share: number;
+        };
+        /** RegimeLabels */
+        RegimeLabels: {
+            /** Rule */
+            rule: string;
+            /** Median Training Volatility */
+            median_training_volatility?: number | null;
+            /** Trend Band */
+            trend_band?: number | null;
+            /** Regimes */
+            regimes: components["schemas"]["RegimeLabel"][];
+        };
+        /** RegimeMethod */
+        RegimeMethod: {
+            /** Method */
+            method: string;
+            /** Warm Up Bars */
+            warm_up_bars: number;
+            /**
+             * Source
+             * @default rule_based
+             * @enum {string}
+             */
+            source: "rule_based" | "model";
+            /** Trend Window */
+            trend_window?: number | null;
+            /** Volatility Window */
+            volatility_window?: number | null;
+            /** Volatility Threshold */
+            volatility_threshold?: number | null;
+            model?: components["schemas"]["RegimeModelRef"] | null;
+            /** Min Days */
+            min_days?: number | null;
+        };
+        /** RegimeModelDetail */
+        RegimeModelDetail: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Number */
+            number: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "TRAINING" | "READY" | "FAILED";
+            /**
+             * Is Active
+             * @description The newest ready model, used for the current regime.
+             */
+            is_active: boolean;
+            /** Model Version */
+            model_version: string;
+            /**
+             * Model Kind
+             * @enum {string}
+             */
+            model_kind: "GMM" | "RF" | "XGB" | "AUTO";
+            instrument: components["schemas"]["InstrumentRef"];
+            vix_instrument?: components["schemas"]["InstrumentRef"] | null;
+            /** Settings */
+            settings: {
+                [key: string]: unknown;
+            };
+            /** Trained By You */
+            trained_by_you: boolean;
+            /** Error Message */
+            error_message: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            /** @description Filled in when the model is READY. */
+            card: components["schemas"]["ModelCard"] | null;
+        };
+        /**
+         * RegimeModelRef
+         * @description The market regime model a stage-3 split used (recorded for reproducibility).
+         */
+        RegimeModelRef: {
+            /** Id */
+            id: string;
+            /** Number */
+            number: number;
+            /** Name */
+            name: string;
+            /** Kind */
+            kind: string;
+            /** Kind Name */
+            kind_name: string;
+            /** Version */
+            version: string;
+            /** Training Start */
+            training_start: string | null;
+            /** Training End */
+            training_end: string | null;
+            /**
+             * In Sample End
+             * @description The last day the model saw in training (a supervised model's labels look ahead).
+             */
+            in_sample_end?: string | null;
+            /** Instrument Id */
+            instrument_id: string | null;
+            /** Instrument Symbol */
+            instrument_symbol: string | null;
+            /** Horizon Days */
+            horizon_days: number | null;
+            /** Random State */
+            random_state?: number | null;
+        };
+        /** RegimeModelSummary */
+        RegimeModelSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Number */
+            number: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "TRAINING" | "READY" | "FAILED";
+            /**
+             * Is Active
+             * @description The newest ready model, used for the current regime.
+             */
+            is_active: boolean;
+            /** Model Version */
+            model_version: string;
+            /**
+             * Model Kind
+             * @enum {string}
+             */
+            model_kind: "GMM" | "RF" | "XGB" | "AUTO";
+            instrument: components["schemas"]["InstrumentRef"];
+            vix_instrument?: components["schemas"]["InstrumentRef"] | null;
+            /** Settings */
+            settings: {
+                [key: string]: unknown;
+            };
+            /** Trained By You */
+            trained_by_you: boolean;
+            /** Error Message */
+            error_message: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+        };
+        /** RegimeOnDay */
+        RegimeOnDay: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Volatility State */
+            volatility_state: string;
+            /** Trend State */
+            trend_state: string;
+            /** As Of */
+            as_of: string;
+        };
+        /** RegimePeriod */
+        RegimePeriod: {
+            /** Regime */
+            regime: string;
+            /** Start */
+            start: string;
+            /** End */
+            end: string;
+            /** Bars */
+            bars: number;
+        };
+        /** RegimeProbability */
+        RegimeProbability: {
+            /** Regime Id */
+            regime_id: number;
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Probability */
+            probability: number;
+        };
+        /** RegimeRow */
+        RegimeRow: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Days */
+            days: number;
+            /** Share */
+            share: number;
+            /** Total Return */
+            total_return: number | null;
+            /** Annualized Mean Return */
+            annualized_mean_return: number | null;
+            /** Annualized Volatility */
+            annualized_volatility: number | null;
+            /** Max Drawdown */
+            max_drawdown: number | null;
+            /** Trade Count */
+            trade_count: number;
+            /** Code */
+            code?: string | null;
+            /** Judged */
+            judged?: boolean | null;
+        };
+        /** RegimeRule */
+        RegimeRule: {
+            /**
+             * Trend States
+             * @description None: any trend state.
+             */
+            trend_states: string[] | null;
+            /**
+             * Volatility States
+             * @description None: any volatility state.
+             */
+            volatility_states: string[] | null;
+            /** Rule */
+            rule: string;
+        };
+        /** RegimeSettings */
+        RegimeSettings: {
+            /**
+             * Source
+             * @description Where the regime labels come from: rule_based (from the instrument's prices) or model (the market regime model's classification of each day, Feature 3).
+             * @default rule_based
+             */
+            source: string;
+            /**
+             * Model Id
+             * @description source = model: the regime model to use (default: the active model).
+             */
+            model_id?: string | null;
+            /**
+             * Trend Window
+             * @description Days of the trend average (bull/bear).
+             * @default 200
+             */
+            trend_window: number;
+            /**
+             * Volatility Window
+             * @description Days of the volatility estimate (high/low).
+             * @default 20
+             */
+            volatility_window: number;
+        };
+        /** RegimeSnapshot */
+        RegimeSnapshot: {
+            /** Model Number */
+            model_number: number;
+            /** Model Version */
+            model_version: string;
+            /** Instrument Symbol */
+            instrument_symbol: string | null;
+            /** As Of */
+            as_of: string;
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Volatility State */
+            volatility_state: string;
+            /** Trend State */
+            trend_state: string;
+            /** Confidence */
+            confidence: number;
+        };
+        /** RegimeStressStage */
+        RegimeStressStage: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "NOT_RUN" | "RUNNING" | "PASS" | "FAIL" | "ERROR" | "PLANNED";
+            /**
+             * Checks
+             * @default []
+             */
+            checks: components["schemas"]["Check"][];
+            /** Reason */
+            reason?: string | null;
+            /** Error */
+            error?: string | null;
+            method?: components["schemas"]["RegimeMethod"] | null;
+            /**
+             * Regimes
+             * @default []
+             */
+            regimes: components["schemas"]["RegimeRow"][];
+            /**
+             * Periods
+             * @default []
+             */
+            periods: components["schemas"]["RegimePeriod"][];
+            /** Labelled Days */
+            labelled_days?: number | null;
+            /** Dimensions */
+            dimensions?: components["schemas"]["DimensionRegimes"][] | null;
+            unclassified?: components["schemas"]["Unclassified"] | null;
+            /** Insufficient */
+            insufficient?: components["schemas"]["InsufficientRegime"][] | null;
+            in_sample?: components["schemas"]["InSample"] | null;
+        };
+        /** RegimeTransition */
+        RegimeTransition: {
+            /** Timestamp */
+            timestamp: string;
+            /** From Regime Id */
+            from_regime_id: number;
+            /** From Code */
+            from_code: string;
+            /** From Name */
+            from_name: string;
+            /** To Regime Id */
+            to_regime_id: number;
+            /** To Code */
+            to_code: string;
+            /** To Name */
+            to_name: string;
+            /** Confidence */
+            confidence: number;
+        };
         /** RegisterRequest */
         RegisterRequest: {
             /** Full Name */
@@ -1361,6 +5492,680 @@ export interface components {
             /** Email Verified */
             email_verified: boolean;
         };
+        /** Relative */
+        Relative: {
+            /** Alpha */
+            alpha: number | null;
+            /** Beta */
+            beta: number | null;
+            /** Correlation */
+            correlation: number | null;
+            /** Tracking Error */
+            tracking_error: number | null;
+            /** Information Ratio */
+            information_ratio: number | null;
+        };
+        /** ReplayDay */
+        ReplayDay: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Bars */
+            bars: number;
+            /**
+             * First
+             * Format: date-time
+             */
+            first: string;
+            /**
+             * Last
+             * Format: date-time
+             */
+            last: string;
+            /** Replayable */
+            replayable: boolean;
+        };
+        /** ResetRequest */
+        ResetRequest: {
+            /** Initial Cash */
+            initial_cash?: number | string | null;
+        };
+        /**
+         * ResultsBasis
+         * @description How the ratios are annualised.
+         */
+        ResultsBasis: {
+            /**
+             * Periods Per Year
+             * @description Bars per year used to annualise (252 trading days).
+             */
+            periods_per_year: number;
+            /**
+             * Risk Free Rate Annual
+             * @description Risk-free rate a year, as a fraction.
+             */
+            risk_free_rate_annual: number;
+            /**
+             * Risk Free Rate Per Period
+             * @description The same rate per bar, compounded.
+             */
+            risk_free_rate_per_period: number;
+            /**
+             * Return Frequency
+             * @description What one return is measured over.
+             */
+            return_frequency: string;
+            /**
+             * Cagr Year Days
+             * @description Calendar days in a year for CAGR.
+             */
+            cagr_year_days: number;
+        };
+        /** ResultsConfiguration */
+        ResultsConfiguration: {
+            /**
+             * Strategy Id
+             * Format: uuid
+             */
+            strategy_id: string;
+            /** Strategy Name */
+            strategy_name: string | null;
+            /** Strategy Key */
+            strategy_key: string | null;
+            /**
+             * Strategy Version
+             * @description Version when the run was submitted.
+             */
+            strategy_version: number | null;
+            /** Current Strategy Version */
+            current_strategy_version: number | null;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Instrument Ids */
+            instrument_ids: string[];
+            /** Timeframe */
+            timeframe: string;
+            /** Initial Capital */
+            initial_capital: number;
+            /** Quantity */
+            quantity: number | null;
+            /** Slippage Bps */
+            slippage_bps: number | null;
+            /** Brokerage Rate */
+            brokerage_rate: number | null;
+            /** Requested Start */
+            requested_start: string | null;
+            /** Requested End */
+            requested_end: string | null;
+            /** Engine Version */
+            engine_version: string | null;
+            /**
+             * Rules
+             * @description A no-code strategy's rules as they were when the run was submitted.
+             */
+            rules?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /** ResultsProvenance */
+        ResultsProvenance: {
+            /** Datasets */
+            datasets: components["schemas"]["ProvenanceEntry"][];
+            /**
+             * Aligned Rows
+             * @description Bars all instruments share (multi-instrument runs).
+             */
+            aligned_rows: number | null;
+        };
+        /** ResultsSummary */
+        ResultsSummary: {
+            /** Initial Capital */
+            initial_capital: number;
+            /** Final Capital */
+            final_capital: number;
+            /** Net Profit */
+            net_profit: number;
+            /** Total Return */
+            total_return: number;
+            /** Cagr */
+            cagr: number | null;
+            /** Annualized Volatility */
+            annualized_volatility: number | null;
+            /** Downside Deviation */
+            downside_deviation: number | null;
+            /** Sharpe Ratio */
+            sharpe_ratio: number | null;
+            /** Sortino Ratio */
+            sortino_ratio: number | null;
+            /** Calmar Ratio */
+            calmar_ratio: number | null;
+            /** Max Drawdown */
+            max_drawdown: number | null;
+            /** Max Drawdown Duration Bars */
+            max_drawdown_duration_bars: number | null;
+            /** Max Drawdown Peak At */
+            max_drawdown_peak_at: string | null;
+            /** Max Drawdown Trough At */
+            max_drawdown_trough_at: string | null;
+            /** Bar Count */
+            bar_count: number;
+            /** First Bar At */
+            first_bar_at: string;
+            /** Last Bar At */
+            last_bar_at: string;
+        };
+        /** ReturnDistribution */
+        ReturnDistribution: {
+            /** Mean */
+            mean: number;
+            /** Median */
+            median: number;
+            percentiles: components["schemas"]["Percentiles"];
+            /** Simulated Outcome Interval 90 */
+            simulated_outcome_interval_90: number[];
+            /** Probability Of Loss */
+            probability_of_loss: number;
+        };
+        /** Risk */
+        Risk: {
+            /**
+             * Loss
+             * @description Capital minus equity now, if positive.
+             */
+            loss: number;
+            /**
+             * Loss Limit
+             * @description The daily loss limit in rupees.
+             */
+            loss_limit: number | null;
+            /**
+             * Loss Used
+             * @description loss / loss_limit (1 = the limit).
+             */
+            loss_used: number | null;
+            /** Position Value */
+            position_value: number | null;
+            /**
+             * Position Limit
+             * @description The maximum position value, or the capital when none is set.
+             */
+            position_limit: number;
+            /**
+             * Position Used
+             * @description position_value / position_limit.
+             */
+            position_used: number | null;
+        };
+        /** RoundTrip */
+        RoundTrip: {
+            /** Instrument Id */
+            instrument_id: string;
+            /** Direction */
+            direction: string;
+            /** Quantity */
+            quantity: number;
+            /** Entry Timestamp */
+            entry_timestamp: string;
+            /** Entry Price */
+            entry_price: number;
+            /** Exit Timestamp */
+            exit_timestamp: string | null;
+            /** Exit Price */
+            exit_price: number | null;
+            /** Gross Pnl */
+            gross_pnl: number | null;
+            /** Charges */
+            charges: number;
+            /** Net Pnl */
+            net_pnl: number | null;
+            /** Return */
+            return: number | null;
+            /** Is Open */
+            is_open: boolean;
+        };
+        /** RunDueOut */
+        RunDueOut: {
+            /**
+             * Through
+             * Format: date
+             */
+            through: string;
+            /** Deployments */
+            deployments: number;
+            /** Days Processed */
+            days_processed: number;
+            /** Snapshots */
+            snapshots: number;
+        };
+        /** SandboxReference */
+        SandboxReference: {
+            /** Entry Point */
+            entry_point: string;
+            /** Allowed Imports */
+            allowed_imports: string[];
+            /** Context Api */
+            context_api: {
+                [key: string]: unknown;
+            }[];
+            /** Return Values */
+            return_values: {
+                [key: string]: unknown;
+            }[];
+            /** Indicators */
+            indicators: {
+                [key: string]: unknown;
+            }[];
+            /** Limits */
+            limits: {
+                [key: string]: unknown;
+            }[];
+            /** Rules */
+            rules: string[];
+            /** Example */
+            example: string;
+            /** Sandbox */
+            sandbox: string;
+            /** Docker Available */
+            docker_available: boolean;
+            /** Max Code Chars */
+            max_code_chars: number;
+        };
+        /** SavedHolding */
+        SavedHolding: {
+            /** Asset */
+            asset: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: string;
+            /** Average Price */
+            average_price: string;
+            /** Market Value */
+            market_value: string;
+            /** Weight */
+            weight: string;
+        };
+        /** ScoreRequest */
+        ScoreRequest: {
+            /**
+             * Weights
+             * @description Optional custom weights per core strategy, e.g. {"momentum": {"trend_strength": 2, "relative_momentum": 1, "volatility_suitability": 1}}. Every factor of a strategy must be given, each >= 0, not all 0. Not saved; strategies left out use the defaults.
+             */
+            weights?: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            } | null;
+        };
+        /** ScoredInstrument */
+        ScoredInstrument: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Symbol */
+            symbol: string | null;
+        };
+        /** ScoredStrategy */
+        ScoredStrategy: {
+            /**
+             * Strategy Id
+             * Format: uuid
+             */
+            strategy_id: string;
+            /** Name */
+            name: string;
+            strategy_type: components["schemas"]["StrategyType"];
+            /** Version */
+            version: number;
+            /** Is Active */
+            is_active: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "SCORED" | "UNSCORED";
+            /**
+             * Reason
+             * @description Why it is not scored.
+             */
+            reason: string | null;
+            /**
+             * Basis
+             * @description How it was scored: a template's factor model, or (custom Python) the metrics of its latest backtest.
+             * @default factor_model
+             * @enum {string}
+             */
+            basis: "factor_model" | "backtest_results";
+            /** Strategy Key */
+            strategy_key: string | null;
+            /** Rank */
+            rank: number | null;
+            /** Composite Score */
+            composite_score: number | null;
+            /** Factors */
+            factors: components["schemas"]["FactorScore"][];
+            /**
+             * As Of
+             * @description The last stored bar the factors used.
+             */
+            as_of: string | null;
+            /** Instruments */
+            instruments: components["schemas"]["ScoredInstrument"][];
+            /**
+             * Source Execution Id
+             * @description The latest completed backtest.
+             */
+            source_execution_id: string | null;
+            /** Source Completed At */
+            source_completed_at: string | null;
+            regime_compatibility: components["schemas"]["Compatibility"] | null;
+            validation: components["schemas"]["ValidationStatus"];
+        };
+        /** Scores */
+        Scores: {
+            /** Accuracy */
+            accuracy: number;
+            /** Balanced Accuracy */
+            balanced_accuracy: number;
+        };
+        /** ScoringDefinitions */
+        ScoringDefinitions: {
+            /** Method */
+            method: string[];
+            /** Windows */
+            windows: {
+                [key: string]: number;
+            };
+            /** Bounds */
+            bounds: {
+                [key: string]: number[];
+            };
+            /** Directions */
+            directions: {
+                [key: string]: string;
+            };
+            /** Factors */
+            factors: components["schemas"]["FactorDefinition"][];
+            /** Strategies */
+            strategies: components["schemas"]["StrategyScoringInfo"][];
+        };
+        /** ScoringResult */
+        ScoringResult: {
+            /** @description The active regime model's current regime. */
+            regime: components["schemas"]["RegimeSnapshot"] | null;
+            /**
+             * Weights
+             * @description The weights used, per core strategy.
+             */
+            weights: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /** Custom Weights */
+            custom_weights: boolean;
+            /**
+             * Rows
+             * @description Scored strategies by rank, then the unscored ones.
+             */
+            rows: components["schemas"]["ScoredStrategy"][];
+        };
+        /** SeriesMetrics */
+        SeriesMetrics: {
+            /** Cagr */
+            cagr: number | null;
+            /** Annualized Volatility */
+            annualized_volatility: number | null;
+            /** Downside Deviation */
+            downside_deviation: number | null;
+            /** Sharpe Ratio */
+            sharpe_ratio: number | null;
+            /** Sortino Ratio */
+            sortino_ratio: number | null;
+            /** Calmar Ratio */
+            calmar_ratio: number | null;
+            /** Max Drawdown */
+            max_drawdown: number | null;
+            /** Max Drawdown Duration Bars */
+            max_drawdown_duration_bars: number | null;
+            /** Total Return */
+            total_return: number | null;
+            /** Final Value */
+            final_value: number;
+        };
+        /** SessionClock */
+        SessionClock: {
+            /**
+             * Market Time
+             * Format: date-time
+             */
+            market_time: string;
+            /** Label */
+            label: string;
+            /** Open */
+            open: boolean;
+            /** Finished */
+            finished: boolean;
+        };
+        /** SettingsRequest */
+        SettingsRequest: {
+            /** Slippage Bps */
+            slippage_bps?: number | null;
+            /** Brokerage Per Order */
+            brokerage_per_order?: number | string | null;
+        };
+        /** Significance */
+        Significance: {
+            /** Test */
+            test: string;
+            /** Null Hypothesis */
+            null_hypothesis: string;
+            /** Alternative Hypothesis */
+            alternative_hypothesis: string;
+            /** Assumptions */
+            assumptions: string[];
+            /** Observed Mean Return */
+            observed_mean_return: number;
+            /** Permutations */
+            permutations: number;
+            /** Seed */
+            seed: number;
+            /** P Value */
+            p_value: number;
+            /** Significant At 0 05 */
+            significant_at_0_05: boolean;
+        };
+        /** SimulatedFill */
+        SimulatedFill: {
+            /** Timestamp */
+            timestamp: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Side */
+            side: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: number;
+            /** Brokerage */
+            brokerage: number;
+            /** Total Charges */
+            total_charges: number;
+            /** Realized Pnl */
+            realized_pnl: number;
+            /** Closed Quantity */
+            closed_quantity: number;
+            /** Opened Quantity */
+            opened_quantity: number;
+        };
+        /** SimulatedOrder */
+        SimulatedOrder: {
+            /** Timestamp */
+            timestamp: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Side */
+            side: string;
+            /** Order Type */
+            order_type: string;
+            /** Quantity */
+            quantity: number;
+            /** Status */
+            status: string;
+            /**
+             * Reference Price
+             * @description The bar's close the order was sent at.
+             */
+            reference_price: number | null;
+            /** Fill Price */
+            fill_price: number;
+        };
+        /** SimulatedPosition */
+        SimulatedPosition: {
+            /** Instrument Id */
+            instrument_id: string;
+            /** Direction */
+            direction: string;
+            /** Quantity */
+            quantity: number;
+            /** Average Price */
+            average_price: number;
+            /** Last Price */
+            last_price: number | null;
+            /** Market Value */
+            market_value: number | null;
+            /** Unrealized Pnl */
+            unrealized_pnl: number | null;
+        };
+        /**
+         * SimulatedRecords
+         * @description This run's simulated orders, fills and end positions. Nothing was traded.
+         */
+        SimulatedRecords: {
+            /** Orders */
+            orders: components["schemas"]["SimulatedOrder"][];
+            /** Fills */
+            fills: components["schemas"]["SimulatedFill"][];
+            /** Positions */
+            positions: components["schemas"]["SimulatedPosition"][];
+            /** Ending Cash */
+            ending_cash: number;
+        };
+        /** SleeveSetting */
+        SleeveSetting: {
+            /** Strategy Id */
+            strategy_id: string;
+            /** Name */
+            name: string;
+            /** Strategy Key */
+            strategy_key: string;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Instrument Id */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string;
+            /** Asset */
+            asset: string;
+            /** Source Backtest Id */
+            source_backtest_id: string;
+            /** Initial Capital */
+            initial_capital: number;
+            /** Quantity */
+            quantity: number;
+            /** Slippage Bps */
+            slippage_bps: number;
+            /** Brokerage Rate */
+            brokerage_rate: number;
+            validation?: components["schemas"]["ValidationStatus"] | null;
+        };
+        /** SleeveSummary */
+        SleeveSummary: {
+            /** Strategy Id */
+            strategy_id: string;
+            /** Name */
+            name: string;
+            /** Symbol */
+            symbol: string;
+            /** Trades */
+            trades: number;
+            /** First Day */
+            first_day: string | null;
+        };
+        /** SnapshotOut */
+        SnapshotOut: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Cash */
+            cash: number;
+            /** Holdings Value */
+            holdings_value: number;
+            /** Equity */
+            equity: number;
+            /** Note */
+            note: string | null;
+        };
+        /** SpanMetrics */
+        SpanMetrics: {
+            /** Bars */
+            bars: number;
+            /** Total Return */
+            total_return: number;
+            /** Annualized Mean Return */
+            annualized_mean_return: number | null;
+            /** Sharpe Ratio */
+            sharpe_ratio: number | null;
+            /** Max Drawdown */
+            max_drawdown: number | null;
+            /** Trade Count */
+            trade_count: number;
+            /**
+             * Null Reasons
+             * @default {}
+             */
+            null_reasons: {
+                [key: string]: string;
+            };
+        };
+        /** Stages */
+        Stages: {
+            backtest: components["schemas"]["BacktestStage"];
+            walk_forward: components["schemas"]["WalkForwardStage"];
+            regime_stress: components["schemas"]["RegimeStressStage"];
+            monte_carlo: components["schemas"]["MonteCarloStage"];
+            paper_trading: components["schemas"]["PaperTradingStage"];
+        };
+        /** StateHolding */
+        StateHolding: {
+            /** Asset */
+            asset: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: string;
+            /** Market Value */
+            market_value: string;
+        };
+        /** StopRequest */
+        StopRequest: {
+            /**
+             * Square Off
+             * @description Square off now; otherwise at 15:20.
+             * @default true
+             */
+            square_off: boolean;
+        };
         /** StrategyCandidateInput */
         StrategyCandidateInput: {
             /** Strategy */
@@ -1378,6 +6183,59 @@ export interface components {
             /** Compatible Regimes */
             compatible_regimes?: string[] | null;
         };
+        /**
+         * StrategyCodeErrorInfo
+         * @description Feature 6: where a custom Python strategy failed, so the editor can show it.
+         */
+        StrategyCodeErrorInfo: {
+            /**
+             * Phase
+             * @description "check", "load" or "bar".
+             */
+            phase?: string | null;
+            /** Exception */
+            exception?: string | null;
+            /** Message */
+            message?: string | null;
+            /**
+             * Line
+             * @description The line in the user's code.
+             */
+            line?: number | null;
+            /**
+             * Bar Date
+             * @description The bar it failed on.
+             */
+            bar_date?: string | null;
+            /**
+             * Traceback
+             * @description The user's frames only.
+             */
+            traceback?: string | null;
+        };
+        /** StrategyCodeErrorOut */
+        StrategyCodeErrorOut: {
+            /**
+             * Code
+             * @default STRATEGY_CODE_ERROR
+             */
+            code: string;
+            /**
+             * Phase
+             * @description "check", "load" or "bar".
+             */
+            phase: string;
+            /** Exception */
+            exception: string;
+            /** Message */
+            message: string;
+            /** Line */
+            line: number | null;
+            /** Bar Date */
+            bar_date: string | null;
+            /** Traceback */
+            traceback?: string | null;
+        };
         /** StrategyConfig */
         StrategyConfig: {
             /** Parameters */
@@ -1390,6 +6248,71 @@ export interface components {
             entry_conditions: components["schemas"]["Condition"][];
             /** Exit Conditions */
             exit_conditions: components["schemas"]["Condition"][];
+        };
+        /** StrategyFactorInfo */
+        StrategyFactorInfo: {
+            /** Name */
+            name: string;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "higher_is_better" | "lower_is_better" | "magnitude" | "suitability";
+        };
+        /**
+         * StrategyParameterInfo
+         * @description One constructor parameter of a built-in strategy.
+         */
+        StrategyParameterInfo: {
+            /** Name */
+            name: string;
+            /** Type */
+            type: string | null;
+            /** Required */
+            required: boolean;
+            /** Default */
+            default?: boolean | number | string | null;
+        };
+        /** StrategyParameterValidationRequest */
+        StrategyParameterValidationRequest: {
+            /** Parameters */
+            parameters: {
+                [key: string]: boolean | number | string;
+            };
+        };
+        /** StrategyParameterValidationResponse */
+        StrategyParameterValidationResponse: {
+            /** Strategy Key */
+            strategy_key: string;
+            /** Effective Parameters */
+            effective_parameters: {
+                [key: string]: boolean | number | string;
+            };
+        };
+        /** StrategyRegimeFit */
+        StrategyRegimeFit: {
+            /** Strategy Key */
+            strategy_key: string;
+            rule: components["schemas"]["RegimeRule"];
+            compatibility: components["schemas"]["Compatibility"];
+        };
+        /**
+         * StrategyRegistryEntry
+         * @description A built-in strategy from StrategyRegistry (read-only).
+         */
+        StrategyRegistryEntry: {
+            /** Strategy Key */
+            strategy_key: string;
+            /** Parameters */
+            parameters: components["schemas"]["StrategyParameterInfo"][];
+            /** Required Inputs */
+            required_inputs: string[];
+            /**
+             * Instruments
+             * @default single
+             * @enum {string}
+             */
+            instruments: "single" | "pair" | "universe";
         };
         /** StrategyResponse */
         StrategyResponse: {
@@ -1407,6 +6330,8 @@ export interface components {
             strategy_config: {
                 [key: string]: unknown;
             };
+            /** Python Code */
+            python_code: string | null;
             /** Version */
             version: number;
             /** Is Active */
@@ -1415,22 +6340,290 @@ export interface components {
             created_at: string;
             /** Updated At */
             updated_at: string;
+            validation: components["schemas"]["ValidationStatus"];
+        };
+        /** StrategyScoringInfo */
+        StrategyScoringInfo: {
+            /** Strategy Key */
+            strategy_key: string;
+            /** Factors */
+            factors: components["schemas"]["StrategyFactorInfo"][];
+            /** Default Weights */
+            default_weights: {
+                [key: string]: number;
+            };
+            regime_rule: components["schemas"]["RegimeRule"];
         };
         /**
          * StrategyType
          * @enum {string}
          */
         StrategyType: "PYTHON" | "NO_CODE";
+        /** SupervisedCard */
+        SupervisedCard: {
+            label_definition: components["schemas"]["LabelDefinition"];
+            evaluation: components["schemas"]["SupervisedEvaluation"];
+            /** Uses Volume */
+            uses_volume: boolean;
+            /** Volume Note */
+            volume_note: string;
+            /** Xgboost Version */
+            xgboost_version: string | null;
+        };
+        /** SupervisedEvaluation */
+        SupervisedEvaluation: {
+            /** Target Accuracy */
+            target_accuracy: number;
+            /** Horizon Days */
+            horizon_days: number;
+            /** Selection */
+            selection: string;
+            /** Cv Folds */
+            cv_folds: number;
+            /** Dimensions */
+            dimensions: components["schemas"]["DimensionEvaluation"][];
+            summary: components["schemas"]["EvaluationSummary"];
+        };
         /** TargetPortfolioRequest */
         TargetPortfolioRequest: {
-            /** Capital */
-            capital: number | string;
             /** Candidates */
-            candidates: components["schemas"]["StrategyCandidateInput"][];
+            candidates?: components["schemas"]["StrategyCandidateInput"][] | null;
+            /** Strategy Ids */
+            strategy_ids?: string[] | null;
             /** Regime */
             regime?: string | null;
+            /**
+             * Require Validated
+             * @default true
+             */
+            require_validated: boolean;
+            /** Capital */
+            capital: number | string;
             limits?: components["schemas"]["PortfolioRiskLimitsInput"] | null;
         };
+        /** TargetPortfolioResponse */
+        TargetPortfolioResponse: {
+            /** Capital */
+            capital: string;
+            /** Regime */
+            regime: string | null;
+            regime_label?: components["schemas"]["ChosenRegime"] | null;
+            /** Invested Capital */
+            invested_capital: string;
+            /** Cash Reserve */
+            cash_reserve: string;
+            /** Positions */
+            positions: components["schemas"]["TargetPosition"][];
+            /**
+             * Excluded
+             * @default []
+             */
+            excluded: components["schemas"]["app__schemas__portfolio__responses__ExcludedStrategy"][];
+            /** Target Values */
+            target_values: {
+                [key: string]: string;
+            };
+            /** Strategy Weights */
+            strategy_weights: {
+                [key: string]: string;
+            };
+            /** Asset Weights */
+            asset_weights: {
+                [key: string]: string;
+            };
+            /** Cash Weight */
+            cash_weight: string;
+            /** Binding Limits */
+            binding_limits: components["schemas"]["BindingLimit"][];
+            /** Require Validated */
+            require_validated?: boolean | null;
+            /**
+             * Simulation Only
+             * @default true
+             */
+            simulation_only: boolean;
+        };
+        /** TargetPosition */
+        TargetPosition: {
+            /** Strategy */
+            strategy: string;
+            /** Strategy Id */
+            strategy_id?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Strategy Key */
+            strategy_key?: string | null;
+            /** Asset */
+            asset: string | null;
+            /** Score */
+            score: number;
+            /** Amount */
+            amount: string;
+            /** Weight */
+            weight: string;
+            validation?: components["schemas"]["ValidationStatus"] | null;
+        };
+        /** TestRunBar */
+        TestRunBar: {
+            /** Date */
+            date: string;
+            /** Open */
+            open: number;
+            /** High */
+            high: number;
+            /** Low */
+            low: number;
+            /** Close */
+            close: number;
+            /** Volume */
+            volume: number;
+        };
+        /** TestRunRequest */
+        TestRunRequest: {
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            /**
+             * Bars
+             * @description The last N stored daily bars.
+             * @default 200
+             */
+            bars: number;
+            /**
+             * Quantity
+             * @description Shares a BUY or SELL holds.
+             * @default 1
+             */
+            quantity: number;
+            /**
+             * Cash
+             * @description The cash the code sees (context.cash).
+             * @default 100000
+             */
+            cash: number;
+            /**
+             * Parameters
+             * @description context.params for this run.
+             */
+            parameters?: {
+                [key: string]: unknown;
+            };
+        };
+        /** TestRunResponse */
+        TestRunResponse: {
+            /** Strategy Id */
+            strategy_id: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Symbol */
+            symbol: string;
+            /** Bars */
+            bars: components["schemas"]["TestRunBar"][];
+            /** Signals */
+            signals: components["schemas"]["TestRunSignal"][];
+            /** Logs */
+            logs: string[];
+            /** @description Set when the code failed; the signals before it are still returned. */
+            error: components["schemas"]["StrategyCodeErrorOut"] | null;
+            /**
+             * Sandbox
+             * @description Which sandbox ran it: "docker" or "process".
+             */
+            sandbox: string;
+            /** Limits */
+            limits: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Simulation Only
+             * @default true
+             */
+            simulation_only: boolean;
+        };
+        /** TestRunSignal */
+        TestRunSignal: {
+            /** Index */
+            index: number;
+            /** Date */
+            date: string;
+            /** Close */
+            close: number;
+            /** Action */
+            action: string;
+            /**
+             * Quantity
+             * @description The size the code asked for, if any.
+             */
+            quantity: number | null;
+            /**
+             * Position
+             * @description Shares held after this signal.
+             */
+            position: number;
+            /**
+             * Changed
+             * @description True when the position changed on this bar.
+             */
+            changed: boolean;
+            /** Logs */
+            logs: string[];
+        };
+        /** TestScores */
+        TestScores: {
+            /** Accuracy */
+            accuracy: number;
+            /** Balanced Accuracy */
+            balanced_accuracy: number;
+            /** Rows */
+            rows: number;
+            /** Target */
+            target: number;
+            /**
+             * Meets Target
+             * @description accuracy >= target, as computed.
+             */
+            meets_target: boolean;
+            /** Beats Baselines */
+            beats_baselines: boolean;
+            /** Per Class */
+            per_class: components["schemas"]["ClassScore"][];
+            /**
+             * Confusion Matrix
+             * @description Rows: actual class; columns: predicted class (in the order of classes).
+             */
+            confusion_matrix: number[][];
+            /** Baselines */
+            baselines: components["schemas"]["Baseline"][];
+        };
+        /** ThresholdDefinition */
+        ThresholdDefinition: {
+            /** Stage */
+            stage: string;
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /**
+             * Operator
+             * @enum {string}
+             */
+            operator: ">" | ">=" | "<" | "<=";
+            /** Threshold */
+            threshold: number;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "ratio" | "fraction" | "count" | "p_value";
+        };
+        /**
+         * Timeframe
+         * @description Supported market-data frequencies.
+         * @enum {string}
+         */
+        Timeframe: "1M" | "5M" | "15M" | "1H" | "1D";
         /** TradeResponse */
         TradeResponse: {
             /**
@@ -1443,6 +6636,11 @@ export interface components {
              * Format: uuid
              */
             order_id: string;
+            /** Execution Id */
+            execution_id?: string | null;
+            /** Instrument Id */
+            instrument_id?: string | null;
+            order_side?: components["schemas"]["OrderSide"] | null;
             /** Broker Trade Id */
             broker_trade_id: string | null;
             /** Executed Quantity */
@@ -1451,7 +6649,10 @@ export interface components {
             executed_price: number;
             /** Brokerage */
             brokerage: number;
-            /** Total Charges */
+            /**
+             * Total Charges
+             * @description Brokerage plus the other charges of the fill.
+             */
             total_charges: number;
             /** Trade Timestamp */
             trade_timestamp: string | null;
@@ -1466,19 +6667,175 @@ export interface components {
              */
             updated_at: string;
         };
+        /** TradeStats */
+        TradeStats: {
+            /** Fill Count */
+            fill_count: number;
+            /**
+             * Round Trip Count
+             * @description Closed trades (open to flat).
+             */
+            round_trip_count: number;
+            /** Open Position Count */
+            open_position_count: number;
+            /** Winning Trades */
+            winning_trades: number;
+            /** Losing Trades */
+            losing_trades: number;
+            /** Win Rate */
+            win_rate: number | null;
+            /** Average Gain */
+            average_gain: number | null;
+            /** Average Loss */
+            average_loss: number | null;
+            /** Profit Factor */
+            profit_factor: number | null;
+            /** Total Charges */
+            total_charges: number;
+            /** Total Brokerage */
+            total_brokerage: number;
+        };
+        /**
+         * TradingDayCheck
+         * @description Expected NSE trading days in the range compared with the stored rows.
+         */
+        TradingDayCheck: {
+            /** Checked */
+            checked: boolean;
+            /** Range Start */
+            range_start?: string | null;
+            /** Range End */
+            range_end?: string | null;
+            /**
+             * Expected Days
+             * @default 0
+             */
+            expected_days: number;
+            /**
+             * Days With Data
+             * @default 0
+             */
+            days_with_data: number;
+            /**
+             * Missing Days
+             * @default 0
+             */
+            missing_days: number;
+            /**
+             * Missing Periods
+             * @default []
+             */
+            missing_periods: components["schemas"]["MissingPeriod"][];
+            /**
+             * Missing Periods Truncated
+             * @default false
+             */
+            missing_periods_truncated: boolean;
+            /**
+             * Closed Days With Data
+             * @default []
+             */
+            closed_days_with_data: string[];
+            /**
+             * Holidays Known For Years
+             * @default []
+             */
+            holidays_known_for_years: number[];
+            /** Note */
+            note?: string | null;
+        };
+        /** TrainRegimeModelRequest */
+        TrainRegimeModelRequest: {
+            /**
+             * Instrument Id
+             * Format: uuid
+             * @description The reference instrument: the model is trained on it and describes it.
+             */
+            instrument_id: string;
+            /**
+             * Start Date
+             * @description First day of training data (all stored data if empty).
+             */
+            start_date?: string | null;
+            /**
+             * End Date
+             * @description Last day of training data (all stored data if empty).
+             */
+            end_date?: string | null;
+            /**
+             * Volatility Window
+             * @description Days in the volatility feature.
+             * @default 20
+             */
+            volatility_window: number;
+            /**
+             * Trend Window
+             * @description Days in the trend-strength feature.
+             * @default 20
+             */
+            trend_window: number;
+            /**
+             * Candidate Components
+             * @description Cluster counts to try; the one with the lowest validation BIC is kept.
+             */
+            candidate_components?: number[];
+            /**
+             * Random State
+             * @description Seed: the same data and seed give the same model.
+             * @default 42
+             */
+            random_state: number;
+            /**
+             * Model Kind
+             * @description GMM: unsupervised clusters (Phase 12). RF / XGB: supervised Random Forest / XGBoost. AUTO: both, each dimension keeps the better on the validation split.
+             * @default GMM
+             * @enum {string}
+             */
+            model_kind: "GMM" | "RF" | "XGB" | "AUTO";
+            /**
+             * Horizon Days
+             * @description Supervised models: the labels describe this many days ahead.
+             * @default 20
+             */
+            horizon_days: number;
+            /**
+             * Vix Instrument Id
+             * @description Supervised models: India VIX (features, and the risk-off rule). Optional.
+             */
+            vix_instrument_id?: string | null;
+        };
+        /** Unclassified */
+        Unclassified: {
+            /** Days */
+            days: number;
+            /** Reasons */
+            reasons: components["schemas"]["UnclassifiedReason"][];
+            /** Periods */
+            periods: components["schemas"]["RegimePeriod"][];
+        };
+        /** UnclassifiedReason */
+        UnclassifiedReason: {
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "warm_up" | "no_reference_bar";
+            /** Description */
+            description: string;
+            /** Days */
+            days: number;
+        };
+        /** UnreadCount */
+        UnreadCount: {
+            /** Unread */
+            unread: number;
+        };
         /** UpdateBrokerAccountRequest */
         UpdateBrokerAccountRequest: {
             /** Account Alias */
             account_alias?: string | null;
             /** Is Active */
             is_active?: boolean | null;
-        };
-        /** UpdateExecutionRequest */
-        UpdateExecutionRequest: {
-            /** Execution Config */
-            execution_config?: {
-                [key: string]: unknown;
-            } | null;
         };
         /** UpdateInstrumentRequest */
         UpdateInstrumentRequest: {
@@ -1499,24 +6856,15 @@ export interface components {
             /** Is Active */
             is_active?: boolean | null;
         };
-        /** UpdateNotificationRequest */
+        /**
+         * UpdateNotificationRequest
+         * @description Phase 16: the only change a user makes is read / unread.
+         *
+         *     The server sets read_at: now when marked read, cleared when marked unread.
+         */
         UpdateNotificationRequest: {
-            /** Execution Id */
-            execution_id?: string | null;
-            notification_type?: components["schemas"]["NotificationType"] | null;
-            priority?: components["schemas"]["NotificationPriority"] | null;
-            /** Title */
-            title?: string | null;
-            /** Message */
-            message?: string | null;
             /** Is Read */
-            is_read?: boolean | null;
-            /** Read At */
-            read_at?: string | null;
-            /** Notification Data */
-            notification_data?: {
-                [key: string]: unknown;
-            } | null;
+            is_read: boolean;
         };
         /** UpdateOrderRequest */
         UpdateOrderRequest: {
@@ -1560,7 +6908,11 @@ export interface components {
             /** Closed At */
             closed_at?: string | null;
         };
-        /** UpdateProfileRequest */
+        /**
+         * UpdateProfileRequest
+         * @description The profile fields a user may change. Email, account status and email
+         *     verification are not editable. An empty phone number or image URL clears it.
+         */
         UpdateProfileRequest: {
             /** Full Name */
             full_name?: string | null;
@@ -1576,6 +6928,8 @@ export interface components {
             /** Description */
             description?: string | null;
             strategy_config?: components["schemas"]["StrategyConfig"] | null;
+            /** Python Code */
+            python_code?: string | null;
             /** Is Active */
             is_active?: boolean | null;
         };
@@ -1593,6 +6947,17 @@ export interface components {
             total_charges?: number | null;
             /** Trade Timestamp */
             trade_timestamp?: string | null;
+        };
+        /** UsedPrice */
+        UsedPrice: {
+            /** Asset */
+            asset: string;
+            /** Price */
+            price: string;
+            /** Source */
+            source: string;
+            /** As Of */
+            as_of?: string | null;
         };
         /** UserProfileResponse */
         UserProfileResponse: {
@@ -1615,6 +6980,64 @@ export interface components {
             /** Created At */
             created_at: string;
         };
+        /** ValidationConfiguration */
+        ValidationConfiguration: {
+            /**
+             * Strategy Id
+             * Format: uuid
+             */
+            strategy_id: string;
+            /** Strategy Name */
+            strategy_name: string | null;
+            /** Strategy Key */
+            strategy_key: string | null;
+            /** Strategy Version */
+            strategy_version: number | null;
+            /** Current Strategy Version */
+            current_strategy_version: number | null;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Rules */
+            rules: {
+                [key: string]: unknown;
+            } | null;
+            /** Instrument Ids */
+            instrument_ids: string[];
+            /** Timeframe */
+            timeframe: string;
+            /** Initial Capital */
+            initial_capital: number;
+            /** Quantity */
+            quantity: number | null;
+            /** Slippage Bps */
+            slippage_bps: number | null;
+            /** Brokerage Rate */
+            brokerage_rate: number | null;
+            /** Requested Start */
+            requested_start: string | null;
+            /** Requested End */
+            requested_end: string | null;
+            /** Walk Forward */
+            walk_forward: {
+                [key: string]: unknown;
+            };
+            /** Regimes */
+            regimes: {
+                [key: string]: unknown;
+            };
+            /** Monte Carlo */
+            monte_carlo: {
+                [key: string]: unknown;
+            };
+            /** Engine Version */
+            engine_version: string | null;
+            /** Validation Version */
+            validation_version: string | null;
+            /** Source Execution Id */
+            source_execution_id: string | null;
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -1628,15 +7051,352 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /** ValidationReport */
+        ValidationReport: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["ExecutionStatus"];
+            /**
+             * Strategy Id
+             * Format: uuid
+             */
+            strategy_id: string;
+            /** Strategy Name */
+            strategy_name: string | null;
+            /** Instrument Id */
+            instrument_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            verdict: components["schemas"]["Verdict"];
+            /** Stage Statuses */
+            stage_statuses: {
+                [key: string]: "NOT_RUN" | "RUNNING" | "PASS" | "FAIL" | "ERROR" | "PLANNED";
+            };
+            /** Source Execution Id */
+            source_execution_id: string | null;
+            error?: components["schemas"]["ExecutionErrorInfo"] | null;
+            configuration: components["schemas"]["ValidationConfiguration"];
+            stages: components["schemas"]["Stages"];
+            /** Thresholds */
+            thresholds: components["schemas"]["ThresholdDefinition"][];
+            /** Thresholds Source */
+            thresholds_source: string;
+            /** Basis */
+            basis: string[];
+            /** Data Provenance */
+            data_provenance: {
+                [key: string]: unknown;
+            } | null;
+            /** Bars */
+            bars: number | null;
+        };
+        /** ValidationStatus */
+        ValidationStatus: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "VALIDATED" | "VALIDATED_PAPER_PENDING" | "FAILED" | "OUTDATED" | "NOT_VALIDATED";
+            /**
+             * Eligible
+             * @description VALIDATED or VALIDATED_PAPER_PENDING: may receive capital.
+             */
+            eligible: boolean;
+            /** Reason */
+            reason: string;
+            /**
+             * Validation Id
+             * @description The latest completed validation.
+             */
+            validation_id: string | null;
+            /**
+             * Verdict
+             * @description That validation's verdict.
+             */
+            verdict: string | null;
+            /**
+             * Validated Version
+             * @description The strategy version it validated.
+             */
+            validated_version: number | null;
+            /** Current Version */
+            current_version: number;
+            /** Completed At */
+            completed_at: string | null;
+            /**
+             * Data End
+             * @description The last day (IST) of data the validation used.
+             */
+            data_end: string | null;
+        };
+        /**
+         * ValidationSummary
+         * @description One validation run in the history list.
+         */
+        ValidationSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["ExecutionStatus"];
+            /**
+             * Strategy Id
+             * Format: uuid
+             */
+            strategy_id: string;
+            /** Strategy Name */
+            strategy_name: string | null;
+            /** Instrument Id */
+            instrument_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            verdict: components["schemas"]["Verdict"];
+            /** Stage Statuses */
+            stage_statuses: {
+                [key: string]: "NOT_RUN" | "RUNNING" | "PASS" | "FAIL" | "ERROR" | "PLANNED";
+            };
+            /** Source Execution Id */
+            source_execution_id: string | null;
+            error?: components["schemas"]["ExecutionErrorInfo"] | null;
+        };
         /** ValueOperand */
         ValueOperand: {
             /**
-             * Type
-             * @constant
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
             type: "value";
             /** Value */
             value: string | number | boolean;
+        };
+        /** Verdict */
+        Verdict: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "PENDING" | "PASS" | "FAIL" | "INCOMPLETE" | "VALIDATED";
+            /** Reason */
+            reason: string;
+        };
+        /** WalkForwardSettings */
+        WalkForwardSettings: {
+            /**
+             * Train Bars
+             * @description Bars before each validation span. They are warm-up only (nothing is traded).
+             * @default 252
+             */
+            train_bars: number;
+            /**
+             * Validation Bars
+             * @description In-sample span: parameters are chosen here.
+             * @default 63
+             */
+            validation_bars: number;
+            /**
+             * Test Bars
+             * @description Out-of-sample span: the chosen parameters are tested here, unchanged.
+             * @default 63
+             */
+            test_bars: number;
+            /**
+             * Step Bars
+             * @description Bars between window starts. Default: test_bars (test spans do not overlap).
+             */
+            step_bars?: number | null;
+            /**
+             * Parameter Grid
+             * @description Optional candidate values per strategy parameter, e.g. {"lookback": [10, 20, 30]}. Every combination is tried on each validation span (at most 25). Empty: the strategy's own parameters on every window. Not allowed for no-code strategies.
+             */
+            parameter_grid?: {
+                [key: string]: (number)[];
+            };
+        };
+        /** WalkForwardSettingsUsed */
+        WalkForwardSettingsUsed: {
+            /** Train Bars */
+            train_bars: number;
+            /** Validation Bars */
+            validation_bars: number;
+            /** Test Bars */
+            test_bars: number;
+            /** Step Bars */
+            step_bars: number;
+            /** Parameter Grid */
+            parameter_grid: {
+                [key: string]: unknown;
+            };
+            /** Candidates */
+            candidates: number;
+            /** Selection */
+            selection: string;
+        };
+        /** WalkForwardStage */
+        WalkForwardStage: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "NOT_RUN" | "RUNNING" | "PASS" | "FAIL" | "ERROR" | "PLANNED";
+            /**
+             * Checks
+             * @default []
+             */
+            checks: components["schemas"]["Check"][];
+            /** Reason */
+            reason?: string | null;
+            /** Error */
+            error?: string | null;
+            settings?: components["schemas"]["WalkForwardSettingsUsed"] | null;
+            /**
+             * Windows
+             * @default []
+             */
+            windows: components["schemas"]["WalkForwardWindow"][];
+            summary?: components["schemas"]["WalkForwardSummary"] | null;
+        };
+        /** WalkForwardSummary */
+        WalkForwardSummary: {
+            /** Window Count */
+            window_count: number;
+            /** Mean In Sample Return */
+            mean_in_sample_return: number | null;
+            /** Mean Out Of Sample Return */
+            mean_out_of_sample_return: number | null;
+            /** Retention */
+            retention: number | null;
+            /** Retention Reason */
+            retention_reason: string | null;
+            /** Mean In Sample Sharpe */
+            mean_in_sample_sharpe: number | null;
+            /** Mean Out Of Sample Sharpe */
+            mean_out_of_sample_sharpe: number | null;
+            /** Mean Test Return */
+            mean_test_return: number;
+            /** Median Test Return */
+            median_test_return: number;
+            /** Test Return Std */
+            test_return_std: number;
+            /** Positive Test Window Rate */
+            positive_test_window_rate: number;
+            /** Parameter Stability */
+            parameter_stability: components["schemas"]["ParameterChoice"][];
+        };
+        /** WalkForwardWindow */
+        WalkForwardWindow: {
+            /** Index */
+            index: number;
+            /** Train Start */
+            train_start: string;
+            /** Train End */
+            train_end: string;
+            /** Validation Start */
+            validation_start: string;
+            /** Validation End */
+            validation_end: string;
+            /** Test Start */
+            test_start: string;
+            /** Test End */
+            test_end: string;
+            /** Train Bars */
+            train_bars: number;
+            /** Validation Bars */
+            validation_bars: number;
+            /** Test Bars */
+            test_bars: number;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Candidates Tested */
+            candidates_tested: number;
+            in_sample: components["schemas"]["SpanMetrics"];
+            out_of_sample: components["schemas"]["SpanMetrics"];
+            /** Retention */
+            retention: number | null;
+            /** Retention Reason */
+            retention_reason: string | null;
+        };
+        /** WatchlistRequest */
+        WatchlistRequest: {
+            /** Instrument Ids */
+            instrument_ids: string[];
+        };
+        /** YearReturn */
+        YearReturn: {
+            /** Year */
+            year: number;
+            /** Return */
+            return: number;
+        };
+        /** EquityPoint */
+        app__schemas__executions__results__EquityPoint: {
+            /** Timestamp */
+            timestamp: string;
+            /** Portfolio Value */
+            portfolio_value: number;
+            /**
+             * Drawdown
+             * @description Value / running peak - 1 (0 or below).
+             */
+            drawdown: number;
+        };
+        /** ExcludedStrategy */
+        app__schemas__portfolio__responses__ExcludedStrategy: {
+            /**
+             * Strategy Id
+             * Format: uuid
+             */
+            strategy_id: string;
+            /** Name */
+            name: string;
+            /** Strategy Key */
+            strategy_key: string | null;
+            /** Asset */
+            asset: string | null;
+            /** Score */
+            score: number | null;
+            /** Reason */
+            reason: string;
+            validation?: components["schemas"]["ValidationStatus"] | null;
+        };
+        /** ExcludedStrategy */
+        app__schemas__portfolio_backtest__ExcludedStrategy: {
+            /** Strategy Id */
+            strategy_id: string;
+            /** Name */
+            name: string;
+            /** Reason */
+            reason: string;
+        };
+        /** EquityPoint */
+        app__schemas__validation__report__EquityPoint: {
+            /** Timestamp */
+            timestamp: string;
+            /** Portfolio Value */
+            portfolio_value: number;
         };
     };
     responses: never;
@@ -1759,7 +7519,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["UserProfileResponse"];
                 };
             };
         };
@@ -2159,6 +7919,152 @@ export interface operations {
             };
         };
     };
+    sandbox_reference_sandbox_reference_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SandboxReference"];
+                };
+            };
+        };
+    };
+    test_run_strategies__strategy_id__test_run_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                strategy_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TestRunRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestRunResponse"];
+                };
+            };
+            /** @description The strategy or instrument was not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The code was refused, or it failed while running. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_registry_strategies_strategy_registry_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrategyRegistryEntry"][];
+                };
+            };
+        };
+    };
+    get_registry_strategy_strategy_registry__strategy_key__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                strategy_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrategyRegistryEntry"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_registry_parameters_strategy_registry__strategy_key__validate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                strategy_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StrategyParameterValidationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrategyParameterValidationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_instruments_instruments_get: {
         parameters: {
             query?: {
@@ -2318,7 +8224,112 @@ export interface operations {
             };
         };
     };
-    list_executions_executions_get: {
+    list_market_data_instruments__instrument_id__market_data_get: {
+        parameters: {
+            query?: {
+                timeframe?: components["schemas"]["Timeframe"];
+                start_date?: string | null;
+                end_date?: string | null;
+            };
+            header?: never;
+            path: {
+                instrument_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarketDataRow"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_coverage_instruments__instrument_id__market_data_coverage_get: {
+        parameters: {
+            query?: {
+                timeframe?: components["schemas"]["Timeframe"];
+                start_date?: string | null;
+                end_date?: string | null;
+            };
+            header?: never;
+            path: {
+                instrument_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarketDataCoverage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    import_market_data_instruments__instrument_id__market_data_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                instrument_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MarketDataImportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarketDataImportResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_indicators_indicators_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -2333,31 +8344,137 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ExecutionResponse"][];
+                    "application/json": components["schemas"]["IndicatorInfo"][];
                 };
             };
         };
     };
-    create_execution_executions_post: {
+    get_indicator_info_indicators__key__get: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                key: string;
+            };
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateExecutionRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ExecutionResponse"];
+                    "application/json": components["schemas"]["IndicatorInfo"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_indicator_parameters_indicators__key__validate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IndicatorParameters"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IndicatorValidationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    indicator_series_instruments__instrument_id__indicators__key__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                instrument_id: string;
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IndicatorSeriesRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IndicatorSeries"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_executions_executions_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["ExecutionStatus"] | null;
+                execution_type?: components["schemas"]["ExecutionType"] | null;
+                strategy_id?: string | null;
+                instrument_id?: string | null;
+                created_from?: string | null;
+                created_to?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExecutionResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -2420,40 +8537,12 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Validation Error */
-            422: {
+            /** @description The execution is still running. */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_execution_executions__execution_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                execution_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateExecutionRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExecutionResponse"];
-                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -2466,7 +8555,7 @@ export interface operations {
             };
         };
     };
-    start_execution_executions__execution_id__start_post: {
+    get_execution_results_executions__execution_id__results_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -2483,74 +8572,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ExecutionResponse"];
+                    "application/json": components["schemas"]["ExecutionResultsResponse"];
                 };
             };
-            /** @description Validation Error */
-            422: {
+            /** @description The run has not completed, or has no stored result. */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    complete_execution_executions__execution_id__complete_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                execution_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExecutionResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    fail_execution_executions__execution_id__fail_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                execution_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FailExecutionRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExecutionResponse"];
-                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -2582,6 +8612,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ExecutionResponse"];
                 };
+            };
+            /** @description The execution has already finished. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -2616,6 +8653,43 @@ export interface operations {
                     "application/json": components["schemas"]["ExecutionResponse"];
                 };
             };
+            /** @description Another backtest is running. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The strategy, parameters or instruments are not valid. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_validations_validations_get: {
+        parameters: {
+            query?: {
+                strategy_id?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationSummary"][];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -2627,7 +8701,76 @@ export interface operations {
             };
         };
     };
-    list_orders_orders_get: {
+    create_validation_validations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateValidationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExecutionResponse"];
+                };
+            };
+            /** @description Another backtest or validation is running. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The strategy, instruments or validation settings are not valid. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_validation_validations__execution_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                execution_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_models_regime_models_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -2642,12 +8785,12 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OrderResponse"][];
+                    "application/json": components["schemas"]["RegimeModelSummary"][];
                 };
             };
         };
     };
-    create_order_orders_post: {
+    train_model_regime_models_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2656,9 +8799,256 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateOrderRequest"];
+                "application/json": components["schemas"]["TrainRegimeModelRequest"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegimeModelDetail"];
+                };
+            };
+            /** @description A regime model is already training. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The instrument or the settings cannot be used. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_model_regime_models__model_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                model_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegimeModelDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    current_regime_regime_current_get: {
+        parameters: {
+            query?: {
+                model_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrentRegime"];
+                };
+            };
+            /** @description No regime model has been trained yet. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    regime_history_regime_history_get: {
+        parameters: {
+            query?: {
+                start_date?: string | null;
+                end_date?: string | null;
+                model_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegimeHistory"];
+                };
+            };
+            /** @description No regime model has been trained yet. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scoring_definitions_scoring_definitions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScoringDefinitions"];
+                };
+            };
+        };
+    };
+    score_scoring_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScoreRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScoringResult"];
+                };
+            };
+            /** @description The custom weights are not valid. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    regime_fit_scoring_regime_fit_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegimeFit"];
+                };
+            };
+        };
+    };
+    record_counts_executions__execution_id__records_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                execution_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecordCounts"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    store_records_executions__execution_id__records_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                execution_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             201: {
@@ -2666,7 +9056,51 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OrderResponse"];
+                    "application/json": components["schemas"]["RecordCounts"];
+                };
+            };
+            /** @description Already stored, not completed, or not a backtest. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_orders_orders_get: {
+        parameters: {
+            query?: {
+                execution_id?: string | null;
+                instrument_id?: string | null;
+                status?: components["schemas"]["OrderStatus"] | null;
+                side?: components["schemas"]["OrderSide"] | null;
+                start_date?: string | null;
+                end_date?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -2775,7 +9209,7 @@ export interface operations {
             };
         };
     };
-    reject_order_orders__order_id__reject_post: {
+    open_order_orders__order_id__open_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2795,36 +9229,12 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponse"];
                 };
             };
-            /** @description Validation Error */
-            422: {
+            /** @description The order's status does not allow this change. */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    cancel_order_orders__order_id__cancel_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                order_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrderResponse"];
-                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -2857,6 +9267,13 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponse"];
                 };
             };
+            /** @description The order's status does not allow this change. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -2868,7 +9285,7 @@ export interface operations {
             };
         };
     };
-    open_order_orders__order_id__open_post: {
+    cancel_order_orders__order_id__cancel_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2888,6 +9305,51 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponse"];
                 };
             };
+            /** @description The order's status does not allow this change. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_order_orders__order_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderResponse"];
+                };
+            };
+            /** @description The order's status does not allow this change. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -2901,7 +9363,15 @@ export interface operations {
     };
     list_trades_trades_get: {
         parameters: {
-            query?: never;
+            query?: {
+                execution_id?: string | null;
+                instrument_id?: string | null;
+                order_id?: string | null;
+                side?: components["schemas"]["OrderSide"] | null;
+                start_date?: string | null;
+                end_date?: string | null;
+                limit?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2915,63 +9385,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TradeResponse"][];
-                };
-            };
-        };
-    };
-    create_trade_trades_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTradeRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TradeResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    execute_trade_trades_execute_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTradeRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TradeResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3082,7 +9495,15 @@ export interface operations {
     };
     list_positions_positions_get: {
         parameters: {
-            query?: never;
+            query?: {
+                execution_id?: string | null;
+                instrument_id?: string | null;
+                status?: components["schemas"]["PositionStatus"] | null;
+                direction?: ("LONG" | "SHORT") | null;
+                start_date?: string | null;
+                end_date?: string | null;
+                limit?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -3096,30 +9517,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PositionResponse"][];
-                };
-            };
-        };
-    };
-    create_position_positions_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreatePositionRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PositionResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3247,7 +9644,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["TargetPortfolioResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3280,7 +9677,38 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["RebalancePlanResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    latest_prices_portfolio_prices_get: {
+        parameters: {
+            query?: {
+                asset?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetPrice"][];
                 };
             };
             /** @description Validation Error */
@@ -3309,7 +9737,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["PortfolioSummary"][];
                 };
             };
         };
@@ -3333,7 +9761,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["PortfolioSummary"];
                 };
             };
             /** @description Validation Error */
@@ -3364,7 +9792,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["PortfolioAccount"];
                 };
             };
             /** @description Validation Error */
@@ -3399,6 +9827,353 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    "application/json": components["schemas"]["PortfolioAccount"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_portfolio_backtests_portfolio_backtests_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PortfolioBacktestSummary"][];
+                };
+            };
+        };
+    };
+    create_portfolio_backtest_portfolio_backtests_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePortfolioBacktestRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PortfolioBacktestDetail"];
+                };
+            };
+            /** @description A strategy is not yours. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Another backtest or validation is running. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The strategies, benchmark, dates or regime model cannot be used. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_portfolio_backtest_portfolio_backtests__run_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PortfolioBacktestDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_portfolio_backtest_results_portfolio_backtests__run_id__results_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PortfolioBacktestResults"];
+                };
+            };
+            /** @description The run has not completed. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_sessions_live_sessions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveSessionOut"][];
+                };
+            };
+        };
+    };
+    create_session_live_sessions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLiveSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveSessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_session_live_sessions__session_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveSessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_bars_live_sessions__session_id__bars_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveBars"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_events_live_sessions__session_id__events_get: {
+        parameters: {
+            query?: {
+                after?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveEvent"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_fills_live_sessions__session_id__fills_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveFill"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stream_live_sessions__session_id__stream_get: {
+        parameters: {
+            query?: {
+                after?: number;
+            };
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": unknown;
                 };
             };
@@ -3413,10 +10188,200 @@ export interface operations {
             };
         };
     };
-    list_notifications_notifications_get: {
+    pause_session_live_sessions__session_id__pause_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveSessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resume_session_live_sessions__session_id__resume_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveSessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stop_session_live_sessions__session_id__stop_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["StopRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveSessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stop_all_live_stop_all_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    replay_days_live_replay_days_get: {
         parameters: {
             query: {
-                user_id: string;
+                instrument_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayDay"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    status_live_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveStatusOut"];
+                };
+            };
+        };
+    };
+    charges_live_charges_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    list_notifications_notifications_get: {
+        parameters: {
+            query?: {
+                is_read?: boolean | null;
+                notification_type?: components["schemas"]["NotificationType"] | null;
+                priority?: components["schemas"]["NotificationPriority"] | null;
             };
             header?: never;
             path?: never;
@@ -3444,77 +10409,29 @@ export interface operations {
             };
         };
     };
-    create_notification_notifications_post: {
+    unread_count_notifications_unread_count_get: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateNotificationRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["NotificationResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_execution_notification_notifications_execution_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateNotificationRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotificationResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
+                    "application/json": components["schemas"]["UnreadCount"];
                 };
             };
         };
     };
     get_notification_notifications__notification_id__get: {
         parameters: {
-            query: {
-                user_id: string;
-            };
+            query?: never;
             header?: never;
             path: {
                 notification_id: string;
@@ -3545,9 +10462,7 @@ export interface operations {
     };
     delete_notification_notifications__notification_id__delete: {
         parameters: {
-            query: {
-                user_id: string;
-            };
+            query?: never;
             header?: never;
             path: {
                 notification_id: string;
@@ -3576,9 +10491,7 @@ export interface operations {
     };
     update_notification_notifications__notification_id__patch: {
         parameters: {
-            query: {
-                user_id: string;
-            };
+            query?: never;
             header?: never;
             path: {
                 notification_id: string;
@@ -3607,6 +10520,698 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_account_paper_account_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountOut"];
+                };
+            };
+        };
+    };
+    reset_account_paper_account_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_settings_paper_account_settings_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingsRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_watchlist_paper_watchlist_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WatchlistRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_quotes_paper_quotes_get: {
+        parameters: {
+            query?: {
+                instrument_id?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteRow"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_charges_paper_charges_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChargesTable"];
+                };
+            };
+        };
+    };
+    preview_order_paper_orders_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_orders_paper_orders_get: {
+        parameters: {
+            query?: {
+                status?: ("OPEN" | "TRIGGER_PENDING" | "FILLED" | "CANCELLED" | "REJECTED" | "EXPIRED") | null;
+                open_only?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    place_order_paper_orders_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_order_paper_orders__order_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_order_paper_orders__order_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    modify_order_paper_orders__order_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModifyOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_holdings_paper_holdings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HoldingOut"][];
+                };
+            };
+        };
+    };
+    list_fills_paper_fills_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FillOut"][];
+                };
+            };
+        };
+    };
+    update_journal_paper_orders__order_id__journal_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JournalRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_deployments_paper_deployments_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeploymentOut"][];
+                };
+            };
+        };
+    };
+    create_deployment_paper_deployments_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeployRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeploymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_paper_stage_paper_deployments_from_validation__validation_id__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                validation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FromValidationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeploymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    run_due_now_paper_deployments_run_due_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunDueOut"];
+                };
+            };
+        };
+    };
+    get_deployment_paper_deployments__deployment_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deployment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeploymentDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pause_deployment_paper_deployments__deployment_id__pause_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deployment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeploymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resume_deployment_paper_deployments__deployment_id__resume_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deployment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeploymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stop_deployment_paper_deployments__deployment_id__stop_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deployment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeploymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    account_performance_paper_performance_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountPerformance"];
                 };
             };
         };

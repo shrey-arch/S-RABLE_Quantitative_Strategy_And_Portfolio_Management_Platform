@@ -219,3 +219,23 @@ def test_apply_trade_with_result_reports_reversal():
     assert result.closed_quantity == 5
     assert result.opened_quantity == 3
     assert portfolio.positions[instrument_id]["quantity"] == -3
+
+
+def test_selling_again_while_short_adds_to_the_short():
+    portfolio = Portfolio(initial_capital=10000)
+
+    portfolio.apply_trade(instrument_id="X", side="SELL", quantity=1, price=100)
+    portfolio.apply_trade(instrument_id="X", side="SELL", quantity=2, price=110)
+
+    position = portfolio.positions["X"]
+    assert position["quantity"] == -3
+    assert position["average_price"] == pytest.approx((100 + 2 * 110) / 3)
+
+    # Buying 1 back closes 1 of the 3, at the average entry price.
+    result = portfolio.apply_trade_with_result(
+        instrument_id="X", side="BUY", quantity=1, price=90
+    )
+    assert result.closed_quantity == 1
+    assert result.opened_quantity == 0
+    assert portfolio.positions["X"]["quantity"] == -2
+    assert result.realized_pnl == pytest.approx((100 + 2 * 110) / 3 - 90)

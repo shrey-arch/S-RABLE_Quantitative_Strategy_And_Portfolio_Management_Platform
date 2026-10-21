@@ -72,8 +72,9 @@ class BrokerAccountRepository:
         account_alias: str | None = None,
         is_active: bool | None = None,
     ) -> BrokerAccount:
+        # An empty alias clears it.
         if account_alias is not None:
-            broker_account.account_alias = account_alias
+            broker_account.account_alias = account_alias.strip() or None
 
         if is_active is not None:
             broker_account.is_active = is_active

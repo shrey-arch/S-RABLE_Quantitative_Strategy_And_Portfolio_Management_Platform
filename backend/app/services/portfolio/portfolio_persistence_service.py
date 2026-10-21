@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from uuid import UUID
 
 from sqlalchemy import select
@@ -127,6 +127,17 @@ class PortfolioPersistenceService:
                     )
                     portfolio.holdings.append(holding)
                 else:
+                    if item.quantity > holding.quantity:
+                        # A buy: blend the average cost with the new price.
+                        bought = item.quantity - holding.quantity
+                        holding.average_price = (
+                            (
+                                Decimal(holding.average_price) * holding.quantity
+                                + item.price * bought
+                            )
+                            / item.quantity
+                        ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+                    # A sell keeps the average cost.
                     holding.quantity = item.quantity
                     holding.current_price = item.price
 
@@ -137,3 +148,26 @@ class PortfolioPersistenceService:
             raise
 
         return cls.load(db, portfolio_id, user_id)
+
+    @classmethod
+    def snapshot(
+        cls,
+        db: Session,
+        portfolio_id: UUID,
+        user_id: UUID,
+    ) -> dict:
+        """The saved portfolio: its record, its state and each holding's average cost."""
+        portfolio = cls._get_owned_portfolio(
+            db,
+            portfolio_id,
+            user_id,
+        )
+        state = cls.load(db, portfolio_id, user_id)
+        return {
+            "portfolio": portfolio,
+            "state": state,
+            "average_prices": {
+                holding.asset: Decimal(holding.average_price)
+                for holding in portfolio.holdings
+            },
+        }

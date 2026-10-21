@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from types import SimpleNamespace
 from uuid import UUID
 
 import pandas as pd
@@ -26,12 +27,19 @@ from app.strategies.base import Strategy
 from app.strategies.context import StrategyContext
 from app.strategies.signal import SignalAction
 
+# Recorded with each run. 1.1: a signal sets the position held (no piling up).
+# 1.2: EXIT closes the position; no-code rule strategies.
+# 1.3: custom Python strategies in the isolated sandbox; optional per-signal quantity.
+ENGINE_VERSION = "1.3"
+
 
 class BacktestEngine:
     def iter_market_data(
         self,
         data: pd.DataFrame,
+        start=None,
     ) -> Iterator[tuple[pd.Timestamp, pd.DataFrame]]:
+        """Each bar from `start` (default: the first) with all the data up to it."""
         if not isinstance(data, pd.DataFrame):
             raise ValueError("data must be a pandas DataFrame.")
 
@@ -41,7 +49,8 @@ class BacktestEngine:
         if not data.index.is_monotonic_increasing:
             raise ValueError("data must be sorted chronologically.")
 
-        for timestamp in data.index:
+        timestamps = data.index if start is None else data.index[data.index >= start]
+        for timestamp in timestamps:
             yield timestamp, data.loc[:timestamp].copy()
 
     def generate_signals(
@@ -50,6 +59,9 @@ class BacktestEngine:
         strategy: Strategy,
         data: pd.DataFrame,
     ) -> Iterator:
+        prepare = getattr(strategy, "prepare", None)
+        if callable(prepare):
+            prepare(data)
         for timestamp, historical_data in self.iter_market_data(data):
             context = StrategyContext(
                 instrument=None,
@@ -290,12 +302,24 @@ class BacktestEngine:
         instrument_ids: dict[str, UUID] | None = None,
         broker: SimulatedBroker | None = None,
         quantity: int = 1,
+        trade_from=None,
     ) -> BacktestResult:
+        """Run the strategy bar by bar.
+
+        trade_from (optional): bars before it are warm-up. They are in the history
+        the strategy sees, but no signal is asked for and nothing is traded or
+        recorded before it; the run (equity curve, trades) starts at trade_from with
+        the initial capital. Walk-forward uses it so a test span starts with its
+        indicators already warmed up on the earlier data, never on later data.
+        """
         if not isinstance(data, pd.DataFrame):
             raise ValueError("data must be a pandas DataFrame.")
 
         if data.empty:
             raise ValueError("data cannot be empty.")
+
+        if trade_from is not None and not (data.index >= trade_from).any():
+            raise ValueError("trade_from is after the last bar of the data.")
 
         if "close" not in data.columns:
             raise ValueError("data must contain a 'close' column.")
@@ -315,7 +339,13 @@ class BacktestEngine:
         trades: list[dict] = []
         current_allocations: dict[str, float] | None = None
 
-        for timestamp, historical_data in self.iter_market_data(data):
+        # Strategies that compute indicators once over the whole run (rule strategies)
+        # do it here, before the first bar.
+        prepare = getattr(strategy, "prepare", None)
+        if callable(prepare):
+            prepare(data)
+
+        for timestamp, historical_data in self.iter_market_data(data, start=trade_from):
             current_timestamp = (
                 timestamp.to_pydatetime()
                 if isinstance(timestamp, pd.Timestamp)
@@ -336,6 +366,13 @@ class BacktestEngine:
                 market_data={
                     "data": historical_data,
                     "current_allocations": current_allocations,
+                    # What is held of the (single) instrument before this bar's signal.
+                    "position_quantity": int(
+                        portfolio.positions.get(str(instrument_id), {}).get("quantity", 0)
+                    ),
+                    # Cash available before this bar's signal (Feature 6: context.cash).
+                    "cash": float(portfolio.cash),
+                    "bar_index": len(historical_data) - 1,
                 },
             )
 
@@ -474,14 +511,41 @@ class BacktestEngine:
                         )
 
             else:
-                order = self.signal_to_order(
-                    signal=signal,
-                    execution_id=execution_id,
-                    instrument_id=instrument_id,
-                    market_price=current_close,
-                    timestamp=current_timestamp,
-                    quantity=quantity,
+                # A signal sets the position to hold, it is not a trade by itself:
+                # BUY = hold +quantity (long), SELL = hold -quantity (short),
+                # EXIT = hold nothing, HOLD = keep what is held. Only the difference is
+                # traded, so a strategy that says BUY on many bars in a row buys once.
+                current_quantity = int(
+                    portfolio.positions.get(str(instrument_id), {}).get("quantity", 0)
                 )
+                # A custom Python strategy may size the signal (signal.quantity);
+                # otherwise the run's quantity is the position magnitude.
+                size = getattr(signal, "quantity", None)
+                size = quantity if size is None else int(size)
+                if signal.action == SignalAction.BUY:
+                    target_quantity = size
+                elif signal.action == SignalAction.SELL:
+                    target_quantity = -size
+                elif signal.action == SignalAction.EXIT:
+                    target_quantity = 0
+                else:
+                    target_quantity = current_quantity
+                delta_quantity = target_quantity - current_quantity
+
+                order = None
+                if delta_quantity != 0:
+                    order = self.signal_to_order(
+                        signal=SimpleNamespace(
+                            action=SignalAction.BUY
+                            if delta_quantity > 0
+                            else SignalAction.SELL
+                        ),
+                        execution_id=execution_id,
+                        instrument_id=instrument_id,
+                        market_price=current_close,
+                        timestamp=current_timestamp,
+                        quantity=abs(delta_quantity),
+                    )
 
                 if order is not None:
                     market_high = (

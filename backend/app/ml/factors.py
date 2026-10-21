@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import math
 from collections.abc import Mapping
@@ -105,18 +105,23 @@ def _suitability(value: float) -> float:
     return normalize_factor(value, raw_min=0.0, raw_max=1.0)
 
 
-def _volatility_suitability(returns: pd.Series, window: int) -> float:
-    """Heuristic: map sample volatility in [0, 0.05] to suitability [1, 0]."""
+def _volatility_suitability_parts(returns: pd.Series, window: int) -> tuple[float, float]:
+    """(suitability, the trailing daily volatility it was mapped from)."""
     _require_history(returns, window)
     volatility = float(returns.tail(window).std(ddof=1))
     if not math.isfinite(volatility):
         raise ValueError("Insufficient history for volatility suitability.")
     raw = 1.0 - min(max(volatility / 0.05, 0.0), 1.0)
-    return _suitability(raw)
+    return _suitability(raw), volatility
 
 
-def _volatility_stability(returns: pd.Series, window: int) -> float:
-    """Heuristic: one minus the clipped CV of trailing rolling volatility."""
+def _volatility_suitability(returns: pd.Series, window: int) -> float:
+    """Heuristic: map sample volatility in [0, 0.05] to suitability [1, 0]."""
+    return _volatility_suitability_parts(returns, window)[0]
+
+
+def _volatility_stability_parts(returns: pd.Series, window: int) -> tuple[float, float]:
+    """(stability, the coefficient of variation it was mapped from)."""
     rolling_vol = returns.rolling(window=window, min_periods=window).std(ddof=1)
     valid = rolling_vol.dropna().tail(window)
     _require_history(valid, window)
@@ -126,22 +131,32 @@ def _volatility_stability(returns: pd.Series, window: int) -> float:
     cv = float(valid.std(ddof=1) / mean_vol)
     if not math.isfinite(cv):
         raise ValueError("Volatility stability must be finite.")
-    return _suitability(1.0 - min(max(cv, 0.0), 1.0))
+    return _suitability(1.0 - min(max(cv, 0.0), 1.0)), cv
 
 
-def _spread_stability(spread: pd.Series, window: int) -> float:
-    """Heuristic: one minus the clipped CV of trailing absolute spread changes."""
+def _volatility_stability(returns: pd.Series, window: int) -> float:
+    """Heuristic: one minus the clipped CV of trailing rolling volatility."""
+    return _volatility_stability_parts(returns, window)[0]
+
+
+def _spread_stability_parts(spread: pd.Series, window: int) -> tuple[float, float]:
+    """(stability, the coefficient of variation it was mapped from)."""
     changes = spread.diff().abs().dropna().tail(window)
     _require_history(changes, window)
     mean_change = float(changes.mean())
     if not math.isfinite(mean_change):
         raise ValueError("Mean absolute spread change must be finite.")
     if mean_change == 0:
-        return 1.0
+        return 1.0, 0.0
     cv = float(changes.std(ddof=1) / mean_change)
     if not math.isfinite(cv):
         raise ValueError("Spread stability must be finite.")
-    return _suitability(1.0 - min(max(cv, 0.0), 1.0))
+    return _suitability(1.0 - min(max(cv, 0.0), 1.0)), cv
+
+
+def _spread_stability(spread: pd.Series, window: int) -> float:
+    """Heuristic: one minus the clipped CV of trailing absolute spread changes."""
+    return _spread_stability_parts(spread, window)[0]
 
 
 def _trend_strength(returns: pd.Series, window: int) -> float:
@@ -161,13 +176,19 @@ def calculate_strategy_factors(
     windows: Mapping[str, int] | None = None,
     normalization_bounds: Mapping[str, tuple[float, float]] | None = None,
     as_of: Any | None = None,
+    raw_values: dict[str, float] | None = None,
 ) -> dict[str, float]:
     """Calculate normalized factors from trailing data available at ``as_of``.
 
     Suitability/stability formulas and all default bounds are engineering
     heuristics, not empirically validated trading thresholds. Input data must
     contain only the market observations relevant to the requested instruments.
+
+    raw_values (optional): a dict that receives each factor's raw value, the
+    measurement before normalisation (e.g. the z-score, or the volatility a
+    suitability was mapped from).
     """
+    raw = raw_values if raw_values is not None else {}
     if strategy not in {
         "momentum",
         "mean_reversion",
@@ -245,9 +266,15 @@ def calculate_strategy_factors(
         vol_suitability = _suitability(
             1.0 - min(max(pair_volatility / 0.05, 0.0), 1.0)
         )
+        stability, spread_cv = _spread_stability_parts(spread, config["stability"])
+        raw.update(
+            spread_deviation=z,
+            spread_stability=spread_cv,
+            volatility_suitability=pair_volatility,
+        )
         return {
             "spread_deviation": _directional(z, "spread_deviation", bounds),
-            "spread_stability": _spread_stability(spread, config["stability"]),
+            "spread_stability": stability,
             "volatility_suitability": vol_suitability,
         }
 
@@ -262,13 +289,15 @@ def calculate_strategy_factors(
             max(window + 1, config["volatility_long"] + 1),
         )
         relative = float(close.iloc[-1] / close.iloc[-1 - window] - 1.0)
+        suitability, volatility = _volatility_suitability_parts(
+            returns, config["volatility_long"]
+        )
+        raw.update(relative_momentum=relative, volatility_suitability=volatility)
         return {
             "relative_momentum": _directional(
                 relative, "relative_momentum", bounds
             ),
-            "volatility_suitability": _volatility_suitability(
-                returns, config["volatility_long"]
-            ),
+            "volatility_suitability": suitability,
         }
 
     if strategy == "momentum":
@@ -280,14 +309,20 @@ def calculate_strategy_factors(
         sma_value = _last_finite(SMA(window).calculate(market), "SMA")
         relative = float(close.iloc[-1] / sma_value - 1.0)
         strength = _trend_strength(returns, window)
+        suitability, volatility = _volatility_suitability_parts(
+            returns, config["volatility_long"]
+        )
+        raw.update(
+            trend_strength=strength,
+            relative_momentum=relative,
+            volatility_suitability=volatility,
+        )
         return {
             "trend_strength": _directional(strength, "trend_strength", bounds),
             "relative_momentum": _directional(
                 relative, "relative_momentum", bounds
             ),
-            "volatility_suitability": _volatility_suitability(
-                returns, config["volatility_long"]
-            ),
+            "volatility_suitability": suitability,
         }
 
     if strategy == "mean_reversion":
@@ -302,12 +337,18 @@ def calculate_strategy_factors(
         )
         strength = _trend_strength(returns, window)
         trend_fit = _suitability(1.0 - min(abs(strength) / 3.0, 1.0))
+        suitability, volatility = _volatility_suitability_parts(
+            returns, config["volatility_long"]
+        )
+        raw.update(
+            price_deviation=z,
+            trend_suitability=strength,
+            volatility_suitability=volatility,
+        )
         return {
             "price_deviation": _directional(z, "price_deviation", bounds),
             "trend_suitability": trend_fit,
-            "volatility_suitability": _volatility_suitability(
-                returns, config["volatility_long"]
-            ),
+            "volatility_suitability": suitability,
         }
 
     if strategy == "volatility_arbitrage":
@@ -328,13 +369,18 @@ def calculate_strategy_factors(
         if long_vol <= 0:
             raise ValueError("Long-window volatility must be positive.")
         relationship = short_vol / long_vol - 1.0
+        stability, volatility_cv = _volatility_stability_parts(
+            returns, config["stability"]
+        )
+        raw.update(
+            volatility_relationship=relationship,
+            volatility_stability=volatility_cv,
+        )
         return {
             "volatility_relationship": _directional(
                 relationship, "volatility_relationship", bounds
             ),
-            "volatility_stability": _volatility_stability(
-                returns, config["stability"]
-            ),
+            "volatility_stability": stability,
         }
 
     raise ValueError(f"Unknown strategy: {strategy!r}.")

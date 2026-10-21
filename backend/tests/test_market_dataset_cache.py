@@ -154,6 +154,7 @@ def test_cache_is_readable_from_separate_process(tmp_path):
     import os
     import subprocess
     import sys
+    from pathlib import Path
 
     cache = MarketDatasetCache(tmp_path)
     instrument_id, dataset = make_market_dataset()
@@ -175,12 +176,19 @@ def test_cache_is_readable_from_separate_process(tmp_path):
         "print(entry['fingerprint'])"
     )
 
+    child_env = os.environ.copy()
+    backend_path = str(Path(__file__).resolve().parents[1])
+    existing_pythonpath = child_env.get("PYTHONPATH")
+    child_env["PYTHONPATH"] = os.pathsep.join(
+        part for part in (backend_path, existing_pythonpath) if part
+    )
+
     result = subprocess.run(
         [sys.executable, "-c", script],
         capture_output=True,
         text=True,
         check=False,
-        env=os.environ.copy(),
+        env=child_env,
     )
 
     assert result.returncode == 0, result.stderr

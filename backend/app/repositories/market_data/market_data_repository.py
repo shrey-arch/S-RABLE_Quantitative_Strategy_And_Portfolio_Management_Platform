@@ -1,7 +1,8 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from app.models import MarketData
@@ -81,3 +82,44 @@ class MarketDataRepository:
         )
 
         return self.db.scalar(statement)
+
+    def insert_ignoring_existing(self, records) -> int:
+        """
+        Inserts validated records; rows that already exist for the same instrument,
+        timestamp and timeframe are left unchanged. Returns how many were inserted.
+        """
+        if not records:
+            return 0
+
+        statement = (
+            insert(MarketData)
+            .values(
+                [
+                    {
+                        "instrument_id": record.instrument_id,
+                        "timestamp": record.timestamp,
+                        "timeframe": record.timeframe,
+                        "open": record.open,
+                        "high": record.high,
+                        "low": record.low,
+                        "close": record.close,
+                        "volume": record.volume,
+                    }
+                    for record in records
+                ]
+            )
+            .on_conflict_do_nothing(
+                constraint="uq_market_data_instrument_timestamp_timeframe"
+            )
+            .returning(MarketData.id)
+        )
+
+        inserted = len(self.db.execute(statement).all())
+        self.db.commit()
+        return inserted
+
+    def count_for_instrument(self, *, instrument_id: UUID) -> int:
+        statement = select(func.count()).select_from(MarketData).where(
+            MarketData.instrument_id == instrument_id
+        )
+        return int(self.db.scalar(statement) or 0)

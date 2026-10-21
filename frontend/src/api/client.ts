@@ -17,7 +17,7 @@ import { tokenStore } from './token';
 
 const baseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/+$/, '');
 
-/** Called when a protected request returns 401 (set by the auth layer in Phase 2). */
+/** Called when a request sent WITH a token comes back 401 (set by the auth layer). */
 let onUnauthorized: (() => void) | null = null;
 export function setUnauthorizedHandler(handler: (() => void) | null) {
   onUnauthorized = handler;
@@ -30,9 +30,11 @@ const authMiddleware: Middleware = {
     return request;
   },
   onResponse({ request, response }) {
-    // A 401 from login itself means wrong credentials, not an expired session.
+    // Only a 401 on a request that carried a token means "session ended".
+    // A 401 from login (wrong password) or from an anonymous request is not a session event.
+    const sentToken = request.headers.has('Authorization');
     const isLogin = new URL(request.url).pathname.endsWith('/auth/login');
-    if (response.status === 401 && !isLogin) {
+    if (response.status === 401 && sentToken && !isLogin) {
       tokenStore.clear();
       onUnauthorized?.();
     }

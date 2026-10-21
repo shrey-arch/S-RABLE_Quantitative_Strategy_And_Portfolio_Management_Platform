@@ -180,8 +180,18 @@ class Portfolio:
                 self.total_fees += fees
                 return realized_for_fill
 
-            position["quantity"] = -quantity
-            position["average_price"] = price
+            if current_quantity < 0:
+                # Adding to an existing short: the short grows and its average
+                # entry price is the quantity-weighted average of both sales.
+                short_quantity = abs(current_quantity)
+                new_short = short_quantity + quantity
+                position["average_price"] = (
+                    short_quantity * current_average_price + quantity * price
+                ) / new_short
+                position["quantity"] = -new_short
+            else:
+                position["quantity"] = -quantity
+                position["average_price"] = price
             self.cash += proceeds
             self.positions[instrument_id] = position
 

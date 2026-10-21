@@ -5,17 +5,43 @@ from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_user
 from app.db import get_db
-from app.models import User
+from app.enums import StrategyType
+from app.models import Strategy, User
 from app.schemas.strategies.create import CreateStrategyRequest
 from app.schemas.strategies.update import UpdateStrategyRequest
 from app.schemas.strategies.response import StrategyResponse
 from app.services.strategies.strategy_service import StrategyService
+from app.services.validation.eligibility import validation_status, validation_statuses
 
 
 router = APIRouter(
     prefix="/strategies",
     tags=["Strategies"],
 )
+
+
+def _response(strategy: Strategy, validation: dict) -> StrategyResponse:
+    return StrategyResponse(
+        id=str(strategy.id),
+        user_id=str(strategy.user_id),
+        name=strategy.name,
+        description=strategy.description,
+        strategy_type=strategy.strategy_type.value,
+        strategy_config=strategy.strategy_config,
+        python_code=strategy.python_code,
+        version=strategy.version,
+        is_active=strategy.is_active,
+        created_at=strategy.created_at.isoformat(),
+        updated_at=strategy.updated_at.isoformat(),
+        validation=validation,
+    )
+
+
+def _not_found() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Strategy not found.",
+    )
 
 
 @router.post(
@@ -36,20 +62,11 @@ def create_strategy(
         description=request.description,
         strategy_type=request.strategy_type,
         strategy_config=request.strategy_config.model_dump(),
+        python_code=request.python_code,
     )
 
-    return StrategyResponse(
-        id=str(strategy.id),
-        user_id=str(strategy.user_id),
-        name=strategy.name,
-        description=strategy.description,
-        strategy_type=strategy.strategy_type.value,
-        strategy_config=strategy.strategy_config,
-        version=strategy.version,
-        is_active=strategy.is_active,
-        created_at=strategy.created_at.isoformat(),
-        updated_at=strategy.updated_at.isoformat(),
-    )
+    return _response(strategy, validation_status(db, strategy))
+
 
 @router.get(
     "",
@@ -65,21 +82,9 @@ def list_strategies(
         user_id=current_user.id,
     )
 
-    return [
-        StrategyResponse(
-            id=str(strategy.id),
-            user_id=str(strategy.user_id),
-            name=strategy.name,
-            description=strategy.description,
-            strategy_type=strategy.strategy_type.value,
-            strategy_config=strategy.strategy_config,
-            version=strategy.version,
-            is_active=strategy.is_active,
-            created_at=strategy.created_at.isoformat(),
-            updated_at=strategy.updated_at.isoformat(),
-        )
-        for strategy in strategies
-    ]
+    statuses = validation_statuses(db, strategies)
+    return [_response(strategy, statuses[strategy.id]) for strategy in strategies]
+
 
 @router.get(
     "/{strategy_id}",
@@ -98,23 +103,10 @@ def get_strategy(
     )
 
     if not strategy:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Strategy not found.",
-        )
+        raise _not_found()
 
-    return StrategyResponse(
-        id=str(strategy.id),
-        user_id=str(strategy.user_id),
-        name=strategy.name,
-        description=strategy.description,
-        strategy_type=strategy.strategy_type.value,
-        strategy_config=strategy.strategy_config,
-        version=strategy.version,
-        is_active=strategy.is_active,
-        created_at=strategy.created_at.isoformat(),
-        updated_at=strategy.updated_at.isoformat(),
-    )
+    return _response(strategy, validation_status(db, strategy))
+
 
 @router.patch(
     "/{strategy_id}",
@@ -134,9 +126,15 @@ def update_strategy(
     )
 
     if not strategy:
+        raise _not_found()
+
+    if (
+        request.python_code is not None
+        and strategy.strategy_type != StrategyType.PYTHON
+    ):
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Strategy not found.",
+            status_code=422,
+            detail="Only PYTHON strategies can have python_code.",
         )
 
     strategy = strategy_service.update_strategy(
@@ -144,25 +142,16 @@ def update_strategy(
         name=request.name,
         description=request.description,
         strategy_config=(
-         request.strategy_config.model_dump()
-         if request.strategy_config is not None
-         else None
+            request.strategy_config.model_dump()
+            if request.strategy_config is not None
+            else None
         ),
+        python_code=request.python_code,
         is_active=request.is_active,
     )
 
-    return StrategyResponse(
-        id=str(strategy.id),
-        user_id=str(strategy.user_id),
-        name=strategy.name,
-        description=strategy.description,
-        strategy_type=strategy.strategy_type.value,
-        strategy_config=strategy.strategy_config,
-        version=strategy.version,
-        is_active=strategy.is_active,
-        created_at=strategy.created_at.isoformat(),
-        updated_at=strategy.updated_at.isoformat(),
-    )
+    return _response(strategy, validation_status(db, strategy))
+
 
 @router.delete(
     "/{strategy_id}",
@@ -181,10 +170,7 @@ def delete_strategy(
     )
 
     if not strategy:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Strategy not found.",
-        )
+        raise _not_found()
 
     strategy_service.delete_strategy(
         strategy=strategy,

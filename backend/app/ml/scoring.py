@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import math
 from collections.abc import Mapping
@@ -147,6 +147,46 @@ def calculate_composite_score(
     Directional factors are in [-1, 1]. Suitability factors are in [0, 1].
     Direction policies are explicit and strategy-specific.
     """
+    return sum(row["contribution"] for row in score_breakdown(strategy, factors, weights))
+
+
+def factor_suitability(strategy: str, name: str, value: float) -> float:
+    """A normalised factor value as a suitability in [0, 1], by its direction."""
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(value)
+    ):
+        raise ValueError(f"Factor {name!r} must be a finite number.")
+
+    direction = FACTOR_DIRECTIONS[strategy][name]
+
+    if direction in {"higher_is_better", "lower_is_better", "magnitude"}:
+        if not -1.0 <= value <= 1.0:
+            raise ValueError(f"Factor {name!r} must be in [-1.0, 1.0].")
+
+        if direction == "higher_is_better":
+            return (float(value) + 1.0) / 2.0
+        if direction == "lower_is_better":
+            return (1.0 - float(value)) / 2.0
+        return abs(float(value))
+    if direction == "suitability":
+        if not 0.0 <= value <= 1.0:
+            raise ValueError(f"Factor {name!r} must be in [0.0, 1.0].")
+        return float(value)
+    raise ValueError(f"Unsupported factor direction: {direction!r}.")
+
+
+def score_breakdown(
+    strategy: str,
+    factors: Mapping[str, float],
+    weights: Mapping[str, float] | None = None,
+) -> list[dict]:
+    """Each factor's part of the composite score, in the strategy's factor order.
+
+    contribution = suitability * weight / total weight; the contributions add up
+    to the composite score.
+    """
     if strategy not in STRATEGY_FACTORS:
         raise ValueError(f"Unknown strategy: {strategy!r}.")
     if not isinstance(factors, Mapping):
@@ -161,37 +201,10 @@ def calculate_composite_score(
     if unknown:
         raise ValueError(f"Unknown factors for {strategy}: {sorted(unknown)}.")
 
-    suitability_values: dict[str, float] = {}
-
-    for name in STRATEGY_FACTORS[strategy]:
-        value = factors[name]
-        if (
-            isinstance(value, bool)
-            or not isinstance(value, (int, float))
-            or not math.isfinite(value)
-        ):
-            raise ValueError(f"Factor {name!r} must be a finite number.")
-
-        direction = FACTOR_DIRECTIONS[strategy][name]
-
-        if direction in {"higher_is_better", "lower_is_better", "magnitude"}:
-            if not -1.0 <= value <= 1.0:
-                raise ValueError(f"Factor {name!r} must be in [-1.0, 1.0].")
-
-            if direction == "higher_is_better":
-                suitability = (float(value) + 1.0) / 2.0
-            elif direction == "lower_is_better":
-                suitability = (1.0 - float(value)) / 2.0
-            else:
-                suitability = abs(float(value))
-        elif direction == "suitability":
-            if not 0.0 <= value <= 1.0:
-                raise ValueError(f"Factor {name!r} must be in [0.0, 1.0].")
-            suitability = float(value)
-        else:
-            raise ValueError(f"Unsupported factor direction: {direction!r}.")
-
-        suitability_values[name] = suitability
+    suitability_values = {
+        name: factor_suitability(strategy, name, factors[name])
+        for name in STRATEGY_FACTORS[strategy]
+    }
 
     selected_weights = (
         DEFAULT_STRATEGY_WEIGHTS[strategy] if weights is None else weights
@@ -199,7 +212,15 @@ def calculate_composite_score(
     validated_weights = validate_strategy_weights(strategy, selected_weights)
     total_weight = sum(validated_weights.values())
 
-    return sum(
-        suitability_values[name] * validated_weights[name]
+    return [
+        {
+            "factor": name,
+            "direction": FACTOR_DIRECTIONS[strategy][name],
+            "normalized": float(factors[name]),
+            "suitability": suitability_values[name],
+            "weight": validated_weights[name],
+            "weight_share": validated_weights[name] / total_weight,
+            "contribution": suitability_values[name] * validated_weights[name] / total_weight,
+        }
         for name in STRATEGY_FACTORS[strategy]
-    ) / total_weight
+    ]

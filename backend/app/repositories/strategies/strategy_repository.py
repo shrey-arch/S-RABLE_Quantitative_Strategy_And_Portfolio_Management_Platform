@@ -18,6 +18,7 @@ class StrategyRepository:
         description: str | None,
         strategy_type,
         strategy_config: dict,
+        python_code: str | None = None,
     ) -> Strategy:
         strategy = Strategy(
             user_id=user_id,
@@ -25,6 +26,7 @@ class StrategyRepository:
             description=description,
             strategy_type=strategy_type,
             strategy_config=strategy_config,
+            python_code=python_code,
         )
 
         self.db.add(strategy)
@@ -69,8 +71,13 @@ class StrategyRepository:
         name: str | None = None,
         description: str | None = None,
         strategy_config: dict | None = None,
+        python_code: str | None = None,
         is_active: bool | None = None,
     ) -> Strategy:
+        # The version counts changes to what the strategy does (its rules or its
+        # code). Renaming, editing the description or toggling it does not count.
+        changed = False
+
         if name is not None:
             strategy.name = name
 
@@ -78,7 +85,15 @@ class StrategyRepository:
             strategy.description = description
 
         if strategy_config is not None:
+            changed = changed or strategy_config != strategy.strategy_config
             strategy.strategy_config = strategy_config
+
+        if python_code is not None:
+            changed = changed or python_code != strategy.python_code
+            strategy.python_code = python_code
+
+        if changed:
+            strategy.version = int(strategy.version or 1) + 1
 
         if is_active is not None:
             strategy.is_active = is_active

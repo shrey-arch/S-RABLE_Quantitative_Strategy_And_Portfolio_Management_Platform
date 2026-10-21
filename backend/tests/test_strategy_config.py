@@ -16,14 +16,14 @@ def valid_config():
                 "name": "sma_20",
                 "type": "SMA",
                 "parameters": {
-                    "period": 20,
+                    "window": 20,
                 },
             },
             {
                 "name": "sma_50",
                 "type": "SMA",
                 "parameters": {
-                    "period": 50,
+                    "window": 50,
                 },
             },
             {

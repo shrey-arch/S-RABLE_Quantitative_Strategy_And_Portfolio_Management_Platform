@@ -38,6 +38,7 @@ def test_create_strategy():
             "fast_period": 10,
             "slow_period": 30,
         },
+        python_code=None,
     )
 
 def test_list_strategies():
@@ -121,6 +122,7 @@ def test_update_strategy():
             "fast_period": 20,
             "slow_period": 50,
         },
+        python_code=None,
         is_active=False,
     )
 

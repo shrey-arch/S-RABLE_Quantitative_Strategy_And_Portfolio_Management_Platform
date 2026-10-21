@@ -3,13 +3,18 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_user
 from app.db import get_db
+from app.models import User
 from app.schemas.instruments import (
     CreateInstrumentRequest,
     InstrumentResponse,
     UpdateInstrumentRequest,
 )
-from app.services.instruments.instrument_service import InstrumentService
+from app.services.instruments.instrument_service import (
+    InstrumentInUseError,
+    InstrumentService,
+)
 
 
 router = APIRouter(
@@ -42,6 +47,7 @@ def _to_response(instrument) -> InstrumentResponse:
 )
 def create_instrument(
     request: CreateInstrumentRequest,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     instrument_service = InstrumentService(db)
@@ -73,6 +79,7 @@ def create_instrument(
 )
 def list_instruments(
     active_only: bool = Query(default=False),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     instrument_service = InstrumentService(db)
@@ -90,6 +97,7 @@ def list_instruments(
 )
 def get_instrument(
     instrument_id: UUID,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     instrument_service = InstrumentService(db)
@@ -114,6 +122,7 @@ def get_instrument(
 def update_instrument(
     instrument_id: UUID,
     request: UpdateInstrumentRequest,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     instrument_service = InstrumentService(db)
@@ -156,6 +165,7 @@ def update_instrument(
 )
 def delete_instrument(
     instrument_id: UUID,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     instrument_service = InstrumentService(db)
@@ -170,6 +180,12 @@ def delete_instrument(
             detail="Instrument not found.",
         )
 
-    instrument_service.delete_instrument(
-        instrument=instrument,
-    )
+    try:
+        instrument_service.delete_instrument(
+            instrument=instrument,
+        )
+    except InstrumentInUseError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(exc),
+        ) from exc
