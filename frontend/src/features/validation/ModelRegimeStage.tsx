@@ -7,6 +7,7 @@ import { classColor, codeColor } from '@/features/regime/regime-model';
 import { Row, Section } from '@/features/results/parts';
 import { toChartPoints } from '@/features/results/results-model';
 import { formatDate, formatNumber, formatPercent } from '@/lib/format';
+import { RegimeCards } from './RegimeCards';
 import { GroupedBarChart, RegimeEquityChart } from './ValidationCharts';
 import { percentOrMissing, type RegimeRow, type ValidationReport } from './validation-model';
 
@@ -172,6 +173,7 @@ export function ModelRegimeStage({ report }: { report: ValidationReport }) {
         title="Performance by regime"
         description={`${dimensions.length ? 'Combined regimes (all three dimensions). ' : ''}A regime with fewer than ${minDays} days is not judged.`}
       >
+        <RegimeCards rows={stage.regimes} code />
         <RegimeTable rows={stage.regimes} caption="Performance by regime" minDays={minDays} code />
         <Bars rows={stage.regimes} label="Return and maximum drawdown by regime" byCode />
       </Section>
@@ -183,6 +185,7 @@ export function ModelRegimeStage({ report }: { report: ValidationReport }) {
           title={`Performance by ${d.name.toLowerCase()}`}
           description="Each class of this dimension is judged on its own (at least the minimum days)."
         >
+          <RegimeCards rows={d.rows} />
           <RegimeTable
             rows={d.rows}
             caption={`Performance by ${d.name.toLowerCase()}`}

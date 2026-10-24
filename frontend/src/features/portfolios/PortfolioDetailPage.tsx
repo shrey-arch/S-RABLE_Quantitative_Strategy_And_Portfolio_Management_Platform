@@ -1,4 +1,4 @@
-import { ArrowLeft, Calculator, CircleSlash, RotateCcw, Save } from 'lucide-react';
+﻿import { ArrowLeft, Calculator, CircleSlash, RotateCcw, Save } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
@@ -62,7 +62,7 @@ function NotAvailable() {
       <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
         <CircleSlash className="size-6" />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">Portfolio not available</h1>
+      <h1 className="mt-4 page-title text-3xl">Portfolio not available</h1>
       <p className="mt-2 max-w-md text-sm text-muted-foreground">
         This portfolio does not exist, or it belongs to another account.
       </p>
@@ -354,7 +354,7 @@ export default function PortfolioDetailPage() {
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
       <BackLink />
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">
+        <h1 className="page-title text-3xl">
           {query.data ? query.data.name : 'Portfolio'}
         </h1>
         {query.data?.description && (

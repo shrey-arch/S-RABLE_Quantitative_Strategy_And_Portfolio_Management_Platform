@@ -1,4 +1,4 @@
-import { Trophy } from 'lucide-react';
+﻿import { Trophy } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,7 +11,7 @@ export function TopStrategiesWidget() {
   const scores = useScores(null);
   const top = (scores.data?.rows ?? []).filter((r) => r.status === 'SCORED').slice(0, 3);
   return (
-    <section aria-labelledby="top-strategies" className="rounded-xl border bg-card p-5">
+    <section aria-labelledby="top-strategies" className="rounded-xl border bg-card shadow-card p-5">
       <div className="flex items-center gap-2">
         <Trophy aria-hidden className="size-4 text-muted-foreground" />
         <h2 id="top-strategies" className="text-sm font-medium">

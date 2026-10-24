@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+﻿import { cn } from '@/lib/utils';
 import { humanize } from '@/lib/format';
 
 /**
@@ -76,10 +76,10 @@ const LABELS: Partial<Record<StatusKind, Record<string, string>>> = {
 const VERBATIM: StatusKind[] = ['connection'];
 
 const TONE_CLASSES: Record<Tone, string> = {
-  success: 'border-success/30 bg-success/10 text-success',
-  warning: 'border-warning/30 bg-warning/10 text-warning',
-  danger: 'border-destructive/30 bg-destructive/10 text-destructive',
-  info: 'border-info/30 bg-info/10 text-info',
+  success: 'border-success/25 bg-success-soft text-success-ink',
+  warning: 'border-warning/35 bg-warning-soft text-warning-ink',
+  danger: 'border-destructive/25 bg-destructive-soft text-destructive-ink',
+  info: 'border-info/25 bg-info-soft text-info-ink',
   neutral: 'border-border bg-muted text-muted-foreground',
 };
 

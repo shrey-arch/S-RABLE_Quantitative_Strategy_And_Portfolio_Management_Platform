@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { DateRangeValue } from '@/components/ui/date-range-field';
@@ -23,7 +23,7 @@ export default function PickersCheckPage() {
     <main className="mx-auto max-w-3xl space-y-6 p-4 sm:p-8">
       <header className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Instrument and date pickers</h1>
+          <h1 className="page-title text-3xl">Instrument and date pickers</h1>
           <p className="text-sm text-muted-foreground">Developer | real backend data</p>
         </div>
         <Button variant="outline" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>

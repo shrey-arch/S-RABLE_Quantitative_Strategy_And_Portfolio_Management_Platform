@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router';
 import { toast } from 'sonner';
 import { ApiError, api, unwrap } from '@/api/client';
@@ -57,7 +57,7 @@ export default function SessionCheckPage() {
   return (
     <main className="mx-auto max-w-3xl space-y-6 p-8">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Session check</h1>
+        <h1 className="page-title text-3xl">Session check</h1>
         <p className="text-sm text-muted-foreground">Developer | uses the real backend</p>
       </header>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { ErrorState, LoadingState } from '@/components/ui/states';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -71,7 +71,7 @@ export default function ScoringPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Scoring</h1>
+        <h1 className="page-title text-3xl">Scoring</h1>
         <p className="max-w-3xl text-sm text-muted-foreground">
           Each of your strategies is scored on the instruments of its latest completed backtest:
           factors from stored daily closes, normalised and weighted into a composite score from 0 to

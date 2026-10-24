@@ -14,6 +14,7 @@ import {
   WindowTimeline,
 } from './ValidationCharts';
 import { ModelRegimeStage } from './ModelRegimeStage';
+import { RegimeCards } from './RegimeCards';
 import {
   histogramBars,
   moneyOrMissing,
@@ -472,6 +473,7 @@ export function RegimeStageView({ report }: { report: ValidationReport }) {
             </p>
           </Section>
           <Section id="regime-table" title="Performance by regime">
+            <RegimeCards rows={stage.regimes} />
             <div className="overflow-x-auto">
               <table className="w-full min-w-[44rem] text-sm">
                 <caption className="sr-only">Performance by regime</caption>

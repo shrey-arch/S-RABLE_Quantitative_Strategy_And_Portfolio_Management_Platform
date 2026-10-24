@@ -1,4 +1,4 @@
-import { Blocks, Code2, Plus } from 'lucide-react';
+﻿import { Blocks, Code2, Plus } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -37,7 +37,7 @@ export default function StrategiesPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-8 p-4 sm:p-6 lg:p-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Strategies</h1>
+        <h1 className="page-title text-3xl">Strategies</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           The built-in strategies the backtest engine runs, and the strategies you have saved.
         </p>

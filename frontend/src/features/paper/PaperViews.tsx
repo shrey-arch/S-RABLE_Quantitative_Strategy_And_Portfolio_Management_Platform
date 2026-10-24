@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/react-table';
+﻿import type { ColumnDef } from '@tanstack/react-table';
 import { NotebookPen, Pencil, Plus, X } from 'lucide-react';
 import { useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link } from 'react-router';
@@ -57,7 +57,7 @@ const failed = (error: unknown) => toast.error((error as Error).message);
 
 export function Tile(props: { label: string; children: ReactNode; hint?: ReactNode }) {
   return (
-    <div className="min-w-0 rounded-xl border bg-card p-4">
+    <div className="min-w-0 rounded-xl border bg-card shadow-card p-4">
       <p className="text-xs text-muted-foreground">{props.label}</p>
       <p className="mt-1 truncate text-lg font-semibold tabular-nums">{props.children}</p>
       {props.hint && <p className="mt-0.5 text-xs text-muted-foreground">{props.hint}</p>}
@@ -167,7 +167,7 @@ export function Watchlist(props: {
     save.mutate([...ids, id], { onError: failed });
   };
   return (
-    <section aria-labelledby="watchlist" className="space-y-3 rounded-xl border bg-card p-4">
+    <section aria-labelledby="watchlist" className="space-y-3 rounded-xl border bg-card shadow-card p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="watchlist" className="font-semibold">
           Watchlist
@@ -778,7 +778,7 @@ export function SettingsPanel({ account }: { account: PaperAccount }) {
         onSubmit={save}
         noValidate
         aria-labelledby="paper-settings"
-        className="space-y-4 rounded-xl border bg-card p-4"
+        className="space-y-4 rounded-xl border bg-card shadow-card p-4"
       >
         <h2 id="paper-settings" className="font-semibold">
           Costs
@@ -845,7 +845,7 @@ export function SettingsPanel({ account }: { account: PaperAccount }) {
           />
         </div>
       </form>
-      <section aria-labelledby="charge-rates" className="space-y-3 rounded-xl border bg-card p-4">
+      <section aria-labelledby="charge-rates" className="space-y-3 rounded-xl border bg-card shadow-card p-4">
         <h2 id="charge-rates" className="font-semibold">
           How charges are calculated
         </h2>

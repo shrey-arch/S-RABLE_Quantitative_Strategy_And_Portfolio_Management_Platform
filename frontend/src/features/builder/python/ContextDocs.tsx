@@ -1,4 +1,4 @@
-import { BookOpen, ShieldCheck } from 'lucide-react';
+﻿import { BookOpen, ShieldCheck } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/states';
 import { SANDBOX_LABELS, SANDBOX_NOTES } from './sandbox-model';
@@ -39,7 +39,7 @@ export function ContextDocs(props: { onInsertExample?: (code: string) => void })
           {reference.context_api.map((entry) => {
             const row = entry as Record<string, string>;
             return (
-              <div key={row.name} className="rounded-md border bg-card p-2">
+              <div key={row.name} className="rounded-md border bg-card shadow-card p-2">
                 <dt className="font-mono text-xs">{row.signature}</dt>
                 <dd className="mt-0.5 text-xs text-muted-foreground">
                   <span className="font-medium text-foreground">{row.returns}</span> &mdash;{' '}
@@ -101,7 +101,7 @@ export function ContextDocs(props: { onInsertExample?: (code: string) => void })
           {reference.limits.map((limit) => {
             const row = limit as Record<string, string>;
             return (
-              <div key={row.name} className="rounded-md border bg-card p-2">
+              <div key={row.name} className="rounded-md border bg-card shadow-card p-2">
                 <dt className="text-muted-foreground">{row.name}</dt>
                 <dd className="font-medium tabular-nums">{row.value}</dd>
                 {row.detail && <dd className="text-muted-foreground">{row.detail}</dd>}

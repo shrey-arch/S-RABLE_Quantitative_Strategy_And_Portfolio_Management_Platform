@@ -1,4 +1,4 @@
-import { toast } from 'sonner';
+﻿import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,8 +46,8 @@ export default function ComponentsCheckPage() {
     <main className="mx-auto max-w-4xl space-y-6 p-8">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Base components</h1>
-          <p className="text-sm text-muted-foreground">Developer · shadcn/ui check</p>
+          <h1 className="page-title text-3xl">Base components</h1>
+          <p className="text-sm text-muted-foreground">Developer Â· shadcn/ui check</p>
         </div>
         <Button variant="outline" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
           {theme === 'dark' ? 'Light' : 'Dark'} theme
@@ -68,7 +68,7 @@ export default function ComponentsCheckPage() {
           <Button variant="link">Link</Button>
           <Button size="sm">Small</Button>
           <Button disabled>
-            <Spinner /> Saving…
+            <Spinner /> Savingâ€¦
           </Button>
         </CardContent>
       </Card>
@@ -166,7 +166,7 @@ export default function ComponentsCheckPage() {
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">Delete…</Button>
+              <Button variant="destructive">Deleteâ€¦</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowLeft, Info, Play, Plus, X } from 'lucide-react';
+﻿import { AlertTriangle, ArrowLeft, Info, Play, Plus, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
@@ -93,7 +93,7 @@ function Page(props: { mode: RunMode; children: React.ReactNode }) {
     <div className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight">{text.title}</h1>
+          <h1 className="page-title text-3xl">{text.title}</h1>
           <SimulationLabel kind="historical" />
         </div>
         <p className="text-sm text-muted-foreground">{text.intro}</p>
@@ -985,7 +985,7 @@ function Review(props: {
     <div className="space-y-6">
       <section
         aria-labelledby="review-heading"
-        className="space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+        className="space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6"
       >
         <div className="space-y-1">
           <h2 id="review-heading" className="font-semibold">

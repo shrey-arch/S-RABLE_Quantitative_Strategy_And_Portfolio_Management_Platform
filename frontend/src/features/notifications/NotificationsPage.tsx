@@ -1,4 +1,4 @@
-import { Bell, Trash2 } from 'lucide-react';
+﻿import { Bell, Trash2 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,7 @@ function NotificationItem({ item }: { item: Notification }) {
     <li
       aria-labelledby={titleId}
       className={cn(
-        'rounded-xl border bg-card p-4',
+        'rounded-xl border bg-card shadow-card p-4',
         !item.is_read && 'border-primary/40 bg-primary/5',
       )}
     >
@@ -148,7 +148,7 @@ export default function NotificationsPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="space-y-2">
-        <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+        <h1 className="flex items-center gap-2 page-title text-3xl">
           <Bell aria-hidden className="size-5 text-muted-foreground" />
           Notifications
         </h1>

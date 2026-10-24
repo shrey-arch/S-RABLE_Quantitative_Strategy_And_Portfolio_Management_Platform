@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
+﻿import { useQueryClient } from '@tanstack/react-query';
 import { CircleSlash, RotateCcw, Square } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 import { toast } from 'sonner';
@@ -58,7 +58,7 @@ export default function PortfolioBacktestPage() {
     return (
       <Shell>
         <BackLink />
-        <h1 className="text-2xl font-semibold tracking-tight">{TITLE}</h1>
+        <h1 className="page-title text-3xl">{TITLE}</h1>
         <div className="flex flex-col items-center rounded-xl border px-6 py-12 text-center">
           <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
             <CircleSlash className="size-6" />
@@ -78,7 +78,7 @@ export default function PortfolioBacktestPage() {
     return (
       <Shell>
         <BackLink />
-        <h1 className="text-2xl font-semibold tracking-tight">{TITLE}</h1>
+        <h1 className="page-title text-3xl">{TITLE}</h1>
         {query.isError ? (
           <ErrorState error={query.error} onRetry={() => void query.refetch()} />
         ) : (
@@ -116,7 +116,7 @@ function RunView({ run, refreshError }: { run: PortfolioBacktestDetail; refreshE
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight">{run.name}</h1>
+            <h1 className="page-title text-3xl">{run.name}</h1>
             <StatusBadge kind="execution" value={run.status} />
             <SimulationLabel kind="historical" />
           </div>
@@ -178,7 +178,7 @@ function RunView({ run, refreshError }: { run: PortfolioBacktestDetail; refreshE
         <section
           aria-labelledby="job-heading"
           className={cn(
-            'space-y-4 rounded-xl border bg-card p-4 sm:p-6',
+            'space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6',
             run.status === 'FAILED' && 'border-destructive/30',
           )}
         >

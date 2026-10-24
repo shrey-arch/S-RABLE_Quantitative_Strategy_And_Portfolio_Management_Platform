@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+﻿import { Plus } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
@@ -132,7 +132,7 @@ export default function InstrumentsPage() {
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Instruments</h1>
+          <h1 className="page-title text-3xl">Instruments</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Instruments you can backtest on. Open one to see its historical data.
           </p>

@@ -1,4 +1,4 @@
-import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
+﻿import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
 
 /**
  * Error boundary for a single route. Shown when a page crashes or fails to load.
@@ -14,14 +14,14 @@ export function RouteErrorPage() {
     message,
   );
   const title = isRouteErrorResponse(error)
-    ? `${error.status} — ${error.statusText}`
+    ? `${error.status} â€” ${error.statusText}`
     : isStaleBuild
       ? 'A new version is available'
       : 'This page failed to load';
 
   return (
     <main className="mx-auto max-w-3xl space-y-4 p-8" role="alert">
-      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+      <h1 className="page-title text-3xl">{title}</h1>
       <p className="text-sm text-muted-foreground">
         {isStaleBuild
           ? 'Reload to get the latest version.'

@@ -1,4 +1,4 @@
-import { AlertCircle, UserRound } from 'lucide-react';
+﻿import { AlertCircle, UserRound } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -101,7 +101,7 @@ function ProfileForm({ profile }: { profile: Profile }) {
       onSubmit={submit}
       noValidate
       aria-labelledby="edit-profile"
-      className="space-y-4 rounded-xl border bg-card p-5"
+      className="space-y-4 rounded-xl border bg-card shadow-card p-5"
     >
       <h2 id="edit-profile" className="font-semibold">
         Edit profile
@@ -183,7 +183,7 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="space-y-2">
-        <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+        <h1 className="flex items-center gap-2 page-title text-3xl">
           <UserRound aria-hidden className="size-5 text-muted-foreground" />
           Profile
         </h1>
@@ -196,7 +196,7 @@ export default function ProfilePage() {
         <LoadingState rows={4} />
       ) : (
         <>
-          <section aria-label="Account details" className="space-y-4 rounded-xl border bg-card p-5">
+          <section aria-label="Account details" className="space-y-4 rounded-xl border bg-card shadow-card p-5">
             <div className="flex items-center gap-4">
               <Avatar profile={profile} />
               <div className="min-w-0">

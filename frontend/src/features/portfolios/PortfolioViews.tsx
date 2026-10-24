@@ -1,4 +1,4 @@
-import { Calculator, FlaskConical, TriangleAlert } from 'lucide-react';
+﻿import { Calculator, FlaskConical, TriangleAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { istDate } from '@/features/instruments/market-data';
 import { Section } from '@/features/results/parts';
@@ -48,7 +48,7 @@ export function CalculationOnly() {
 
 function Stat(props: { label: string; value: string; note?: ReactNode }) {
   return (
-    <div className="rounded-xl border bg-card p-4">
+    <div className="rounded-xl border bg-card shadow-card p-4">
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm text-muted-foreground">{props.label}</p>
         <Simulated />

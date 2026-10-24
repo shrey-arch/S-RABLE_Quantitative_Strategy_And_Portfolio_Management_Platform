@@ -18,7 +18,7 @@ export function AppShell() {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-dvh bg-background text-foreground">
+    <div className="app-ground flex min-h-dvh bg-background text-foreground">
       <a
         href="#main"
         className="sr-only z-50 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
@@ -26,7 +26,7 @@ export function AppShell() {
         Skip to content
       </a>
 
-      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r bg-card lg:flex">
+      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r bg-card shadow-card lg:flex">
         <div className="flex h-14 items-center border-b px-5">
           <Link to="/app/dashboard" className="text-lg font-semibold tracking-tight">
             S-RABLE

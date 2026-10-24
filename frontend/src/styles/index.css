@@ -1,83 +1,180 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* Typefaces, bundled rather than fetched, so the app renders correctly offline.
+   The family names below are the ones @fontsource-variable actually declares -
+   'Inter Variable', not 'Inter'. Playfair's italic is a separate stylesheet and
+   the design depends on it for every accent word, so it is imported explicitly. */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/playfair-display';
+@import '@fontsource-variable/playfair-display/wght-italic.css';
+@import '@fontsource-variable/caveat';
+
 /* Dark mode is controlled by a "dark" class on <html>. */
 @custom-variant dark (&:is(.dark *));
 
 /*
  * S-RABLE design tokens.
- * Names follow shadcn/ui so its components work unchanged.
- * success / warning / info are S-RABLE additions for status badges.
+ * Names follow shadcn/ui so its components work unchanged; the S-RABLE
+ * additions below are surfaces, soft status fills and the regime palette.
+ *
+ * Colours are stated in hex because they were sampled from the reference
+ * design rather than derived, and hex is what was measured.
  */
 :root {
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 
-  --background: oklch(0.985 0.002 250);
-  --foreground: oklch(0.21 0.02 255);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.02 255);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.02 255);
+  /* --- surfaces, lightest to deepest ------------------------------------ */
+  --background: #f8f9f6;        /* page ground, warm paper */
+  --card: #ffffff;              /* card body */
+  --surface-raised: #ffffff;    /* alias for cards that sit on cards */
+  --surface-strip: #f2f6fd;     /* card header and footer strips */
+  --surface-row: #f7fafe;       /* alternating table rows */
+  --surface-head: #edf2fb;      /* table header row */
+  --surface-well: #f1f3ee;      /* inset wells: tab tracks, search fields */
+  --popover: #ffffff;
 
-  --primary: oklch(0.5 0.1 185);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.95 0.01 250);
-  --secondary-foreground: oklch(0.21 0.02 255);
-  --muted: oklch(0.96 0.005 250);
-  --muted-foreground: oklch(0.5 0.02 255);
-  --accent: oklch(0.95 0.02 185);
-  --accent-foreground: oklch(0.3 0.06 185);
+  --foreground: #0a1628;
+  --card-foreground: #0a1628;
+  --popover-foreground: #0a1628;
+  --muted: #f1f3ee;
+  --muted-foreground: #7a8494;
+  --subtle-foreground: #8a93a5; /* micro-labels, column headings */
 
-  --destructive: oklch(0.55 0.19 25);
-  --success: oklch(0.55 0.13 150);
-  --warning: oklch(0.6 0.13 70);
-  --info: oklch(0.55 0.13 250);
+  --border: #e9ebe5;            /* warm hairline */
+  --border-strong: #dfe1da;     /* dividers that need to read */
+  --input: #e5e7e0;
+  --ring: #0055ff;
 
-  --border: oklch(0.91 0.008 250);
-  --input: oklch(0.88 0.01 250);
-  --ring: oklch(0.55 0.11 185);
+  /* --- brand ------------------------------------------------------------ */
+  --primary: #0055ff;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e7f0f8;      /* active nav, soft buttons */
+  --primary-tint: #edf2fa;      /* hover, selected rows */
+  --primary-ink: #0040cc;       /* text on a soft primary background */
 
-  --chart-1: oklch(0.55 0.11 185);
-  --chart-2: oklch(0.6 0.15 255);
-  --chart-3: oklch(0.68 0.15 65);
-  --chart-4: oklch(0.58 0.17 330);
-  --chart-5: oklch(0.6 0.12 140);
+  --secondary: #f1f3ee;
+  --secondary-foreground: #0a1628;
+  --accent: #edf2fa;
+  --accent-foreground: #0040cc;
+
+  /* --- status ----------------------------------------------------------- */
+  --success: #03ac81;
+  --success-soft: #ddf4ee;
+  --success-ink: #057055;       /* passes contrast on --success-soft */
+
+  --warning: #f8a231;
+  --warning-soft: #fdf1d9;
+  --warning-ink: #8a5a06;
+
+  --destructive: #ee4455;
+  --destructive-soft: #fde5e4;
+  --destructive-ink: #b32434;
+
+  --info: #2b71fc;
+  --info-soft: #f2f6fa;
+  --info-ink: #0040cc;
+
+  /* --- market regimes, used as filled category cards -------------------- */
+  --regime-strong: #2b71fc;     /* the standout regime: solid fill */
+  --regime-strong-ink: #ffffff;
+  --regime-calm: #ddf4ee;
+  --regime-calm-ink: #057055;
+  --regime-stress: #fde5e4;
+  --regime-stress-ink: #b32434;
+  --regime-volatile: #fdf1d9;
+  --regime-volatile-ink: #8a5a06;
+  --regime-overall: #f4f6f6;
+  --regime-overall-ink: #0a1628;
+
+  /* --- charts ----------------------------------------------------------- */
+  --chart-1: #005ffb;
+  --chart-2: #03ac81;
+  --chart-3: #f8a231;
+  --chart-4: #8b5cf6;
+  --chart-5: #0e7faf;
+  --chart-grid: #f1f3ee;
+  --grid-line: rgb(10 22 40 / 0.055); /* graph paper behind every page */
+  --grid-size: 24px;
+  --chart-benchmark: #9aa3b2;   /* the dashed buy-and-hold line */
+
+  /* --- annotation ------------------------------------------------------- */
+  --hand: #2271fb;              /* handwritten notes on the home page */
 }
 
 .dark {
-  --background: oklch(0.17 0.012 255);
-  --foreground: oklch(0.94 0.005 250);
-  --card: oklch(0.21 0.014 255);
-  --card-foreground: oklch(0.94 0.005 250);
-  --popover: oklch(0.21 0.014 255);
-  --popover-foreground: oklch(0.94 0.005 250);
+  --background: #0c1017;
+  --card: #131821;
+  --surface-raised: #171d27;
+  --surface-strip: #151c27;
+  --surface-row: #151a24;
+  --surface-head: #19202b;
+  --surface-well: #1c222d;
+  --popover: #131821;
 
-  --primary: oklch(0.7 0.11 185);
-  --primary-foreground: oklch(0.17 0.02 185);
-  --secondary: oklch(0.27 0.014 255);
-  --secondary-foreground: oklch(0.94 0.005 250);
-  --muted: oklch(0.25 0.014 255);
-  --muted-foreground: oklch(0.7 0.015 255);
-  --accent: oklch(0.3 0.04 185);
-  --accent-foreground: oklch(0.9 0.05 185);
+  --foreground: #e8ebf0;
+  --card-foreground: #e8ebf0;
+  --popover-foreground: #e8ebf0;
+  --muted: #1c222d;
+  --muted-foreground: #98a1b2;
+  --subtle-foreground: #8a93a5;
 
-  --destructive: oklch(0.7 0.17 25);
-  --success: oklch(0.72 0.14 150);
-  --warning: oklch(0.78 0.13 80);
-  --info: oklch(0.72 0.12 250);
+  --border: #262d3a;
+  --border-strong: #323a49;
+  --input: #323a49;
+  --ring: #4d8dff;
 
-  --border: oklch(0.3 0.015 255);
-  --input: oklch(0.34 0.015 255);
-  --ring: oklch(0.7 0.11 185);
+  --primary: #4d8dff;
+  --primary-foreground: #06101f;
+  --primary-soft: #16263d;
+  --primary-tint: #141f31;
+  --primary-ink: #9cc2ff;
 
-  --chart-1: oklch(0.72 0.11 185);
-  --chart-2: oklch(0.72 0.13 255);
-  --chart-3: oklch(0.8 0.13 75);
-  --chart-4: oklch(0.72 0.15 330);
-  --chart-5: oklch(0.74 0.12 140);
+  --secondary: #1c222d;
+  --secondary-foreground: #e8ebf0;
+  --accent: #16263d;
+  --accent-foreground: #9cc2ff;
+
+  --success: #2bc99b;
+  --success-soft: #11362d;
+  --success-ink: #6fe0bd;
+
+  --warning: #ffb648;
+  --warning-soft: #3a2b10;
+  --warning-ink: #ffd089;
+
+  --destructive: #ff6b7a;
+  --destructive-soft: #3a1a1e;
+  --destructive-ink: #ff9ea8;
+
+  --info: #5ba8f5;
+  --info-soft: #141f31;
+  --info-ink: #9cc2ff;
+
+  --regime-strong: #2b71fc;
+  --regime-strong-ink: #ffffff;
+  --regime-calm: #11362d;
+  --regime-calm-ink: #6fe0bd;
+  --regime-stress: #3a1a1e;
+  --regime-stress-ink: #ff9ea8;
+  --regime-volatile: #3a2b10;
+  --regime-volatile-ink: #ffd089;
+  --regime-overall: #1c222d;
+  --regime-overall-ink: #e8ebf0;
+
+  --chart-1: #4d8dff;
+  --chart-2: #2bc99b;
+  --chart-3: #ffb648;
+  --chart-4: #a78bfa;
+  --chart-5: #4cc0e8;
+  --chart-grid: #222a36;
+  --grid-line: rgb(255 255 255 / 0.05);
+  --chart-benchmark: #6b7589;
+
+  --hand: #6ba6ff;
 }
 
-/* Expose tokens as Tailwind classes: bg-background, text-primary, border-border, … */
+/* Expose the tokens as Tailwind classes: bg-background, text-primary, ... */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -85,34 +182,79 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-strip: var(--surface-strip);
+  --color-surface-row: var(--surface-row);
+  --color-surface-head: var(--surface-head);
+  --color-surface-well: var(--surface-well);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-ink: var(--primary-ink);
+
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
   --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-destructive-ink: var(--destructive-ink);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-ink: var(--success-ink);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-ink: var(--warning-ink);
   --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-ink: var(--info-ink);
+
+  --color-regime-strong: var(--regime-strong);
+  --color-regime-strong-ink: var(--regime-strong-ink);
+  --color-regime-calm: var(--regime-calm);
+  --color-regime-calm-ink: var(--regime-calm-ink);
+  --color-regime-stress: var(--regime-stress);
+  --color-regime-stress-ink: var(--regime-stress-ink);
+  --color-regime-volatile: var(--regime-volatile);
+  --color-regime-volatile-ink: var(--regime-volatile-ink);
+  --color-regime-overall: var(--regime-overall);
+  --color-regime-overall-ink: var(--regime-overall-ink);
+
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-benchmark: var(--chart-benchmark);
+
+  --color-hand: var(--hand);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display Variable', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-hand: 'Caveat Variable', Caveat, ui-rounded, cursive;
   --font-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --shadow-card: 0 1px 2px rgb(10 22 40 / 0.04), 0 4px 10px rgb(10 22 40 / 0.04);
+  --shadow-raised: 0 1px 2px rgb(10 22 40 / 0.04), 0 6px 18px rgb(10 22 40 / 0.05);
+  --shadow-float: 0 -2px 10px rgb(10 22 40 / 0.04), 0 18px 40px rgb(10 22 40 / 0.07);
 }
 
 @layer base {
@@ -122,5 +264,36 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-variant-numeric: tabular-nums;
+  }
+  /* Page titles are the one serif moment on a screen; card headings stay sans. */
+  .page-title {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+  }
+  .micro-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--subtle-foreground);
+  }
+  /*
+   * Graph paper behind every app and auth page. Cards are opaque (--card),
+   * so they lift off it; the sidebar is bg-card and stays clean.
+   */
+  .app-ground {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+  }
+  /* The faint plotting grid behind the home page and page headers. */
+  .paper-grid {
+    background-image:
+      linear-gradient(var(--chart-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--chart-grid) 1px, transparent 1px);
+    background-size: 38px 38px;
   }
 }

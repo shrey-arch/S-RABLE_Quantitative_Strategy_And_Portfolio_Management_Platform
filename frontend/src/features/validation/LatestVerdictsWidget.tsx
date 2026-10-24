@@ -1,4 +1,4 @@
-import { ShieldCheck } from 'lucide-react';
+﻿import { ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -20,7 +20,7 @@ export function LatestVerdictsWidget() {
   const query = useValidations();
   const latest = (query.data ?? []).slice(0, 5);
   return (
-    <section aria-labelledby="latest-verdicts" className="rounded-xl border bg-card p-5">
+    <section aria-labelledby="latest-verdicts" className="rounded-xl border bg-card shadow-card p-5">
       <div className="flex items-center gap-2">
         <ShieldCheck aria-hidden className="size-4 text-muted-foreground" />
         <h2 id="latest-verdicts" className="text-sm font-medium">

@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
+﻿import { useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, ChartLine, CircleSlash, RotateCcw, Square } from 'lucide-react';
 import { Fragment } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
@@ -68,7 +68,7 @@ export default function ValidationReportPage() {
     return (
       <Shell>
         <BackLink />
-        <h1 className="text-2xl font-semibold tracking-tight">{TITLE}</h1>
+        <h1 className="page-title text-3xl">{TITLE}</h1>
         <div className="flex flex-col items-center rounded-xl border px-6 py-12 text-center">
           <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
             <CircleSlash className="size-6" />
@@ -88,7 +88,7 @@ export default function ValidationReportPage() {
     return (
       <Shell>
         <BackLink />
-        <h1 className="text-2xl font-semibold tracking-tight">{TITLE}</h1>
+        <h1 className="page-title text-3xl">{TITLE}</h1>
         {query.isError ? (
           <ErrorState error={query.error} onRetry={() => void query.refetch()} />
         ) : (
@@ -137,7 +137,7 @@ function Pipeline(props: { report: ValidationReport; onOpen: (tab: string) => vo
                   type="button"
                   onClick={() => props.onOpen(key)}
                   aria-label={`Stage ${index + 1}, ${STAGE_LABELS[key]}: ${stage.status === 'NOT_RUN' ? 'Not run' : humanize(stage.status)}`}
-                  className="flex min-w-36 flex-col gap-1 rounded-lg border bg-card px-3 py-2 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  className="flex min-w-36 flex-col gap-1 rounded-lg border bg-card shadow-card px-3 py-2 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 >
                   <span className="text-xs text-muted-foreground">{`${index + 1}. ${STAGE_LABELS[key]}`}</span>
                   <StageStatusBadge status={stage.status} />
@@ -181,7 +181,7 @@ function ReportView({ report, refreshError }: { report: ValidationReport; refres
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight">{TITLE}</h1>
+            <h1 className="page-title text-3xl">{TITLE}</h1>
             <StatusBadge kind="execution" value={report.status} />
             <SimulationLabel kind="historical" />
           </div>
@@ -255,7 +255,7 @@ function ReportView({ report, refreshError }: { report: ValidationReport; refres
         <section
           aria-labelledby="job-heading"
           className={cn(
-            'space-y-4 rounded-xl border bg-card p-4 sm:p-6',
+            'space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6',
             report.status === 'FAILED' && 'border-destructive/30',
           )}
         >

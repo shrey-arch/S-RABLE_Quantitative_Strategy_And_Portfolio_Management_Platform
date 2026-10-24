@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/react-table';
+﻿import type { ColumnDef } from '@tanstack/react-table';
 import { ChartLine, ShieldCheck } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link } from 'react-router';
@@ -134,7 +134,7 @@ export default function ValidationHistoryPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight">Validation</h1>
+            <h1 className="page-title text-3xl">Validation</h1>
             <SimulationLabel kind="historical" />
           </div>
           <p className="max-w-2xl text-sm text-muted-foreground">

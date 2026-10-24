@@ -1,4 +1,4 @@
-import { useQueries } from '@tanstack/react-query';
+﻿import { useQueries } from '@tanstack/react-query';
 import { CircleCheck, CircleHelp, CircleX } from 'lucide-react';
 import { Link } from 'react-router';
 import { api, unwrap } from '@/api/client';
@@ -46,7 +46,7 @@ export function RegimeBanner({ regime }: { regime: RegimeSnapshot | null }) {
     <div
       role="group"
       aria-label="Current regime"
-      className="flex flex-wrap items-center gap-2 rounded-lg border bg-card px-4 py-3 text-sm"
+      className="flex flex-wrap items-center gap-2 rounded-lg border bg-card shadow-card px-4 py-3 text-sm"
     >
       {regime ? (
         <>

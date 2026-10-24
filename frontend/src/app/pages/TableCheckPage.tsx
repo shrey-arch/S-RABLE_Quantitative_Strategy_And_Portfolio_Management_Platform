@@ -1,4 +1,4 @@
-import { toast } from 'sonner';
+﻿import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { DataTable, type ColumnDef } from '@/components/ui/data-table';
 import { StatusBadge } from '@/components/ui/status-badge';
@@ -51,7 +51,7 @@ export default function TableCheckPage() {
     <main className="mx-auto max-w-4xl space-y-6 p-8">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Data table</h1>
+          <h1 className="page-title text-3xl">Data table</h1>
           <p className="text-sm text-muted-foreground">Developer | sample values only</p>
         </div>
         <Button variant="outline" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>

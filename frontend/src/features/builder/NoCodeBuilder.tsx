@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Save } from 'lucide-react';
+﻿import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Save } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ApiError } from '@/api/errors';
@@ -265,7 +265,7 @@ export function NoCodeBuilder(props: {
 
       <section
         aria-labelledby="builder-step"
-        className="min-w-0 space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+        className="min-w-0 space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6"
       >
         <h2 id="builder-step" className="text-lg font-semibold">
           Step {index + 1} of {STEPS.length}: {current.title}

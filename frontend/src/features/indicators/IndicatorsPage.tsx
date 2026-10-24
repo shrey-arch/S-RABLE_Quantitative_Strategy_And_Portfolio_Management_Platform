@@ -1,4 +1,4 @@
-import { CircleCheck } from 'lucide-react';
+﻿import { CircleCheck } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -111,7 +111,7 @@ export default function IndicatorsPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Indicators</h1>
+        <h1 className="page-title text-3xl">Indicators</h1>
         <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
           The indicator types the backend calculates. A strategy configuration can only use these,
           and charts show series computed by the backend from stored daily bars.

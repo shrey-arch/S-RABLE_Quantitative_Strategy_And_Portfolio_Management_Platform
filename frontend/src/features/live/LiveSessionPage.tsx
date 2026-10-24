@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
+﻿import { ArrowLeft } from 'lucide-react';
 import { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router';
 import { ErrorState, LoadingState } from '@/components/ui/states';
@@ -50,7 +50,7 @@ export default function LiveSessionPage() {
     return (
       <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
         <Back />
-        <h1 className="text-2xl font-semibold tracking-tight">Live session</h1>
+        <h1 className="page-title text-3xl">Live session</h1>
         <ErrorState error={session.error} onRetry={() => void session.refetch()} />
       </div>
     );
@@ -59,7 +59,7 @@ export default function LiveSessionPage() {
     return (
       <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
         <Back />
-        <h1 className="text-2xl font-semibold tracking-tight">Live session</h1>
+        <h1 className="page-title text-3xl">Live session</h1>
         <LoadingState rows={6} />
       </div>
     );
@@ -70,7 +70,7 @@ export default function LiveSessionPage() {
       <Back />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="page-title text-3xl">
             <span className="sr-only">Live session: </span>
             {s.name}
           </h1>
@@ -94,7 +94,7 @@ export default function LiveSessionPage() {
         </p>
       )}
       <SessionSummary session={s} />
-      <section aria-label="Chart" className="rounded-xl border bg-card p-4">
+      <section aria-label="Chart" className="rounded-xl border bg-card shadow-card p-4">
         {bars.isError ? (
           <ErrorState error={bars.error} onRetry={() => void bars.refetch()} />
         ) : !bars.data ? (
@@ -118,7 +118,7 @@ export default function LiveSessionPage() {
       <MoneyTiles session={s} />
       <div className="grid gap-4 lg:grid-cols-2">
         <RiskMeter session={s} />
-        <section aria-label="Equity" className="space-y-2 rounded-xl border bg-card p-4">
+        <section aria-label="Equity" className="space-y-2 rounded-xl border bg-card shadow-card p-4">
           <h2 className="text-sm font-semibold">Equity after each bar</h2>
           {equity.length ? (
             <EquityLine points={equity} capital={s.capital} label="Session equity" />

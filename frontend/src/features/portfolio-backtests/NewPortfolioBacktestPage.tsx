@@ -1,4 +1,4 @@
-import { ArrowLeft, Info, Play } from 'lucide-react';
+﻿import { ArrowLeft, Info, Play } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
@@ -51,7 +51,7 @@ function Page(props: { children: React.ReactNode }) {
       </Link>
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight">New portfolio backtest</h1>
+          <h1 className="page-title text-3xl">New portfolio backtest</h1>
           <SimulationLabel kind="historical" />
         </div>
         <p className="text-sm text-muted-foreground">
@@ -579,7 +579,7 @@ function Review(props: {
     <div className="space-y-6">
       <section
         aria-labelledby="review-heading"
-        className="space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+        className="space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6"
       >
         <div className="space-y-1">
           <h2 id="review-heading" className="font-semibold">

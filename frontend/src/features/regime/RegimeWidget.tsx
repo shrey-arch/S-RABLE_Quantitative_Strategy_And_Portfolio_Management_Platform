@@ -1,4 +1,4 @@
-import { Compass } from 'lucide-react';
+﻿import { Compass } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,7 +12,7 @@ import { classificationText } from './regime-model';
 export function RegimeWidget() {
   const current = useCurrentRegime();
   return (
-    <section aria-labelledby="regime-widget" className="rounded-xl border bg-card p-5">
+    <section aria-labelledby="regime-widget" className="rounded-xl border bg-card shadow-card p-5">
       <div className="flex items-center gap-2">
         <Compass aria-hidden className="size-4 text-muted-foreground" />
         <h2 id="regime-widget" className="text-sm font-medium">

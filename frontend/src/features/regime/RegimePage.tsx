@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router';
+﻿import { useSearchParams } from 'react-router';
 import { DateRangeField } from '@/components/ui/date-range-field';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/states';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -153,7 +153,7 @@ export default function RegimePage() {
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight">Market Regime</h1>
+          <h1 className="page-title text-3xl">Market Regime</h1>
           <ClassificationLabel horizon={current.data?.horizon_days} />
         </div>
         <p className="max-w-3xl text-sm text-muted-foreground">

@@ -1,4 +1,4 @@
-import { ArrowLeft, Play } from 'lucide-react';
+﻿import { ArrowLeft, Play } from 'lucide-react';
 import { useMemo, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
@@ -61,7 +61,7 @@ function Review(props: {
     ['Slippage', `${b.slippage_bps ?? 5} bps on each fill`],
   ];
   return (
-    <section aria-label="Review" className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+    <section aria-label="Review" className="space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6">
       <h2 className="text-lg font-semibold">Review</h2>
       {props.refusal && (
         <p
@@ -161,7 +161,7 @@ export default function NewLiveSessionPage() {
         <ArrowLeft aria-hidden className="size-4" /> {LIVE_AREA}
       </Link>
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">New live session</h1>
+        <h1 className="page-title text-3xl">New live session</h1>
         <p className="text-sm text-muted-foreground">
           A strategy trades one NSE instrument on intraday bars as the market moves. Delayed live
           runs 15 minutes behind the market during NSE hours; replay plays a recorded day from
@@ -197,7 +197,7 @@ export default function NewLiveSessionPage() {
         <form
           onSubmit={submit}
           noValidate
-          className="space-y-5 rounded-xl border bg-card p-4 sm:p-6"
+          className="space-y-5 rounded-xl border bg-card shadow-card p-4 sm:p-6"
         >
           <FormField
             label="Strategy"

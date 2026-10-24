@@ -10,17 +10,19 @@ export function Section(props: {
   id: string;
   title: string;
   description?: ReactNode;
+  eyebrow?: string;
   actions?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <section
       aria-labelledby={`${props.id}-heading`}
-      className="space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+      className="space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6"
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border pb-3">
         <div className="space-y-1">
-          <h2 id={`${props.id}-heading`} className="font-semibold">
+          {props.eyebrow && <p className="micro-label">{props.eyebrow}</p>}
+          <h2 id={`${props.id}-heading`} className="text-base font-semibold tracking-[-0.01em]">
             {props.title}
           </h2>
           {props.description && (
@@ -77,9 +79,11 @@ export function MetricTile(props: {
   const reason = results.null_reasons[metric.key];
   const about = `${metric.definition} ${metric.basis(results.basis)}`;
   return (
-    <div role="group" aria-label={metric.label} className="rounded-lg border bg-background p-3">
+    <div role="group" aria-label={metric.label} className="rounded-lg border border-border bg-surface-row p-3 transition-colors hover:border-border-strong">
       <div className="flex items-start justify-between gap-2">
-        <span className="text-xs font-medium text-muted-foreground">{metric.label}</span>
+        <span className="text-[0.6875rem] font-semibold tracking-[0.06em] text-subtle-foreground">
+          {metric.label}
+        </span>
         <Tooltip>
           <TooltipTrigger asChild>
             <button
@@ -96,7 +100,7 @@ export function MetricTile(props: {
       <p
         data-metric={metric.key}
         className={cn(
-          'mt-1 text-lg font-semibold tabular-nums',
+          'mt-1.5 text-xl font-semibold tabular-nums tracking-[-0.01em]',
           signClass(value, metric.colored),
           value === null && 'text-muted-foreground',
         )}

@@ -1,4 +1,4 @@
-import { Compass } from 'lucide-react';
+﻿import { Compass } from 'lucide-react';
 import { Link } from 'react-router';
 import { Row, Section } from '@/features/results/parts';
 import { istDate } from '@/features/instruments/market-data';
@@ -261,7 +261,7 @@ function DimensionHistory(props: { history: RegimeHistory; dimensions: Dimension
           <div className="mt-2 max-h-80 overflow-auto rounded-md border">
             <table className="w-full min-w-[26rem] text-sm">
               <caption className="sr-only">{`${d.name} periods`}</caption>
-              <thead className="sticky top-0 bg-card">
+              <thead className="sticky top-0 bg-card shadow-card">
                 <tr className="border-b text-left text-xs text-muted-foreground">
                   <th className="px-2 py-2 font-medium">Class</th>
                   <th className="px-2 py-2 font-medium">From</th>
@@ -313,7 +313,7 @@ export function HistoryView({ history }: { history: RegimeHistory }) {
           <div className="max-h-80 overflow-auto rounded-md border">
             <table className="w-full min-w-[34rem] text-sm">
               <caption className="sr-only">Regime transitions</caption>
-              <thead className="sticky top-0 bg-card">
+              <thead className="sticky top-0 bg-card shadow-card">
                 <tr className="border-b text-left text-xs text-muted-foreground">
                   <th className="px-2 py-2 font-medium">Date</th>
                   <th className="px-2 py-2 font-medium">From</th>
@@ -352,7 +352,7 @@ export function HistoryView({ history }: { history: RegimeHistory }) {
         <div className="mt-2 max-h-80 overflow-auto rounded-md border">
           <table className="w-full min-w-[30rem] text-sm">
             <caption className="sr-only">Regime periods</caption>
-            <thead className="sticky top-0 bg-card">
+            <thead className="sticky top-0 bg-card shadow-card">
               <tr className="border-b text-left text-xs text-muted-foreground">
                 <th className="px-2 py-2 font-medium">Regime</th>
                 <th className="px-2 py-2 font-medium">From</th>

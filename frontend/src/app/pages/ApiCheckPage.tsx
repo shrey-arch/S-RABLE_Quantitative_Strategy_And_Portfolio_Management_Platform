@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+﻿import { useQuery } from '@tanstack/react-query';
 import { Moon, RefreshCw, Sun } from 'lucide-react';
 import { useState } from 'react';
 import { ApiError, api, unwrap } from '@/api/client';
@@ -15,13 +15,13 @@ export default function App() {
     setThemeState(next);
   };
 
-  // Public route — loads automatically, cached under queryKeys.instruments.list()
+  // Public route â€” loads automatically, cached under queryKeys.instruments.list()
   const instruments = useQuery({
     queryKey: queryKeys.instruments.list(),
     queryFn: () => unwrap(api.GET('/instruments')),
   });
 
-  // Protected route without a token — 401 must NOT be retried
+  // Protected route without a token â€” 401 must NOT be retried
   const me = useQuery({
     queryKey: queryKeys.me,
     queryFn: () => unwrap(api.GET('/users/me')),
@@ -31,35 +31,35 @@ export default function App() {
     <main className="mx-auto max-w-3xl space-y-6 p-8">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">S-RABLE</h1>
-          <p className="text-sm text-muted-foreground">Phase 1 · Step 1.6 — TanStack Query</p>
+          <h1 className="page-title text-3xl">S-RABLE</h1>
+          <p className="text-sm text-muted-foreground">Phase 1 Â· Step 1.6 â€” TanStack Query</p>
         </div>
         <button
           type="button"
           onClick={toggle}
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-          className="inline-flex size-9 items-center justify-center rounded-md border bg-card hover:bg-muted"
+          className="inline-flex size-9 items-center justify-center rounded-md border bg-card shadow-card hover:bg-muted"
         >
           {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
         </button>
       </header>
 
-      <section className="space-y-4 rounded-lg border bg-card p-5 text-card-foreground">
+      <section className="space-y-4 rounded-lg border bg-card shadow-card p-5 text-card-foreground">
         <h2 className="text-sm font-semibold">Query states</h2>
 
         <Row label="GET /instruments" expected="Expect: success">
           {instruments.isPending
-            ? 'Loading…'
+            ? 'Loadingâ€¦'
             : instruments.isError
-              ? `Error ${(instruments.error as ApiError).status} — ${instruments.error.message}`
-              : `Success — ${instruments.data.length} instrument(s)`}
+              ? `Error ${(instruments.error as ApiError).status} â€” ${instruments.error.message}`
+              : `Success â€” ${instruments.data.length} instrument(s)`}
         </Row>
 
         <Row label="GET /users/me (no token)" expected="Expect: error 401, no retries">
           {me.isPending
-            ? 'Loading…'
+            ? 'Loadingâ€¦'
             : me.isError
-              ? `Error ${(me.error as ApiError).status} — ${me.error.message} · attempts: ${me.failureCount}`
+              ? `Error ${(me.error as ApiError).status} â€” ${me.error.message} Â· attempts: ${me.failureCount}`
               : 'Unexpected success'}
         </Row>
 

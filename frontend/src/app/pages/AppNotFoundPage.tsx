@@ -1,4 +1,4 @@
-import { SearchX } from 'lucide-react';
+﻿import { SearchX } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 
@@ -9,7 +9,7 @@ export default function AppNotFoundPage() {
       <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
         <SearchX className="size-6" />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">Page not found</h1>
+      <h1 className="mt-4 page-title text-3xl">Page not found</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         The address may be mistyped, or the page has moved.
       </p>

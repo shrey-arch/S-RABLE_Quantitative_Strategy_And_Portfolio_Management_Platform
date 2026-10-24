@@ -1,4 +1,4 @@
-import { ChartLine, Play } from 'lucide-react';
+﻿import { ChartLine, Play } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
@@ -181,7 +181,7 @@ export default function BacktestHistoryPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight">Backtest history</h1>
+            <h1 className="page-title text-3xl">Backtest history</h1>
             <SimulationLabel kind="historical" />
           </div>
           <p className="text-sm text-muted-foreground">

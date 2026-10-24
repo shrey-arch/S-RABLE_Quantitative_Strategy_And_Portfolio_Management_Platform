@@ -1,4 +1,4 @@
-import { OctagonX, Plus, Radio } from 'lucide-react';
+﻿import { OctagonX, Plus, Radio } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -115,7 +115,7 @@ export default function LiveTradingPage() {
     <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+          <h1 className="flex items-center gap-2 page-title text-3xl">
             <Radio aria-hidden className="size-5 text-muted-foreground" />
             {LIVE_AREA}
           </h1>

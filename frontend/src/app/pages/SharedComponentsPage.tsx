@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { toast } from 'sonner';
 import { ApiError } from '@/api/errors';
 import { Button } from '@/components/ui/button';
@@ -22,7 +22,7 @@ export default function SharedComponentsPage() {
     <main className="mx-auto max-w-4xl space-y-6 p-8">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Shared components</h1>
+          <h1 className="page-title text-3xl">Shared components</h1>
           <p className="text-sm text-muted-foreground">Developer | sample values only</p>
         </div>
         <Button variant="outline" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>

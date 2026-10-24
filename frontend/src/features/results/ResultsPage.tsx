@@ -38,10 +38,13 @@ function Shell(props: { children: React.ReactNode }) {
 
 function Heading(props: { children?: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <h1 className="text-2xl font-semibold tracking-tight">{TITLE}</h1>
-      <SimulationLabel kind="historical" />
-      {props.children}
+    <div className="space-y-2">
+      <p className="micro-label">Execution report</p>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="page-title text-3xl">{TITLE}</h1>
+        <SimulationLabel kind="historical" />
+        {props.children}
+      </div>
     </div>
   );
 }
@@ -93,7 +96,7 @@ function NoResultsYet({ execution }: { execution: Execution }) {
       <Heading>
         <StatusBadge kind="execution" value={execution.status} />
       </Heading>
-      <div className="space-y-3 rounded-xl border bg-card p-4 sm:p-6">
+      <div className="space-y-3 rounded-xl border bg-card shadow-card p-4 sm:p-6">
         <p aria-live="polite" className="text-sm">
           {active
             ? `This backtest is ${humanize(execution.status).toLowerCase()}. Results appear here when it completes; this page checks every ${POLL_MS / 1000} seconds.`
@@ -147,7 +150,7 @@ export default function ResultsPage() {
         <Heading />
         {results.isError ? (
           results.error instanceof ApiError && results.error.status === 409 ? (
-            <div role="alert" className="rounded-xl border bg-card p-4 text-sm sm:p-6">
+            <div role="alert" className="rounded-xl border bg-card shadow-card p-4 text-sm sm:p-6">
               <p className="font-medium">No results for this run</p>
               <p className="mt-1 text-muted-foreground">{results.error.message}</p>
             </div>
@@ -237,13 +240,13 @@ function ResultsView({ results }: { results: ExecutionResults }) {
       </div>
 
       {madeNoTrades(results) && (
-        <p role="status" className="rounded-md border bg-muted/50 p-3 text-sm">
+        <p role="status" className="rounded-lg border border-info/25 bg-info-soft p-3 text-sm text-info-ink">
           The strategy made no trades in this run. That is a valid result: the capital stayed in
           cash, so the trade statistics are empty.
         </p>
       )}
       {changed && (
-        <p role="status" className="rounded-md border border-warning/40 bg-warning/10 p-3 text-sm">
+        <p role="status" className="rounded-lg border border-warning/35 bg-warning-soft p-3 text-sm text-warning-ink">
           {changed}
         </p>
       )}

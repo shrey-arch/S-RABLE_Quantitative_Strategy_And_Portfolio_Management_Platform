@@ -1,4 +1,4 @@
-import { Clock, Lock } from 'lucide-react';
+﻿import { Clock, Lock } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import type { UnavailableRoute } from '../routes';
@@ -16,7 +16,7 @@ export function NotAvailablePage({ title, reason }: Pick<UnavailableRoute, 'titl
       <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
         <Icon className="size-6" />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">
+      <h1 className="mt-4 page-title text-3xl">
         {planned ? `${title} is planned` : `${title} is not available`}
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">

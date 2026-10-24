@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+﻿import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { AuthContext, type AuthContextValue } from '@/features/auth/auth-context';
@@ -44,14 +44,14 @@ describe('LandingPage', () => {
     }
   });
 
-  it('marks only the backtest stage as available; the rest are planned', () => {
+  it('shows all five validation stages, each available', () => {
     renderLanding();
     const pillar = screen.getByRole('heading', { name: 'Five-stage validation' }).parentElement!;
     const stages = within(pillar).getAllByRole('listitem');
     expect(stages).toHaveLength(5);
     expect(stages[0]).toHaveTextContent('Backtest');
     expect(stages[0]).toHaveTextContent('Available');
-    for (const stage of stages.slice(1)) expect(stage).toHaveTextContent('Planned');
+    for (const stage of stages) expect(stage).toHaveTextContent('Available');
   });
 
   it('never implies live trading', () => {

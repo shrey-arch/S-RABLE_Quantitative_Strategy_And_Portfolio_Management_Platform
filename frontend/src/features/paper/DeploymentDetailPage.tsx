@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/react-table';
+﻿import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowLeft, CircleSlash, Pause, Play, Square } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router';
@@ -43,7 +43,7 @@ function NotAvailable() {
       <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
         <CircleSlash className="size-6" />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">Paper deployment not available</h1>
+      <h1 className="mt-4 page-title text-3xl">Paper deployment not available</h1>
       <p className="mt-2 max-w-md text-sm text-muted-foreground">
         This deployment does not exist, or it belongs to another account.
       </p>
@@ -206,7 +206,7 @@ function Detail({ dep }: { dep: PaperDeploymentDetail }) {
     <>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">{dep.name}</h1>
+          <h1 className="page-title text-3xl">{dep.name}</h1>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <StatusBadge kind="paperDeployment" value={dep.status} />
             <span>{dep.instruments.map((i) => i.symbol).join(', ')}</span>

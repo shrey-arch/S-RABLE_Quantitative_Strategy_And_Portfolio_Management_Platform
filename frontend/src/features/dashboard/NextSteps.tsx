@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, Circle } from 'lucide-react';
+﻿import { ArrowRight, CheckCircle2, Circle } from 'lucide-react';
 import { Link } from 'react-router';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +17,7 @@ export interface NextStep {
 
 export function NextSteps({ steps }: { steps: NextStep[] }) {
   return (
-    <section aria-labelledby="next-steps" className="rounded-xl border bg-card p-5 shadow-sm">
+    <section aria-labelledby="next-steps" className="rounded-xl border bg-card p-5 shadow-card">
       <h2 id="next-steps" className="font-semibold tracking-tight">
         Next steps
       </h2>

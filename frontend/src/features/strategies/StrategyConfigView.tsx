@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+﻿import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { conditionText, readConfig, type Condition } from './strategy-config';
 
 function Empty({ children }: { children: string }) {
@@ -113,7 +113,7 @@ export function StrategyConfigView({ config }: { config: unknown }) {
         </CardContent>
       </Card>
 
-      <details className="rounded-xl border bg-card p-4 text-sm lg:col-span-2">
+      <details className="rounded-xl border bg-card shadow-card p-4 text-sm lg:col-span-2">
         <summary className="cursor-pointer font-medium">Advanced: raw configuration (JSON)</summary>
         <pre className="mt-3 max-h-96 overflow-auto rounded-md bg-muted p-3 font-mono text-xs">
           {JSON.stringify(config, null, 2)}

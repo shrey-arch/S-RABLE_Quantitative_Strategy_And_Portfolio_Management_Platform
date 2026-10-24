@@ -1,4 +1,4 @@
-import { AlertTriangle, Info, RefreshCw } from 'lucide-react';
+﻿import { AlertTriangle, Info, RefreshCw } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { ApiError } from '@/api/errors';
 import { Button } from '@/components/ui/button';
@@ -38,7 +38,7 @@ export function StatCard(props: StatCardProps) {
       aria-label={props.title}
       aria-busy={props.isPending}
       className={cn(
-        'flex min-h-36 flex-col rounded-xl border bg-card p-5 text-card-foreground shadow-sm',
+        'flex min-h-36 flex-col rounded-xl border bg-card p-5 text-card-foreground shadow-card',
         props.error ? 'border-destructive/40' : '',
       )}
     >

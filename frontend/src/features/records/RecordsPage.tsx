@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -70,7 +70,7 @@ function Filters(props: { tab: RecordTab; names: Names }) {
   );
   return (
     <div
-      className="grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-4"
+      className="grid gap-3 rounded-xl border bg-card shadow-card p-4 sm:grid-cols-2 lg:grid-cols-4"
       role="group"
       aria-label="Filters"
     >
@@ -219,7 +219,7 @@ export default function RecordsPage() {
     <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">Trading Records</h1>
+          <h1 className="page-title text-3xl">Trading Records</h1>
           <p className="max-w-3xl text-sm text-muted-foreground">
             The simulated orders, trades and positions stored from your backtests, and how they link
             to each run. Open a row for its chain: execution, order, trades and position. There is

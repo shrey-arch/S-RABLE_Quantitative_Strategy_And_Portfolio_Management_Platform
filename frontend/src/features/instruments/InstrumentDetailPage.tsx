@@ -1,4 +1,4 @@
-import { CandlestickChart, CircleSlash, LineChart, Pencil, Trash2 } from 'lucide-react';
+﻿import { CandlestickChart, CircleSlash, LineChart, Pencil, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
@@ -55,7 +55,7 @@ function NotAvailable() {
       <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
         <CircleSlash className="size-6" />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">Instrument not available</h1>
+      <h1 className="mt-4 page-title text-3xl">Instrument not available</h1>
       <p className="mt-2 max-w-md text-sm text-muted-foreground">
         This instrument does not exist or was deleted.
       </p>
@@ -180,7 +180,7 @@ function HistoricalData({ instrument }: { instrument: Instrument }) {
         </div>
       </div>
 
-      <div className="rounded-xl border bg-card p-3 sm:p-4">
+      <div className="rounded-xl border bg-card shadow-card p-3 sm:p-4">
         {data.isPending ? (
           <Skeleton className="h-80 w-full sm:h-96" />
         ) : data.isError ? (
@@ -287,7 +287,7 @@ export default function InstrumentDetailPage() {
     return (
       <div className="mx-auto max-w-6xl space-y-4 p-4 sm:p-6 lg:p-8">
         <BackLink />
-        <h1 className="text-2xl font-semibold tracking-tight">Instrument</h1>
+        <h1 className="page-title text-3xl">Instrument</h1>
         {query.isError ? (
           <ErrorState error={query.error} onRetry={() => void query.refetch()} />
         ) : (
@@ -314,7 +314,7 @@ export default function InstrumentDetailPage() {
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight break-words">{instrument.symbol}</h1>
+          <h1 className="page-title text-3xl break-words">{instrument.symbol}</h1>
           <p className="text-muted-foreground">{instrument.name}</p>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <StatusBadge kind="active" value={instrument.is_active} />
@@ -346,7 +346,7 @@ export default function InstrumentDetailPage() {
         </div>
       </div>
 
-      <dl className="grid gap-4 rounded-xl border bg-card p-4 text-sm sm:grid-cols-3 lg:grid-cols-6">
+      <dl className="grid gap-4 rounded-xl border bg-card shadow-card p-4 text-sm sm:grid-cols-3 lg:grid-cols-6">
         {[
           ['Trading symbol', instrument.trading_symbol],
           ['ISIN', instrument.isin || MISSING],

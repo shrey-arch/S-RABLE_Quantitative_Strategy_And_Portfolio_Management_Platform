@@ -1,4 +1,4 @@
-import { CircleSlash, Copy, Pencil, Play, ShieldCheck, Trash2 } from 'lucide-react';
+﻿import { CircleSlash, Copy, Pencil, Play, ShieldCheck, Trash2 } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 import { ApiError } from '@/api/errors';
@@ -34,7 +34,7 @@ function NotAvailable() {
       <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
         <CircleSlash className="size-6" />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">Strategy not available</h1>
+      <h1 className="mt-4 page-title text-3xl">Strategy not available</h1>
       <p className="mt-2 max-w-md text-sm text-muted-foreground">
         This strategy does not exist, or it belongs to another account.
       </p>
@@ -65,7 +65,7 @@ export default function StrategyDetailPage() {
     return (
       <div className="mx-auto max-w-6xl space-y-4 p-4 sm:p-6 lg:p-8">
         <BackLink />
-        <h1 className="text-2xl font-semibold tracking-tight">Strategy</h1>
+        <h1 className="page-title text-3xl">Strategy</h1>
         {query.isError ? (
           <ErrorState error={query.error} onRetry={() => void query.refetch()} />
         ) : (
@@ -98,7 +98,7 @@ export default function StrategyDetailPage() {
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight break-words">{strategy.name}</h1>
+          <h1 className="page-title text-3xl break-words">{strategy.name}</h1>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <StatusBadge kind="active" value={strategy.is_active} />
             <span>{humanize(strategy.strategy_type)}</span>
@@ -177,7 +177,7 @@ export default function StrategyDetailPage() {
         </p>
       )}
 
-      <dl className="grid gap-4 rounded-xl border bg-card p-4 text-sm sm:grid-cols-3">
+      <dl className="grid gap-4 rounded-xl border bg-card shadow-card p-4 text-sm sm:grid-cols-3">
         {strategy.validation && (
           <div className="sm:col-span-3">
             <dt className="text-xs text-muted-foreground">Validation</dt>

@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/react-table';
+﻿import type { ColumnDef } from '@tanstack/react-table';
 import { Clock, FlaskConical, OctagonX, Pause, Play } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router';
@@ -209,7 +209,7 @@ function Meter(props: { label: string; used: number | null; text: string; testId
 export function RiskMeter({ session: s }: { session: LiveSession }) {
   const r = s.risk;
   return (
-    <section aria-label="Risk limits" className="space-y-4 rounded-xl border bg-card p-4">
+    <section aria-label="Risk limits" className="space-y-4 rounded-xl border bg-card shadow-card p-4">
       <h2 className="text-sm font-semibold">Risk limits</h2>
       <Meter
         label="Daily loss"
@@ -251,7 +251,7 @@ export function EventLog(props: { events: LiveEvent[] }) {
     [props.events, filter],
   );
   return (
-    <section aria-label="Event log" className="space-y-3 rounded-xl border bg-card p-4">
+    <section aria-label="Event log" className="space-y-3 rounded-xl border bg-card shadow-card p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-sm font-semibold">Event log</h2>
         <div role="group" aria-label="Show events" className="flex flex-wrap gap-1">

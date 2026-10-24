@@ -1,4 +1,4 @@
-import { AlertCircle, Plus } from 'lucide-react';
+﻿import { AlertCircle, Plus } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
@@ -137,7 +137,7 @@ export default function PortfoliosPage() {
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">Portfolios</h1>
+          <h1 className="page-title text-3xl">Portfolios</h1>
           <p className="max-w-3xl text-sm text-muted-foreground">
             Simulated portfolios: choose strategies, get a target allocation within your risk
             limits, plan a rebalance and save the result. Nothing here places an order.
@@ -157,7 +157,7 @@ export default function PortfoliosPage() {
           action={<CreatePortfolioDialog />}
         />
       ) : (
-        <div className="relative overflow-x-auto rounded-xl border bg-card">
+        <div className="relative overflow-x-auto rounded-xl border bg-card shadow-card">
           <table className="w-full min-w-[44rem] text-sm">
             <caption className="sr-only">Your portfolios</caption>
             <thead>

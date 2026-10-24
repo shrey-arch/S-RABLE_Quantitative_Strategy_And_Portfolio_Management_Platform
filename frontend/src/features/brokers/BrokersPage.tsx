@@ -1,4 +1,4 @@
-import { Landmark, Pencil, PlugZap, Trash2, Unplug } from 'lucide-react';
+﻿import { Landmark, Pencil, PlugZap, Trash2, Unplug } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,7 @@ function AccountCard(props: { account: BrokerAccount; onEdit: () => void; onConn
   const titleId = `broker-${account.id}`;
   const connected = account.connection_status === 'CONNECTED';
   return (
-    <li aria-labelledby={titleId} className="space-y-4 rounded-xl border bg-card p-4">
+    <li aria-labelledby={titleId} className="space-y-4 rounded-xl border bg-card shadow-card p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
           <h2 id={titleId} className="truncate font-semibold">
@@ -101,7 +101,7 @@ export default function BrokersPage() {
     <div className="mx-auto max-w-5xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+          <h1 className="flex items-center gap-2 page-title text-3xl">
             <Landmark aria-hidden className="size-5 text-muted-foreground" />
             Brokers
           </h1>

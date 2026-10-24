@@ -1,4 +1,4 @@
-import {
+﻿import {
   ChartLine,
   CircleCheck,
   CircleDashed,
@@ -54,7 +54,7 @@ function NotAvailable() {
       <span aria-hidden className="rounded-full bg-muted p-3 text-muted-foreground">
         <CircleSlash className="size-6" />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">Backtest not available</h1>
+      <h1 className="mt-4 page-title text-3xl">Backtest not available</h1>
       <p className="mt-2 max-w-md text-sm text-muted-foreground">
         This backtest does not exist, or it belongs to another account.
       </p>
@@ -80,7 +80,7 @@ export default function BacktestStatusPage() {
   if (!query.data) {
     return (
       <Shell>
-        <h1 className="text-2xl font-semibold tracking-tight">Backtest</h1>
+        <h1 className="page-title text-3xl">Backtest</h1>
         {query.isError ? (
           <ErrorState error={query.error} onRetry={() => void query.refetch()} />
         ) : (
@@ -200,7 +200,7 @@ function ExecutionView({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight">Backtest</h1>
+            <h1 className="page-title text-3xl">Backtest</h1>
             <StatusBadge kind="execution" value={execution.status} />
             <SimulationLabel kind="historical" />
           </div>
@@ -266,7 +266,7 @@ function ExecutionView({
 
       <section
         aria-labelledby="timeline-heading"
-        className="space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+        className="space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6"
       >
         <h2 id="timeline-heading" className="font-semibold">
           Timeline
@@ -313,7 +313,7 @@ function ExecutionView({
 
       <section
         aria-labelledby="config-heading"
-        className="space-y-3 rounded-xl border bg-card p-4 sm:p-6"
+        className="space-y-3 rounded-xl border bg-card shadow-card p-4 sm:p-6"
       >
         <h2 id="config-heading" className="font-semibold">
           Configuration

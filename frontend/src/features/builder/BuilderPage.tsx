@@ -1,4 +1,4 @@
-import { AlertTriangle, Blocks, Code2 } from 'lucide-react';
+﻿import { AlertTriangle, Blocks, Code2 } from 'lucide-react';
 import { lazy, Suspense, useMemo } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { ApiError } from '@/api/errors';
@@ -19,7 +19,7 @@ function Page(props: { title: string; intro?: string; children: React.ReactNode 
         &larr; Strategies
       </Link>
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{props.title}</h1>
+        <h1 className="page-title text-3xl">{props.title}</h1>
         {props.intro && <p className="mt-1 text-sm text-muted-foreground">{props.intro}</p>}
       </div>
       {props.children}
