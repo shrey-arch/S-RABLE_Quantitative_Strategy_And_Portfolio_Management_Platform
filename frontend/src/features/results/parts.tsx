@@ -79,7 +79,11 @@ export function MetricTile(props: {
   const reason = results.null_reasons[metric.key];
   const about = `${metric.definition} ${metric.basis(results.basis)}`;
   return (
-    <div role="group" aria-label={metric.label} className="rounded-lg border border-border bg-surface-row p-3 transition-colors hover:border-border-strong">
+    <div
+      role="group"
+      aria-label={metric.label}
+      className="rounded-lg border border-border bg-surface-row p-3 transition-colors hover:border-border-strong"
+    >
       <div className="flex items-start justify-between gap-2">
         <span className="text-[0.6875rem] font-semibold tracking-[0.06em] text-subtle-foreground">
           {metric.label}

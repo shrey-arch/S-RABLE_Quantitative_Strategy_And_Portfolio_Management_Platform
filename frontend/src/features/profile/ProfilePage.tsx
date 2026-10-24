@@ -196,7 +196,10 @@ export default function ProfilePage() {
         <LoadingState rows={4} />
       ) : (
         <>
-          <section aria-label="Account details" className="space-y-4 rounded-xl border bg-card shadow-card p-5">
+          <section
+            aria-label="Account details"
+            className="space-y-4 rounded-xl border bg-card shadow-card p-5"
+          >
             <div className="flex items-center gap-4">
               <Avatar profile={profile} />
               <div className="min-w-0">

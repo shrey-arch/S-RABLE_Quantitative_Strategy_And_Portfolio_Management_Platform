@@ -128,13 +128,21 @@ export function SummaryTab(props: { results: ExecutionResults; symbol: (id: stri
         }
       >
         <dl className="grid gap-3 text-sm sm:grid-cols-2">
-          <div role="group" aria-label="Strategy return" className="rounded-lg border border-border bg-surface-row p-3">
+          <div
+            role="group"
+            aria-label="Strategy return"
+            className="rounded-lg border border-border bg-surface-row p-3"
+          >
             <dt className="text-xs text-muted-foreground">Strategy, total return</dt>
             <dd className="mt-1 text-lg font-semibold">
               <PercentText value={results.summary.total_return} colored />
             </dd>
           </div>
-          <div role="group" aria-label="Buy and hold return" className="rounded-lg border border-border bg-surface-row p-3">
+          <div
+            role="group"
+            aria-label="Buy and hold return"
+            className="rounded-lg border border-border bg-surface-row p-3"
+          >
             <dt className="text-xs text-muted-foreground">Buy and hold, total return</dt>
             <dd className="mt-1 text-lg font-semibold">
               {benchmark ? (

@@ -6,7 +6,10 @@ export function FormSection(props: {
 }) {
   const id = `section-${props.title.toLowerCase().replace(/[^a-z]+/g, '-')}`;
   return (
-    <section aria-labelledby={id} className="space-y-4 rounded-xl border bg-card p-4 shadow-card sm:p-6">
+    <section
+      aria-labelledby={id}
+      className="space-y-4 rounded-xl border bg-card p-4 shadow-card sm:p-6"
+    >
       <div className="space-y-1">
         <h2 id={id} className="font-semibold">
           {props.title}

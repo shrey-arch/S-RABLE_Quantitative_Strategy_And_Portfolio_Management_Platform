@@ -17,7 +17,10 @@ export function LiveSessionsWidget() {
   const running = all.filter(isLiveNow);
   const shown = [...running, ...all.filter((s) => !isLiveNow(s))].slice(0, 5);
   return (
-    <section aria-labelledby="live-sessions-card" className="rounded-xl border bg-card shadow-card p-5">
+    <section
+      aria-labelledby="live-sessions-card"
+      className="rounded-xl border bg-card shadow-card p-5"
+    >
       <div className="flex items-center gap-2">
         <Radio aria-hidden className="size-4 text-muted-foreground" />
         <h2 id="live-sessions-card" className="text-sm font-medium">

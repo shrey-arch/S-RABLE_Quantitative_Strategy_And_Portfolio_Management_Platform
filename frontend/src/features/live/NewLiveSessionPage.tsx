@@ -61,7 +61,10 @@ function Review(props: {
     ['Slippage', `${b.slippage_bps ?? 5} bps on each fill`],
   ];
   return (
-    <section aria-label="Review" className="space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6">
+    <section
+      aria-label="Review"
+      className="space-y-4 rounded-xl border bg-card shadow-card p-4 sm:p-6"
+    >
       <h2 className="text-lg font-semibold">Review</h2>
       {props.refusal && (
         <p

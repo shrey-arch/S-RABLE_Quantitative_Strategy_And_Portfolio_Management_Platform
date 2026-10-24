@@ -354,9 +354,7 @@ export default function PortfolioDetailPage() {
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
       <BackLink />
       <div className="space-y-2">
-        <h1 className="page-title text-3xl">
-          {query.data ? query.data.name : 'Portfolio'}
-        </h1>
+        <h1 className="page-title text-3xl">{query.data ? query.data.name : 'Portfolio'}</h1>
         {query.data?.description && (
           <p className="text-sm text-muted-foreground">{query.data.description}</p>
         )}

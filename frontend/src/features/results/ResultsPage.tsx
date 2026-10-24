@@ -240,13 +240,19 @@ function ResultsView({ results }: { results: ExecutionResults }) {
       </div>
 
       {madeNoTrades(results) && (
-        <p role="status" className="rounded-lg border border-info/25 bg-info-soft p-3 text-sm text-info-ink">
+        <p
+          role="status"
+          className="rounded-lg border border-info/25 bg-info-soft p-3 text-sm text-info-ink"
+        >
           The strategy made no trades in this run. That is a valid result: the capital stayed in
           cash, so the trade statistics are empty.
         </p>
       )}
       {changed && (
-        <p role="status" className="rounded-lg border border-warning/35 bg-warning-soft p-3 text-sm text-warning-ink">
+        <p
+          role="status"
+          className="rounded-lg border border-warning/35 bg-warning-soft p-3 text-sm text-warning-ink"
+        >
           {changed}
         </p>
       )}

@@ -167,7 +167,10 @@ export function Watchlist(props: {
     save.mutate([...ids, id], { onError: failed });
   };
   return (
-    <section aria-labelledby="watchlist" className="space-y-3 rounded-xl border bg-card shadow-card p-4">
+    <section
+      aria-labelledby="watchlist"
+      className="space-y-3 rounded-xl border bg-card shadow-card p-4"
+    >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="watchlist" className="font-semibold">
           Watchlist
@@ -845,7 +848,10 @@ export function SettingsPanel({ account }: { account: PaperAccount }) {
           />
         </div>
       </form>
-      <section aria-labelledby="charge-rates" className="space-y-3 rounded-xl border bg-card shadow-card p-4">
+      <section
+        aria-labelledby="charge-rates"
+        className="space-y-3 rounded-xl border bg-card shadow-card p-4"
+      >
         <h2 id="charge-rates" className="font-semibold">
           How charges are calculated
         </h2>

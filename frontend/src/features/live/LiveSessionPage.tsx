@@ -118,7 +118,10 @@ export default function LiveSessionPage() {
       <MoneyTiles session={s} />
       <div className="grid gap-4 lg:grid-cols-2">
         <RiskMeter session={s} />
-        <section aria-label="Equity" className="space-y-2 rounded-xl border bg-card shadow-card p-4">
+        <section
+          aria-label="Equity"
+          className="space-y-2 rounded-xl border bg-card shadow-card p-4"
+        >
           <h2 className="text-sm font-semibold">Equity after each bar</h2>
           {equity.length ? (
             <EquityLine points={equity} capital={s.capital} label="Session equity" />

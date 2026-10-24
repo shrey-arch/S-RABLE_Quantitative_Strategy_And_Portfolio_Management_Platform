@@ -209,7 +209,10 @@ function Meter(props: { label: string; used: number | null; text: string; testId
 export function RiskMeter({ session: s }: { session: LiveSession }) {
   const r = s.risk;
   return (
-    <section aria-label="Risk limits" className="space-y-4 rounded-xl border bg-card shadow-card p-4">
+    <section
+      aria-label="Risk limits"
+      className="space-y-4 rounded-xl border bg-card shadow-card p-4"
+    >
       <h2 className="text-sm font-semibold">Risk limits</h2>
       <Meter
         label="Daily loss"

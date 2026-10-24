@@ -64,13 +64,7 @@ function Arrow(props: { className: string; d: string; head: string }) {
       viewBox="0 0 120 120"
       className={cn('pointer-events-none absolute hidden text-hand lg:block', props.className)}
     >
-      <path
-        d={props.d}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
+      <path d={props.d} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       <path
         d={props.head}
         fill="none"
@@ -91,17 +85,29 @@ export default function LandingPage() {
       {/* Floating pill navigation. */}
       <div className="px-4 pt-5 sm:px-6">
         <header className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 rounded-2xl border bg-card px-4 py-2.5 shadow-raised">
-          <Link to="/" className="flex items-center gap-2.5 text-base font-semibold tracking-[0.2em]">
+          <Link
+            to="/"
+            className="flex items-center gap-2.5 text-base font-semibold tracking-[0.2em]"
+          >
             S-RABLE
           </Link>
           <nav aria-label="Sections" className="ml-4 hidden items-center gap-1 md:flex">
-            <a href="#how" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary-tint hover:text-foreground">
+            <a
+              href="#how"
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary-tint hover:text-foreground"
+            >
               How it works
             </a>
-            <a href="#validation" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary-tint hover:text-foreground">
+            <a
+              href="#validation"
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary-tint hover:text-foreground"
+            >
               The five stages
             </a>
-            <a href="#portfolio" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary-tint hover:text-foreground">
+            <a
+              href="#portfolio"
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-primary-tint hover:text-foreground"
+            >
               Portfolio
             </a>
           </nav>

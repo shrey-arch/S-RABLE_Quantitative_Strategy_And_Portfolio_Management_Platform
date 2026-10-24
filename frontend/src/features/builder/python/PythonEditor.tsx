@@ -199,7 +199,10 @@ export function PythonEditor(props: {
         </span>
       </div>
 
-      <section aria-labelledby={`${id}-run`} className="space-y-3 rounded-xl border bg-card shadow-card p-4">
+      <section
+        aria-labelledby={`${id}-run`}
+        className="space-y-3 rounded-xl border bg-card shadow-card p-4"
+      >
         <h2 id={`${id}-run`} className="sr-only">
           Test run and reference
         </h2>
